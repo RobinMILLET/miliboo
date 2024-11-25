@@ -20,3 +20,11 @@ Route::get('/', function () {
 Route::get('/miliboo', function(){
     return view('miliboo');
 });
+
+Route::get('/recherche', function(){
+    return view('rechercheProduit');
+});
+
+Route::get('/produit', function() {
+    return view('detailProduit');
+});

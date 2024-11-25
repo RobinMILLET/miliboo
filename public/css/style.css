@@ -1,10 +1,184 @@
-div {
-    background-color: aqua;
-    color: blueviolet;
-
+*{
+    font-family: sans-serif;
+    list-style: none;
 }
-div:hover{
-    background-color: gray;
-    color: red;
-    font-size: 80px;
+
+body{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.marge{
+    margin-left: 200px;
+    margin-right: 200px;
+}
+
+/*
+Bar d'info en haut de la page
+*/
+.info-bar-haut{
+    width: 100vw;
+    height: 50px;
+    background-color: black;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: large;
+    margin-bottom: 25px;
+}
+/*
+NavBar Page Accueil
+*/
+.barre-recherche-info{
+    height: 90px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+}
+/*
+Image Miliboo
+*/
+#Miliboologo{
+    width: 170px;
+    height: 50.89px;
+}
+
+#contenu-recherchebar{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+#recherche-zone{
+    height: 100%;
+    flex: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 30px;
+}
+
+#form-style{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    border: 2px solid gray;
+    border-radius: 10px;
+}
+
+#imgsearch{
+    height: 50px;
+    padding-left: 10px;
+}
+
+/*
+bar de recherche 
+*/
+#recherchebar{
+    width: 600px;
+    height: 60px;
+    border: 0px;
+    font-size: large;
+}
+
+#recherchebar:focus{
+    outline: none;
+}
+
+#recherchebar::placeholder{
+    font-size: large;
+}
+
+/*
+Compte, aide, panier
+*/
+#test{
+    align-items: center;
+    display: flex;
+}
+/*
+img compte, 
+*/
+
+.imgtest{
+    height: 50px;
+    margin-left: 20px;
+}
+    
+#navigation{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+    font-size: x-large;
+}
+
+#navigation-regroupement{
+    display: flex;
+    gap: 20px;
+}
+
+#navigation-pro{
+
+    
+}
+
+#navcategorie{
+    
+}
+
+#div-cat{
+    width: 100%;
+    background-color: rgb(212, 212, 212, 0.5);
+    padding: 5px 0px 5px 0px;
+}
+
+#ul-cat{
+    padding-left: 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 40px;
+}
+
+.licategorie{
+    color: rgb(85, 85, 85);
+    font-size: small;
+}
+
+#service{
+    background-color: rgb(183, 185, 166);
+    height: 200px;
+}
+
+#div-bandeau{
+    height: 100%;
+}
+
+#ul-service{
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.bandeau-service{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.img-bandeau{
+height: 70px;
+
 }
