@@ -16,3 +16,15 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/miliboo', function(){
+    return view('miliboo');
+});
+
+Route::get('/recherche', function(){
+    return view('rechercheProduit');
+});
+
+Route::get('/produit', function() {
+    return view('detailProduit');
+});

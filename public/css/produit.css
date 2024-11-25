@@ -1,0 +1,204 @@
+html {
+    scroll-behavior: smooth;
+}
+
+img {
+    overflow-clip-margin: content-box;
+    overflow: clip;
+    vertical-align: middle;
+}
+
+.divProduit {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 100%; /* Ensure the container doesn't overflow */
+}
+
+.columnsProduit {
+    display: flex;
+    gap: 8%;
+    align-items: flex-start;
+    width: 100%; /* Ensure the columns span the available space */
+    max-width: 95%; /* Optional: limit the total width if desired */
+}
+
+.colImagesProduit {
+    display: flex;
+    width: 58%;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.colImagesProduit img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.colPresentationProduit {
+    flex: 1;
+    width: 42%;
+    position: relative;
+}
+
+.cardProduit {
+    position: fixed;
+    background-color: #f9f9f9;
+    padding: 20px;
+    margin-right: 20px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.titreProduit {
+    font-weight: 400;
+    font-size: 1.2rem;
+}
+
+.descProduitAccordion {
+    margin-top: 3rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.titreDescAccordion {
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+}
+
+.titreDescAccordion::-webkit-details-marker {
+    display: none; /* Hides the default arrow */
+  }
+
+.flecheAccordionDesc {
+    font-size: 16px;
+    transform: rotate(90deg);
+    transition: transform 0.3s ease; /* Smooth rotation effect */
+  }
+
+.descProduitAccordion[open] {
+    background-color: #f9f9f9;
+}
+
+.descProduitAccordion[open] .flecheAccordionDesc{
+    transform: rotate(180deg);
+}
+
+.aDescDetail {
+    text-decoration: underline;
+    font-weight: 200;
+    font-size: 0.875em;
+}
+
+.divColoris {
+    margin-top: 10px;
+}
+
+.pColoris {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.divListColoris {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#couleur1 {
+    background-color: white;
+    border: 2px solid black;
+    width: 30px;
+    height: 30px;
+    margin-bottom: 0.5rem;
+    margin-right: 0.25rem;
+}
+
+#couleur2 {
+    background-color: black;
+    border: 2px solid black;
+    width: 30px;
+    height: 30px;
+    margin-bottom: 0.5rem;
+    margin-right: 0.25rem;
+}
+
+#couleur3 {
+    background-color: green;
+    border: 2px solid black;
+    width: 30px;
+    height: 30px;
+    margin-bottom: 0.5rem;
+    margin-right: 0.25rem;
+}
+
+#couleur4 {
+    background-color: yellow;
+    border: 2px solid black;
+    width: 30px;
+    height: 30px;
+    margin-bottom: 0.5rem;
+    margin-right: 0.25rem;
+}
+
+#couleur5 {
+    background-color: blue;
+    border: 2px solid black;
+    width: 30px;
+    height: 30px;
+    margin-bottom: 0.5rem;
+    margin-right: 0.25rem;
+}
+
+.divNoteProduit {
+    font-size: 0.8rem;
+}
+
+.pNoteProduit {
+    display: inline-block;
+}
+
+.pNbAvis {
+    display: inline-block;
+}
+
+.descProduitEntretien {
+    margin-top: 3rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.titreEntretienAccordion {
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+}
+
+.titreEntretienAccordion::-webkit-details-marker {
+    display: none; /* Hides the default arrow */
+  }
+
+.flecheAccordionEntretien {
+    font-size: 16px;
+    transform: rotate(90deg);
+    transition: transform 0.3s ease; /* Smooth rotation effect */
+  }
+
+.descProduitEntretien[open] {
+    background-color: #f9f9f9;
+}
+
+.descProduitEntretien[open] .flecheAccordionEntretien{
+    transform: rotate(180deg);
+}

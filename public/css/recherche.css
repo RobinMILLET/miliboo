@@ -1,0 +1,165 @@
+* {
+    transition-delay: 0.1s;
+    transition-duration: 0.1s;
+}
+
+body {
+    margin-left: 10%;
+    margin-right: 10%;
+    text-align: center;
+}
+
+#filtres {
+    text-align: center;
+    width: 80%;
+    margin: 5%;
+    margin-left: 10%;
+    margin-right: 10%;
+    border-top: 1px solid grey;
+    border-bottom: 1px solid grey;
+}
+
+.dropdown {
+    list-style: none;
+    width: 90%;
+    margin: 1%;
+}
+
+.dropdown li {
+    display: inline-block;
+    position: relative;
+    min-width: 100px;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.dropdown li h3  {
+    display: block;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+
+.dropdown li h3:hover {
+    color: rgb(16,16,16)
+}
+
+.dropdown li .dropdownitem {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 60%;
+    margin-left: 15%;
+}
+
+.dropdown li .dropdownitem li {
+    margin-left: -75%;
+    width: fit-content;
+}
+
+.dropdown li:hover .dropdownitem {
+    display: block;
+}
+
+.dropdown li .dropdownitem li {
+    display: block;
+}
+
+#mid {
+    text-align: center;
+    margin-top: -2.5%;
+    vertical-align: middle;
+    width: 100%;
+    line-height: 1%;
+    margin-bottom: 2.5%;
+}
+
+#mid>* {
+    display: inline-block;
+}
+
+.left {
+    justify-content: left;
+    margin-right: 20%;
+}
+
+.right {
+    justify-content: right;
+    margin-left: 20%;
+}
+
+#recherche {
+    margin-left: -10%;
+    margin-right: -10%;
+}
+
+#grid {
+    text-align: left;
+}
+
+#grid>* {
+    text-align: center;
+    margin: 0;
+    display: inline-block;
+    margin: 0.5%;
+    vertical-align: middle;
+}
+
+.produit {
+    border: 2px solid lightgray;
+    border-radius: 10%;
+    width: 20vw;
+    height: 20vw;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+}
+
+.produit img {
+    width: 80%;
+    height: 60%;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.produit>*{
+    font-size: 1vw;
+    display: block;
+    margin: 1%;
+    padding: 0;
+}
+
+.produit h3 {
+    font-size: 1.5vw;
+}
+
+.produit>*>span{
+    display: inline-block;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.cicles {
+    display: contents;
+}
+
+.circles>p {
+    vertical-align: middle;
+    display: inline-block;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+
+.circles div {
+    vertical-align: middle;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    border: 1px solid black;
+    border-radius: 50%;
+}
+
+.small {
+    font-size: 75%;
+}
