@@ -1,0 +1,10 @@
+div {
+    background-color: aqua;
+    color: blueviolet;
+
+}
+div:hover{
+    background-color: gray;
+    color: red;
+    font-size: 80px;
+}
