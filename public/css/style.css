@@ -41,7 +41,7 @@ NavBar Page Accueil
 /*
 Image Miliboo
 */
-#Miliboologo{
+.Miliboologo{
     width: 170px;
     height: 50.89px;
 }
@@ -127,22 +127,17 @@ a{
     gap: 20px;
 }
 
-#navigation-pro{
-
-    
-}
-
-#navcategorie{
-    
-}
-
 #div-cat{
+    height: 7vh;
     width: 100%;
     background-color: rgb(212, 212, 212, 0.5);
-    padding: 5px 0px 5px 0px;
+    display: flex;
+    justify-content: center;
 }
 
 #ul-cat{
+    height: 100%;
+    margin: 0;
     padding-left: 0;
     display: flex;
     justify-content: flex-start;
@@ -151,8 +146,119 @@ a{
 }
 
 .licategorie{
+    height: 100%;
+    align-content: center;
     color: rgb(85, 85, 85);
     font-size: small;
+}
+
+.container-title-cat{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.licategorie a{
+    text-decoration: none;
+    color: black;
+    font-size: medium;
+    display: inline-block;
+    height: 100%;
+    align-content: center;
+}
+
+.licategorie:hover #cat-canape{
+    visibility: visible;
+}
+
+.licategorie:hover #cat-chaise{
+    visibility: visible;
+}
+
+.licategorie:hover #cat-bureau{
+    visibility: visible;
+}
+
+.licategorie:hover #cat-table{
+    visibility: visible;
+}
+
+.licategorie:hover #cat-rangement{
+    visibility: visible;
+}
+
+.licategorie:hover #cat-chambre{
+    visibility: visible;
+}
+
+.licategorie:hover #cat-enfant{
+    visibility: visible;
+}
+
+.licategorie:hover #cat-jardin{
+    visibility: visible;
+}
+
+.licategorie:hover #cat-luminaire{
+    visibility: visible;
+}
+
+.licategorie:hover #cat-deco{
+    visibility: visible;
+}
+
+.categorie-menu{
+    --decay: 150px;
+    left: 0;/*var(--decay);*/
+    width: calc(100vw - var(--decay));/*calc(100vw - calc(var(--decay)*2));*/
+    padding-top: 10px;
+    padding-left: var(--decay);
+    height: 50%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden;
+    border-bottom: 1px solid;
+    background-color: white;
+    z-index: 2;
+}
+
+.cat-colonne{
+    height: 100%;
+    width: 100%;
+    flex: 1;
+    background-color: transparent;
+}
+
+.ul-sous-cat{
+    padding-top: 40px;
+}
+
+.ul-sous-cat li{
+    line-height: 30px;
+}
+
+.ul-sous-cat li a{
+    color: gray;
+}
+
+.ul-sous-cat li a u{
+    color: black;
+}
+
+.div-cat-img{
+    flex: 3;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.img-cat{
+    height: 100%;
+    --p: 100px;
+    clip-path: polygon(var(--p) 0,100% 0,calc(100% - var(--p)) 100%,0 100%);
 }
 
 #service{
@@ -179,6 +285,78 @@ a{
 }
 
 .img-bandeau{
-height: 70px;
+    height: 70px;
+}
 
+.lignes{
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(-1* var(--bs-gutter-y));
+    margin-right: calc(-.5* var(--bs-gutter-x));
+    margin-left: calc(-.5* var(--bs-gutter-x));
+    unicode-bidi: isolate;
+}
+
+.iframeTrustpilot{
+    position: relative;
+    height: 150px;
+    border-style: none;
+    display: block;
+    overflow: hidden;
+}
+
+.mt-5{
+    margin-top: 3rem !important;
+}
+
+.footer{
+    margin-left: 3%;
+    margin-right: 3%;
+}
+.colonne-footer{
+    display: block;
+    margin-top: 3rem;
+    
+}
+
+.footer-h5{
+    text-transform: uppercase !important;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    margin-left: 7rem;
+}
+
+.footer-ul{
+    padding-inline-start: 0px;
+}
+
+.footer-li{
+    margin-bottom: 0.5rem !important;
+    margin-left: 7rem;
+}
+
+.footer-li-a{
+    --bs-text-opacity: 1;
+    color: #6c757d !important;
+    font-size: 1rem;
+}
+
+.footer-img{
+    margin-left: 5rem;
+    width: 100%;
+    height: auto;
+    margin-top: 5rem;
+}
+
+.small{
+    font-size: 0.75rem;
+    margin-left: 7rem;
+}
+
+.img-paiement{
+    width: 50%;
+    height: auto;
+    margin-left: 6rem;
 }

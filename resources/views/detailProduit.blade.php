@@ -1,7 +1,4 @@
-                <!-- TODO: Fleches menus a faire -->
-
-
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
     <head>
         <meta charset="utf-8">
@@ -12,21 +9,58 @@
 
         <link rel="stylesheet" type="text/css" href="{{asset('css/produit.css')}}"/>   
 
-    </head>
-    
+    </head> -->
+
+@extends('layouts.app')
+
+@section('title', $produit->nomproduit)
+
+@section('css')
+<link rel="stylesheet" type="text/css" href="{{asset('css/produit.css')}}" />
+@endsection
+
+@section('content')
+
+<!--
+<div class="product-detail">
+    <h1>{{ $produit->nomproduit }}</h1>
+    <p><strong>IdPays:</strong> ${{ $produit->idpays }}</p>
+    <p><strong>Source Notice:</strong> {{ $produit->sourcenotice }}</p>
+    <p><strong>Type Produit:</strong> {{ $produit->idtypeproduit ?? 'Uncategorized' }}</p>
+</div>
+-->
+
     <body>
         <div class="divProduit">
             <div class="columnsProduit">
-                <!-- Colonne images produits + menus accordions -->
                 <div class="colImagesProduit">
-                    <img src="img/imagesProduitTest/creep1.jpg">
-                    <img src="img/imagesProduitTest/creep2.jpg">
-                    <img src="img/imagesProduitTest/creep3.png">
-                    <img src="img/imagesProduitTest/creep4.png">
-                    <img src="img/imagesProduitTest/creep5.png">
-                    <img src="img/imagesProduitTest/creep6.png">
-                    <img src="img/imagesProduitTest/creep7.png">
-                    <img src="img/imagesProduitTest/creep8.png">
+
+                <?php
+
+                $colorationPrincipale = $produit->colorationPrixMin();
+                // dd($colorationPrincipale);
+                //var_dump($colorationPrincipale->getPhotos());
+                // Récupération d'une photo
+                 foreach ( $colorationPrincipale->getPhotos() as $photo) {
+                        if ($photo) {
+                            $source = $photo->sourcephoto;
+                            $description = $photo->descriptionphoto;
+                            } // Si pas de photo, on prend la photo par défaut
+                        else { $source = "PLACEHOLDER.PNG";
+                                $description ="Non"; }
+                    echo "<img src='$source' alt='$description'>";
+                }
+
+                ?>
+                
+                    <!-- <img src="{{asset ('img/imagesProduitTest/creep1.jpg') }}">  -->
+                    <!-- <img src="{{asset ('img/imagesProduitTest/creep2.jpg') }}">  -->
+                    <!-- <img src="{{asset ('img/imagesProduitTest/creep3.png') }}">  -->
+                    <!-- <img src="{{asset ('img/imagesProduitTest/creep4.png') }}">  -->
+                    <!-- <img src="{{asset ('img/imagesProduitTest/creep5.png') }}">  -->
+                    <!-- <img src="{{asset ('img/imagesProduitTest/creep6.png') }}">  -->
+                    <!-- <img src="{{asset ('img/imagesProduitTest/creep7.png') }}">  -->
+                    <!-- <img src="{{asset ('img/imagesProduitTest/creep8.png') }}">  -->
 
                     <details class="descProduitAccordion">
                         <summary class="titreDescAccordion">
@@ -34,7 +68,7 @@
                             <span class="flecheAccordionDesc">^</span> 
                         </summary>
                         <p id="description" class="pProduitDesc"> 
-                            Design et sobriété : voilà qui définit parfaitement ce<strong> canapé made in France</strong> !<br /><br />D'inspiration <strong>scandinave</strong>, le <strong>canapé 3 places CREEP</strong> trouvera sa place dans de nombreux salons grâce à sa ligne épurée et ses courbes intemporelles. Son joli revêtement en polyester gris chiné apporte une touche moderne et chaleureuse à cet ensemble à la sobriété élégante. Solide et au caractère authentique, il sublime l'assise au design réussi. Le canapé CREEP est <strong>fabriqué en France</strong>, on retrouve, dans ses matériaux et sa forme élégante, la qualité et le savoir-faire français.<br /><br />Grâce à ses dimensions, ce canapé scandinave peut accueillir confortablement 3 personnes. Son assise garnie de mousse et ses coussins de dossier en font le compagnon idéal pour les instants détente dans le salon. Pour donner à la pièce un esprit scandinave chaleureux et moderne, on accompagne ce <strong>canapé 3 places</strong> d'une <a href=&quot;https://www.miliboo.com/tables-basses-bois.html&quot;><strong>table basse en bois</strong></a>.<br /><br />Ce <strong>canapé français</strong> est habillé d'un <strong>tissu déperlant</strong> qui limite l'absorption et la pénétration des taches. Les liquides glissent sur la surface du tissu et forment des gouttes que vous pourrez enlever facilement à l'aide d'un chiffon doux. <br /><br /><strong>Canapé gris clair</strong> livré prêt à monter. Coussins d'appoint inclus.<br /><br />Le colis étant volumineux, nous vous conseillons de vérifier que portes et escaliers permettent son passage."
+                            Design et sobriété : voilà qui définit parfaitement ce<strong> canapé made in France</strong> !<br /><br />D'inspiration <strong>scandinave</strong>, le <strong>canapé 3 places CREEP</strong> trouvera sa place dans de nombreux salons grâce à sa ligne épurée et ses courbes intemporelles. Son joli revêtement en polyester gris chiné apporte une touche moderne et chaleureuse à cet ensemble à la sobriété élégante. Solide et au caractère authentique, il sublime l'assise au design réussi. Le canapé CREEP est <strong>fabriqué en France</strong>, on retrouve, dans ses matériaux et sa forme élégante, la qualité et le savoir-faire français.<br /><br />Grâce à ses dimensions, ce canapé scandinave peut accueillir confortablement 3 personnes. Son assise garnie de mousse et ses coussins de dossier en font le compagnon idéal pour les instants détente dans le salon. Pour donner à la pièce un esprit scandinave chaleureux et moderne, on accompagne ce <strong>canapé 3 places</strong> d'une table basse en bois.<br/><br />Ce <strong>canapé français</strong> est habillé d'un <strong>tissu déperlant</strong> qui limite l'absorption et la pénétration des taches. Les liquides glissent sur la surface du tissu et forment des gouttes que vous pourrez enlever facilement à l'aide d'un chiffon doux. <br /><br /><strong>Canapé gris clair</strong> livré prêt à monter. Coussins d'appoint inclus.<br /><br />Le colis étant volumineux, nous vous conseillons de vérifier que portes et escaliers permettent son passage."
                         </p>
                     </details>
 
@@ -49,10 +83,10 @@
                     </details>
             </div>
 
-                            <!-- Colonne de la vignette prix, couleurs etc.. -->
+
             <div class="colPresentationProduit">
                 <div class="cardProduit">
-                    <h1 class="titreProduit">Canapé scandinave 3 places en tissu gris clair chiné et bois clair CREEP</h1>
+                    <h1 class="titreProduit"> {{ $produit->nomproduit }}</h1>
                     <a class="aDescDetail" href="#description" >
                         Description détaillée
                     </a>
@@ -68,15 +102,69 @@
                     <div class="divColoris">
                         <p class="pColoris"> Colori(s) disponible(s)</p>
                         <div class="divListColoris">
-                            <a id="couleur1" href="LIEN COULEUR 1"></a> 
-                            <a id="couleur2" href="LIEN COULEUR 2"></a>
-                            <a id="couleur3" href="LIEN COULEUR 3"></a>   
-                            <a id="couleur4" href="LIEN COULEUR 4"></a>   
-                            <a id="couleur5" href="LIEN COULEUR 5"></a>
+
+                        <?php
+                            foreach ($produit->getCouleurs as $couleur) {
+                                echo "<div class='carreCouleur' style='background-color: #$couleur->rgbcouleur;' title='$couleur->nomcouleur'></div>";
+                            }
+                        ?>
+
                         </div>   
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="divAvis">
+            <h2 class="titreAvis">
+                Avis clients
+            </h2>
+            <div class="headerAvis">
+                <div class="divImageAvis">
+                    <img class="imgHeaderAvis" src="{{ asset('img/imagesProduitTest/creep1.jpg') }}">
+                </div>
+                <div class="noteAvis">
+                    <h4 class="titreNoteAvis">
+                        4/4
+                    </h4>
+                    <p class="pNoteAvis">
+                        ★★★★
+                    </p>
+                    <p class="pNoteNbAvis">
+                        (49 avis)
+                    </p>
+                </div>
+            </div>
+            
+            <div class="divAvisClient">
+                <div class="divCommentaireClient">
+                    <div class="divClient">
+                        <p class="nomClient">
+                            Caroline
+                        </p>
+                        <div class="divNoteClient">
+                            <i class="noteEtoileClient">★</i>
+                            <i class="noteEtoileClient">★</i>
+                            <i class="noteEtoileClient">★</i>
+                            <i class="noteEtoileClient">★</i>
+                        </div>
+                    </div>
+                    <div class="commentaireClient">
+                        <h4 class="titreCommentaire">
+                            Très belles chaises 
+                        </h4>
+                        <div class="contentCommentaire">
+                            Très belles chaises
+                        </div>     
+                    </div>
+                    <div class="timestampAvis">
+                        <span class="timestampAvis">
+                            Jeudi 23 Mai 2024
+                        </span>
+                    </div>
+                </div>                                  
+            </div>
+        </div>
     </body>
-</html>
+
+@endsection

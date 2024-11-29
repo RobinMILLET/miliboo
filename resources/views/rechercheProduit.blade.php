@@ -1,15 +1,23 @@
-<html lang="{{ app()->getLocale() }}">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Recherche</title>
-        <link rel="stylesheet" type="text/css" href="{{asset('css/recherche.css')}}"/>   
-    </head>
-    <body>
+@extends('layouts.app')
+@section('title', 'Recherche')
+@section('css')
+<link rel="stylesheet" type="text/css" href="{{asset('css/recherche.css')}}"/>  
+@endsection
+@section('content')
+        <script type="text/javascript">
+            var $_GET = <?php echo json_encode($_GET); ?>;
+        </script>
+        <script src="{{asset('js/recherche.js')}}" defer></script>
         <section id="top">
-
+            <?php
+            $nomTypeProduit = $nomTypeProduit ?? null;
+            if ($nomTypeProduit) {
+                echo "<h1>Produits dans la catégorie : $nomTypeProduit </h1>";
+                // Filtres uniquement applicables pour types de produit (TODO!)
+            }
+            ?>
         </section>
+        <!--
         <section id="filtres">
             <ul class="dropdown">
                 <li>
@@ -40,111 +48,26 @@
                 </li>
             </ul>
         </section>
-
+        -->
         <section id="mid">
-            <p class="left">123 produits</p>
+            <p class="left">{{ count($produits) }} produits</p>
             <select class="right">
-                <option>Trier par:</option>
-                <option>Prix croissant</option>
-                <option>Prix décroissant</option>
+                <option onclick="setGet('tri','nom',true)">Trier par:</option>
+                <option onclick="setGet('tri','min',true)">Prix croissant</option>
+                <option onclick="setGet('tri','max',true)">Prix décroissant</option>
             </select>
         </section>
 
         <section id="recherche">
             <grid id="grid">
+                <?php 
 
-                <div class="produit">
-                    <img src="img/imagesProduitTest/creep1.jpg">
-                    <h3>Canapé de l'infini</h3>
-                    <p><span>Expedié sous 24h</span><span>★★★★<span class="small">(32)</span></span></p>
-                    <p><span>299.99 €</span><s><span>399.99 €</span></s><span class="reduc">-25%</span></p>
-                    <div class="circles">
-                        <div style="background-color:red"></div>
-                        <div style="background-color:green"></div>
-                        <div style="background-color:blue"></div>
-                        <p>+ 4</p>
-                    </div>
-                </div>
-
-                <div class="produit">
-                    <img src="img/imagesProduitTest/creep1.jpg">
-                    <h3>Canapé de l'infini</h3>
-                    <p><span>Expedié sous 24h</span><span>★★★★<span class="small">(32)</span></span></p>
-                    <p><span>299.99 €</span><s><span>399.99 €</span></s><span class="reduc">-25%</span></p>
-                    <div class="circles">
-                        <div style="background-color:red"></div>
-                        <div style="background-color:green"></div>
-                        <div style="background-color:blue"></div>
-                        <p>+ 4</p>
-                    </div>
-                </div>
-
-                <div class="produit">
-                    <img src="img/imagesProduitTest/creep1.jpg">
-                    <h3>Canapé de l'infini</h3>
-                    <p><span>Expedié sous 24h</span><span>★★★★<span class="small">(32)</span></span></p>
-                    <p><span>299.99 €</span><s><span>399.99 €</span></s><span class="reduc">-25%</span></p>
-                    <div class="circles">
-                        <div style="background-color:red"></div>
-                        <div style="background-color:green"></div>
-                        <div style="background-color:blue"></div>
-                        <p>+ 4</p>
-                    </div>
-                </div>
-
-                <div class="produit">
-                    <img src="img/imagesProduitTest/creep1.jpg">
-                    <h3>Canapé de l'infini</h3>
-                    <p><span>Expedié sous 24h</span><span>★★★★<span class="small">(32)</span></span></p>
-                    <p><span>299.99 €</span><s><span>399.99 €</span></s><span class="reduc">-25%</span></p>
-                    <div class="circles">
-                        <div style="background-color:red"></div>
-                        <div style="background-color:green"></div>
-                        <div style="background-color:blue"></div>
-                        <p>+ 4</p>
-                    </div>
-                </div>
-
-                <div class="produit">
-                    <img src="img/imagesProduitTest/creep1.jpg">
-                    <h3>Canapé de l'infini</h3>
-                    <p><span>Expedié sous 24h</span><span>★★★★<span class="small">(32)</span></span></p>
-                    <p><span>299.99 €</span><s><span>399.99 €</span></s><span class="reduc">-25%</span></p>
-                    <div class="circles">
-                        <div style="background-color:red"></div>
-                        <div style="background-color:green"></div>
-                        <div style="background-color:blue"></div>
-                        <p>+ 4</p>
-                    </div>
-                </div>
-
-                <div class="produit">
-                    <img src="img/imagesProduitTest/creep1.jpg">
-                    <h3>Canapé de l'infini</h3>
-                    <p><span>Expedié sous 24h</span><span>★★★★<span class="small">(32)</span></span></p>
-                    <p><span>299.99 €</span><s><span>399.99 €</span></s><span class="reduc">-25%</span></p>
-                    <div class="circles">
-                        <div style="background-color:red"></div>
-                        <div style="background-color:green"></div>
-                        <div style="background-color:blue"></div>
-                        <p>+ 4</p>
-                    </div>
-                </div>
-
-                <div class="produit">
-                    <img src="img/imagesProduitTest/creep1.jpg">
-                    <h3>Canapé de l'infini</h3>
-                    <p><span>Expedié sous 24h</span><span>★★★★<span class="small"> (32)</span></span></p>
-                    <p><span>299.99 €</span><s><span>399.99 €</span></s><span class="reduc">-25%</span></p>
-                    <div class="circles">
-                        <div style="background-color:red"></div>
-                        <div style="background-color:green"></div>
-                        <div style="background-color:blue"></div>
-                        <p>+ 4</p>
-                    </div>
-                </div>
-
+                    // si tri est null ou pas max, trier par prixMin
+                    $triMin = (($_GET["tri"] ?? "nom") != "max");
+                    foreach ($produits as $produit) {
+                        echo $produit->afficheRecherche($triMin);
+                    }
+                ?>
             </grid>
         </section>
-    </body>
-</html>
+@endsection

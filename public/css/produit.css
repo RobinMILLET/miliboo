@@ -1,5 +1,10 @@
 html {
     scroll-behavior: smooth;
+    font-family: Montserrat
+}
+
+body {
+    display: block;
 }
 
 img {
@@ -112,44 +117,7 @@ img {
     flex-wrap: wrap;
 }
 
-#couleur1 {
-    background-color: white;
-    border: 2px solid black;
-    width: 30px;
-    height: 30px;
-    margin-bottom: 0.5rem;
-    margin-right: 0.25rem;
-}
-
-#couleur2 {
-    background-color: black;
-    border: 2px solid black;
-    width: 30px;
-    height: 30px;
-    margin-bottom: 0.5rem;
-    margin-right: 0.25rem;
-}
-
-#couleur3 {
-    background-color: green;
-    border: 2px solid black;
-    width: 30px;
-    height: 30px;
-    margin-bottom: 0.5rem;
-    margin-right: 0.25rem;
-}
-
-#couleur4 {
-    background-color: yellow;
-    border: 2px solid black;
-    width: 30px;
-    height: 30px;
-    margin-bottom: 0.5rem;
-    margin-right: 0.25rem;
-}
-
-#couleur5 {
-    background-color: blue;
+.carreCouleur {
     border: 2px solid black;
     width: 30px;
     height: 30px;
@@ -186,13 +154,13 @@ img {
 }
 
 .titreEntretienAccordion::-webkit-details-marker {
-    display: none; /* Hides the default arrow */
+    display: none; 
   }
 
 .flecheAccordionEntretien {
     font-size: 16px;
     transform: rotate(90deg);
-    transition: transform 0.3s ease; /* Smooth rotation effect */
+    transition: transform 0.3s ease;
   }
 
 .descProduitEntretien[open] {
@@ -201,4 +169,79 @@ img {
 
 .descProduitEntretien[open] .flecheAccordionEntretien{
     transform: rotate(180deg);
+}
+
+.divAvis {
+    justify-content: center;
+    width: 83%;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    flex: 0 0 auto;
+}
+
+.titreAvis {
+    font-weight: 200;
+    justify-content: flex-start;
+}
+
+.headerAvis {
+    padding: 10px;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+    display: flex;
+}
+
+.divImageAvis {
+    flex: 0 0 auto;
+    width: 50%;
+    display: flex;
+    justify-content: center;
+}
+
+.imgHeaderAvis {
+    max-width: 200px;
+}
+
+.noteAvis {
+    text-align: center;
+    justify-content: center;
+    border-left: 1px solid gainsboro;
+    flex: 1;
+    width: 50%;
+}
+
+.divAvisClient {
+    margin-top: 3rem;
+}
+
+.divCommentaireClient {
+    display: flex;
+    align-items: center;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    justify-content: space-between;
+    border-bottom: 1px solid black ;
+}
+
+.divClient {
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 25%;
+}
+
+.commentaireClient {
+    flex-grow: 1;
+    text-align: left;
+    width: 50%;
+}
+
+.timestampAvis {
+    text-align: right;
+    font-size: 0.9rem;
 }

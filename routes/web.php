@@ -1,6 +1,11 @@
 <?php
 
+use App\Http\Controllers\BarreRechercheTestController;
+use App\Http\Controllers\DetailProduitController;
+use App\Http\Controllers\RechercheCategorieController;
+use App\Http\Controllers\RechercheController;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -19,12 +24,15 @@ Route::get('/', function () {
 
 Route::get('/miliboo', function(){
     return view('miliboo');
+})->name('homepage');
+
+Route::get('/recherche',
+    [RechercheController::class, "index"])->name('produit.recherche');
+
+Route::get('/produit/idproduit{id}', [DetailProduitController::class, 'show']) ->name('produit.show');
+
+Route::get('/cookie', function() {
+    return view('cookie');
 });
 
-Route::get('/recherche', function(){
-    return view('rechercheProduit');
-});
-
-Route::get('/produit', function() {
-    return view('detailProduit');
-});
+Route::get('/categorie/{idTypeProduit}',[RechercheController::class, 'showByCategory'])->name('produits.parCategorie');
