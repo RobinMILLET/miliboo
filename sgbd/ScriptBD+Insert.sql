@@ -3470,3 +3470,22 @@ insert into valeurAttribut(idAttribut, idProduit, Valeur) Values
 (3,4,'Bois noyer'),
 (4,4,'139 cm'),
 (5,8,'150-200cm');
+
+set search_path = miliboo;
+UPDATE Coloration c
+SET descriptioncoloration = p.nomproduit
+FROM Produit p
+WHERE c.idproduit = p.idproduit;
+
+INSERT INTO detailregroupement (idproduit, idregroupement, idcouleur)
+SELECT idproduit, 3, 1
+FROM produit
+WHERE idpays = 1;
+
+INSERT INTO DetailRegroupement
+SELECT 
+    FLOOR(RANDOM() * 50 + 1),  -- Génère un nombre aléatoire entre 1 et 50 pour col1
+    FLOOR(RANDOM() * 5 + 1),   -- Génère un nombre aléatoire entre 1 et 5 pour col2
+    1                          -- Valeur fixe 1 pour col3
+FROM generate_series(1, 10);   -- Crée 10 lignes
+

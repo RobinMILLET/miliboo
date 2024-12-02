@@ -15,4 +15,8 @@ class TypeProduit extends Model
     public function getProduit(){
         return $this->hasMany(Produit::class, 'idtypeproduit', 'idtypeproduit');
     }
+
+    public function getAttributProduits() {
+        return $this->hasMany(AttributProduit::class, 'idtypeproduit', 'idtypeproduit')->get();
+    }
 }

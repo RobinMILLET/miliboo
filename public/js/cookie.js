@@ -15,6 +15,7 @@ const backGround = document.getElementById("background");
 const buttonAccepteTout = document.getElementById("button-accepte-all");
 const slidersCookie = document.querySelectorAll("input")
 const buttonAccepte = document.getElementById("button-accepte");
+const buttonRefuse = document.getElementById("button-refuse");
 const buttonAfficheCookie = document.getElementById("but-affiche-cookie");
 const scale = 1.1;
 
@@ -64,6 +65,12 @@ function CloseCookies(){
     document.getElementById("background").style.display = "none";
     document.getElementById("cookie-container").style.display = "none";
 }
+
+buttonRefuse.addEventListener("click", () => {
+    localStorage.setItem("cookieConsent", "refused");
+
+    CloseCookies();
+})
 
 buttonAccepte.addEventListener("click", () => {
     slidersCookie.forEach(slider => {

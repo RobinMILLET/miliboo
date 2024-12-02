@@ -5,7 +5,7 @@ namespace App\Models;
 use DateInterval;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Mockery\Generator\StringManipulation\Pass\Pass;
 
 class Produit extends Model
 {
@@ -42,10 +42,10 @@ class Produit extends Model
         return $this->hasManyThrough(
             Couleur::class, 
             Coloration::class, 
-            'idproduit', // Foreign key on Coloration table
-            'idcouleur', // Foreign key on Couleur table
-            'idproduit', // Local key on Produit table
-            'idcouleur'  // Local key on Coloration table
+            'idproduit', 
+            'idcouleur', 
+            'idproduit', 
+            'idcouleur'  
         );
     }
 
@@ -65,6 +65,11 @@ class Produit extends Model
     public function getTypeProduit() {
         return $this->belongsTo(TypeProduit::class, 'idtypeproduit', 'idtypeproduit')->get();
     }
+
+    public function getValeurAttributs() {
+        return $this->hasMany(ValeurAttribut::class, 'idproduit', 'idproduit')->get();
+    }
+
     
     public function colorationPrixMin($seulementVisibles = true) {
         $minPrice = PHP_INT_MAX;
@@ -105,8 +110,26 @@ class Produit extends Model
     }
                 
 
-    public function afficheRecherche($affichePrixMin = true)
+    public function afficheRecherche($affichePrixMin = true, $valeursActives = null)
     {
+        // Filtrage en fonction des valeurs actives
+        if ($valeursActives) { // Si pas de filtre, check ok automatique
+            $valeursProduit = $this->getValeurAttributs();
+            $valide = false;
+            foreach ($valeursProduit as $valProd) {
+                // On passe le check si la valeur ne correspond pas aux ValeursActives
+                if (!in_array($valProd->idattribut, array_keys($valeursActives))) continue;
+                foreach ($valeursActives[$valProd->idattribut] as $valeur) {
+                    if ($valProd->valeur == $valeur) {
+                        $valide = true;
+                        break;
+                    }
+                    if ($valide) break;
+                }
+            }
+            if (!$valide) return "";
+        }
+
         // Itération à travers les colorations pour trouver la moins cher
         $colorationPrincipale = $affichePrixMin ?
             $this->colorationPrixMin() :
@@ -116,8 +139,12 @@ class Produit extends Model
         $photos = $colorationPrincipale->getPhotos();
         if ($photos) {
             $source = $photos[0]->sourcephoto;
+            $desc = $photos[0]->descriptionphoto;
         } // Si pas de photo, on prend la photo par défaut
-        else { $source = "PLACEHOLDER.PNG"; }
+        else {
+            $source = "PLACEHOLDER.png";
+            $desc = "Image par défaut";
+        }
 
         // Nombre et moyenne des avis
         $avis = $this->getAvis();
@@ -140,7 +167,7 @@ class Produit extends Model
         <div class='produit'>
             <img src='SOURCEPHOTO.EXT'>
             <h3>NOMPRODUIT</h3>
-            <p><span>TXT_EXPEDITION</span><span>NB_ETOILES<span class='small'>(NBAVIS)</span></span></p>
+            <p><span>TXT_EXPEDITION</span><span>NB_ETOILES<span class='smalltext'>(NBAVIS)</span></span></p>
             <p><span>PRIXACTUEL €</span><s><span>PRIXINIT €</span></s><span class='reduc'>REDUC</span></p>
             <div class='circles'>
                 <div style='background-color:#HEX1'></div>
@@ -152,7 +179,7 @@ class Produit extends Model
         */
 
         // Image et nom
-        $img = "<img src='$source'>";
+        $img = "<img src='/img/$source' alt='$desc'>";
         $nomProduit = "<h3>".$this->nomproduit."</h3>";
 
         // Ligne 1 : expedition, note moyenne et nbAvis
@@ -191,10 +218,12 @@ class Produit extends Model
     }
 
     public static function formatMotClef($motclef) {
+        // Retire les accents, met en minuscule, et retire la ponctuation
         $motclef = strtr($motclef, 'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ', 'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
         $motclef = strtolower($motclef);
         $allow = "abcdefghijklmnopqrstuvwxyz0123456789 ";
         $motclef = preg_replace("/[^$allow]/", "", $motclef);
+        // Sépare le mot clef avec espaces en liste de mots indiviuels
         if (strpos($motclef, " ")) {
             return explode(" ", $motclef);
         }
@@ -207,6 +236,7 @@ class Produit extends Model
     }
 
     public static function compare($a, $b) {
+        // Si un paramètre est un array, retourner la somme de leur indice de comparaison
         if (gettype($a) == "array") {
             $sum = 0;
             foreach ($a as $element) {
@@ -221,21 +251,45 @@ class Produit extends Model
             }
             return $sum;
         }
-        else {
+        else { // LES COEFFICIENTS SONT MODIFIABLES EN TÊTE DE CLASSE
+            // On ignore certains caractères et prépositions
             if (in_array($a, self::$IGNOREMOTCLEF) ||
                 in_array($b, self::$IGNOREMOTCLEF) ||
                 strlen($a) < 2 || strlen($b) < 2) return 0;
-            if ($a == $b) {
-                return self::$COEFMOTCLEF["isequal"];
-            }
-            if (str_starts_with($a, $b)) {
-                return self::$COEFMOTCLEF["startswith"];
-            }
-            if (str_contains($a, $b)) {
-                return self::$COEFMOTCLEF["contains"];
-            }
+            // On fait correspondre les checks d'appartenance avec leur coefficient
+            if ($a == $b) return self::$COEFMOTCLEF["isequal"];
+            if (str_starts_with($a, $b)) return self::$COEFMOTCLEF["startswith"];
+            if (str_contains($a, $b)) return self::$COEFMOTCLEF["contains"];
+            // Valeur par défaut (personalisable)
             return self::$COEFMOTCLEF["notfound"];
         }
         
     }
+
+    //TEST AFFICHAGE NOTE DANS LE DETAIL PRODUIT VICTOR // CODE DE ROBIN
+    // Fonctionne, peut etre utilise pour refactor le code de recherche car doublon
+    public function affficheNote() {
+        $avis = $this->getAvis();
+        $nbAvis = $avis->count();
+        
+        $sumNote = 0;
+        foreach ($avis as $avisProduit) {
+            $sumNote += (int)$avisProduit->noteavis;
+        }
+        $avgNote = $nbAvis > 0 ? $sumNote / (float)$nbAvis : null;
+        $stars = ["☆☆☆☆", "★☆☆☆", "★★☆☆", "★★★☆", "★★★★"];
+        if ($nbAvis) {
+            $avisProduit = "<span>".$stars[(int)$avgNote]."<span class='smalltext'></span></span>";
+        }
+        else { $avisProduit = "<span>Aucun avis</span>"; }
+
+
+        return [
+            'nbAvis' => $nbAvis,
+            'noteMoy' => $avgNote,
+            'noteEtoiles' => $avisProduit
+        ];
+    }
+
 }
+

@@ -13,7 +13,7 @@
 </head>
 <body>
 
-    <div id="cookie">
+    <!-- <div id="cookie">
         <div id="background">
             <div id="cookie-container">
                 <div id="container-content">
@@ -173,7 +173,7 @@
                 <div id="container-button">
                     <button class="button" id="personnaliser" onclick="ShowDetail()">Personnaliser</button>
                     <div id="container-choice-button">
-                        <button class="button" onclick="CloseCookies()">Refuser</button>
+                        <button class="button" id="button-refuse" onclick="CloseCookies()">Refuser</button>
                         <button class="button" id="button-accepte">Accepter</button>
                     </div>
                 </div>
@@ -181,8 +181,8 @@
         </div>
         <button id="but-affiche-cookie"><img id="img-cookie" src="{{asset('img/cookie.svg')}}" alt=""></button>
         <script src="{{ asset('js/cookie.js') }}"></script>
-    </div>
-
+    </div> -->
+    
     <div class="info-bar-haut">    
             -10% supp avec le code BLACK même sur les promos &amp; Livraison gratuite! <sup>(1)</sup>    
     </div>
@@ -207,10 +207,9 @@
     </nav>
     <div class="marge" id="navigation">
         <div id="navigation-regroupement">
-            <a href="" class="navigation-regroupement">Nos Produits</a>
-            <a href="" class="navigation-regroupement">Nouveautés</a>
-            <a href="" class="navigation-regroupement">Promotion</a>
-            <a href="" class="navigation-regroupement">Made in FRANCE</a>
+            <a href="{{ route('produits.parRegroupement', 1)}}" class="navigation-regroupement">Nouveautés</a>
+            <a href="{{ route('produits.parRegroupement', 2)}}" class="navigation-regroupement">Promotion</a>
+            <a href="{{ route('produits.parRegroupement', 3)}}" class="navigation-regroupement">Made in FRANCE</a>
         </div>
         <div>
             <a href="" class="navigation-pro">Espace Pro</a>
@@ -220,7 +219,7 @@
         <nav class="marge" id="navcategorie">
             <ul id="ul-cat">
                 <li class="licategorie" id="a-canape">
-                    <a href="{{ route('produits.parCategorie', 1)}}">Canapé & Fauteuil</a>
+                    <a href="{{ route('produits.parCategorieMere', 1)}}">Canapé & Fauteuil</a>
                     <div class="categorie-menu" id="cat-canape">
                         <div class="cat-colonne">
                             <ul class="ul-sous-cat">
@@ -240,7 +239,7 @@
                     </div>
                 </li>
                 <li class="licategorie">
-                    <a id="a-chaise" href="{{route('produits.parCategorie', 15)}}">Chaise & tabouret</a>
+                    <a id="a-chaise" href="{{route('produits.parCategorieMere', 2)}}">Chaise & tabouret</a>
                     <div class="categorie-menu" id="cat-chaise">
                         <div class="cat-colonne">
                             <ul class="ul-sous-cat">
@@ -261,7 +260,7 @@
                     </div>
                 </li>
                 <li class="licategorie">
-                    <a id="a-bureau" href="{{route('produits.parCategorie', 18)}}">Bureau</a>
+                    <a id="a-bureau" href="{{route('produits.parCategorieMere', 3)}}">Bureau</a>
                     <div class="categorie-menu" id="cat-bureau">
                         <div class="cat-colonne">
                             <ul class="ul-sous-cat">
@@ -279,7 +278,7 @@
                     </div>
                 </li>
                 <li class="licategorie">
-                <a id="a-table" href="{{route('produits.parCategorie', 20)}}">Table</a>
+                <a id="a-table" href="{{route('produits.parCategorieMere', 4)}}">Table</a>
                     <div class="categorie-menu" id="cat-table">
                         <div class="cat-colonne">
                             <ul class="ul-sous-cat">
@@ -292,7 +291,7 @@
                     </div>
                 </li>
                 <li class="licategorie">
-                    <a id="a-rangement" href="{{route('produits.parCategorie', 22)}}">Rangement</a>
+                    <a id="a-rangement" href="{{route('produits.parCategorieMere', 5)}}">Rangement</a>
                     <div class="categorie-menu" id="cat-rangement">
                         <div class="cat-colonne">
                             <ul class="ul-sous-cat">
@@ -310,7 +309,7 @@
                     </div>
                 </li>
                 <li class="licategorie">
-                    <a id="a-chambre" href="{{route('produits.parCategorie', 24)}}">Chambre</a>
+                    <a id="a-chambre" href="{{route('produits.parCategorieMere', 6)}}">Chambre</a>
                     <div class="categorie-menu" id="cat-chambre">
                         <div class="cat-colonne">
                         <ul class="ul-sous-cat">
@@ -325,7 +324,7 @@
                     </div>
                 </li>
                 <li class="licategorie">
-                    <a id="a-enfant" href="{{route('produits.parCategorie', 26)}}">Enfant</a>
+                    <a id="a-enfant" href="{{route('produits.parCategorieMere', 7)}}">Enfant</a>
                     <div class="categorie-menu" id="cat-enfant">
                         <div class="cat-colonne">
                         <ul class="ul-sous-cat">
@@ -338,7 +337,7 @@
                     </div>
                 </li>
                 <li class="licategorie">
-                    <a id="a-jardin" href="{{route('produits.parCategorie', 28)}}">Jardin</a>
+                    <a id="a-jardin" href="{{route('produits.parCategorieMere', 8)}}">Jardin</a>
                     <div class="categorie-menu" id="cat-jardin">
                         <div class="cat-colonne">
                             <ul class="ul-sous-cat">
@@ -353,7 +352,7 @@
                     </div>
                 </li>
                 <li class="licategorie">
-                    <a id="a-luminaire" href="{{route('produits.parCategorie', 30)}}">Luminaire</a>
+                    <a id="a-luminaire" href="{{route('produits.parCategorieMere', 9)}}">Luminaire</a>
                     <div class="categorie-menu" id="cat-luminaire">
                         <div class="cat-colonne">
                             <ul class="ul-sous-cat">
@@ -367,7 +366,7 @@
                     </div>
                 </li>
                 <li class="licategorie">
-                    <a id="a-deco" href="{{route('produits.parCategorie', 32)}}">Déco</a>
+                    <a id="a-deco" href="{{route('produits.parCategorieMere', 10)}}">Déco</a>
                     <div class="categorie-menu" id="cat-deco">
                         <div class="cat-colonne">
                         <ul class="ul-sous-cat">
@@ -388,7 +387,7 @@
             </ul>
         </nav>
     </div>
-        
+        <br><br><br>
     <div class="container">
         @yield('content')
     </div>
@@ -431,11 +430,11 @@
         </div>
     </div>
     <footer>
-        <div class="container"> 
-            <div class="lignes">   <!-- ligne 1 -->
-                <div> <!-- colonne 1 -->
-                    <h5>à propos de Miliboo</h5>
-                    <ul>
+        <div id="container-footer"> 
+            <div class="lignes">
+                <div id="c1"> 
+                    <h3 class="title-footer">à propos de Miliboo</h3>
+                    <ul class="ul-footer">
                         <li><a href="">Qui sommes nous et nos engagements</a></li>
                         <li><a href="">Mentions légales</a></li>
                         <li><a href="">Moyens de paiement</a></li>
@@ -451,9 +450,9 @@
                         <li><a href="">Espace investisseurs</a></li>
                     </ul>
                 </div>
-                <div> <!-- colonne 2 -->
-                    <h5>Aide & Contact</h5>
-                    <ul>
+                <div id="c2">
+                    <h3 class="title-footer">Aide & Contact</h3>
+                    <ul class="ul-footer">
                         <li><a href="">Besoin d'aide</a></li>
                         <li><a href="">Espace presse</a></li>
                         <li><a href="">Avis Clients</a></li>
@@ -461,18 +460,18 @@
                         <li><a href="">Promotions meubles</a></li>
                         <li><a href="">Recherche féquentes</a></li>
                     </ul>
-                    <h5>Miliboo sur le Net</h5>
-                    <ul>
+                    <h3 class="title-footer">Miliboo sur le Net</h3>
+                    <ul class="ul-footer">
                         <li><a href="">Miliboo-blog</a></li>
                         <li><a href="">Nos Partenaires</a></li>
                     </ul>
                 </div>
-                <div> <!-- colonne 3 -->
+                <div id="c3"> 
                     <img src="{{asset('img/logo_Miliboo_fr.svg')}}" alt="salut" class="Miliboologo">
                 </div>
             </div>  
-            <div class="lignes">   <!-- ligne 2 -->
-                <h5>Moyens de paiement</h5>
+            <div class="lignes"> 
+                <h3>Moyens de paiement</h3>
             </div>
             <div></div>
         </div>

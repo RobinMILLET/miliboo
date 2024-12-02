@@ -4,7 +4,7 @@ button{
 }
 
 #background{
-    position: absolute;
+    position: fixed;
     z-index: 9999;
     height: 100vh;
     width: 100vw;

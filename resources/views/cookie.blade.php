@@ -166,7 +166,7 @@
             <div id="container-button">
                 <button class="button" id="personnaliser" onclick="ShowDetail()">Personnaliser</button>
                 <div id="container-choice-button">
-                    <button class="button" onclick="CloseCookies()">Refuser</button>
+                    <button class="button" id="button-refuse" onclick="CloseCookies()">Refuser</button>
                     <button class="button" id="button-accepte">Accepter</button>
                 </div>
             </div>

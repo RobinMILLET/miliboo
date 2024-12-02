@@ -5,67 +5,69 @@
 @endsection
 @section('content')
         <script type="text/javascript">
+            // Récupère le GET et le transfère en variable globale dans l'environnement JS
             var $_GET = <?php echo json_encode($_GET); ?>;
         </script>
         <script src="{{asset('js/recherche.js')}}" defer></script>
         <section id="top">
             <?php
-            $nomTypeProduit = $nomTypeProduit ?? null;
-            if ($nomTypeProduit) {
-                echo "<h1>Produits dans la catégorie : $nomTypeProduit </h1>";
-                // Filtres uniquement applicables pour types de produit (TODO!)
+            $typeProduit = $typeProduit ?? null;
+            $valeursActives = [];
+            $valeursPossibles = [];
+            if($typeProduit) {
+                $attributs = $typeProduit->getAttributProduits();
+                if (array_key_exists("filtres", $_GET)) {
+                    $filtres = explode(" ", $_GET["filtres"]);
+                }
+                else $filtres = [];
+            }
+
+            if ($typeProduit && $attributs->count()) {
+                $idCount = 0; // On attribue un 'id' temporaire au filtre pour le reconnaitre depuis le GET
+                echo "<section id='filtres'><ul class='ul-filtres'>";
+                foreach ($attributs as $attribut) {
+                    echo "<li class='li-nom-filtre'><h3>".$attribut->nomattribut."</h3><div class='div-select-filtre'>";
+                    foreach ($attribut->getValeurAttributs() as $valeur) {
+                        // Si la valeur a déjà été utilisée, on ne créer pas de doublons
+                        if (in_array($valeur->idattribut, array_keys($valeursPossibles))) {
+                            if (in_array($valeur->valeur, $valeursPossibles[$valeur->idattribut])) continue;
+                        }
+                        $valeursPossibles[$valeur->idattribut][] = $valeur->valeur;
+                        // Si checké, insertion dans les valeurs à vérifier
+                        if (in_array($idCount, $filtres)) {
+                            if (!isset($valeursActives[$valeur->idattribut])) {
+                                $valeursActives[$valeur->idattribut] = [];
+                            }
+                            $valeursActives[$valeur->idattribut][] = $valeur->valeur;
+                        }
+                        // Si l'idTemp de valeur est dans filtres, la case est pré-cochée
+                        $checked = in_array($idCount, $filtres) ? " checked": "";
+                        echo "<div class='div-container'><input class='checkbox-filtre' type='checkbox' id='filtre$idCount' onchange='filtre(this,$idCount)' autocomplete='off'$checked>";
+                        echo "<label for='filtre$idCount' class='nom-filtre'>".$valeur->valeur."</label></div>";
+                        $idCount++;
+                    }
+                    echo "</div></li>";
+                }
+                echo "<input id='button-valide' type='button' value='Valider' onclick='apply()'></ul></section>";
             }
             ?>
-        </section>
-        <!--
-        <section id="filtres">
-            <ul class="dropdown">
-                <li>
-                    <h3>Filtre 1</h3>
-                    <ul  class="dropdownitem">
-                        <li>
-                            <input type="checkbox" name="opt11"/>
-                            <label for="opt11">Option 1</label>
-                        </li>
-                        <li>
-                            <input type="checkbox" name="opt12"/>
-                            <label for="opt12">Option 2</label>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <h3>Filtre 2</h3>
-                    <ul class="dropdownitem">
-                        <li>
-                            <input type="checkbox" name="opt21"/>
-                            <label for="opt21">Option 3</label>
-                        </li>
-                        <li>
-                            <input type="checkbox" name="opt22"/>
-                            <label for="opt22">Option 4</label>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </section>
-        -->
         <section id="mid">
-            <p class="left">{{ count($produits) }} produits</p>
-            <select class="right">
-                <option onclick="setGet('tri','nom',true)">Trier par:</option>
-                <option onclick="setGet('tri','min',true)">Prix croissant</option>
-                <option onclick="setGet('tri','max',true)">Prix décroissant</option>
+            <p class="left"><b id="count">{{ count($produits) }}</b> produits</p>
+            <select onchange="setGet('tri',this.value,true)" class="right">
+                <option value="">Trier par:</option>
+                <option value="nom">Alphabétique</option>
+                <option value="min">Prix croissant</option>
+                <option value="max">Prix décroissant</option>
             </select>
         </section>
 
         <section id="recherche">
             <grid id="grid">
                 <?php 
-
-                    // si tri est null ou pas max, trier par prixMin
+                    // Si tri est null ou pas max, trier par prixMin
                     $triMin = (($_GET["tri"] ?? "nom") != "max");
                     foreach ($produits as $produit) {
-                        echo $produit->afficheRecherche($triMin);
+                        echo $produit->afficheRecherche($triMin, $valeursActives);
                     }
                 ?>
             </grid>

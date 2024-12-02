@@ -16,4 +16,11 @@ class CategorieProduit extends Model
     public function typeProduit(){
         return $this->belongsTo(TypeProduit::class, 'idcategorie');
     }
+
+    public static function findCategoryFilles($idCategorieMere) {
+        return self::where('cat_idcategorie', $idCategorieMere)->get();
+    }
+    public function getTypeProduit() {
+        return $this->hasMany(TypeProduit::class, 'idcategorie');
+    }
 }
