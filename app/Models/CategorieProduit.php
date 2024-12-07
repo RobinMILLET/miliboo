@@ -12,15 +12,21 @@ class CategorieProduit extends Model
     protected $primaryKey = 'idcategorie';
     public $timestamps = false;
 
-
-    public function typeProduit(){
-        return $this->belongsTo(TypeProduit::class, 'idcategorie');
+    /**
+     * Renvoie les catégories appartenant à la catégorie spécifiée
+     * @param int|CategorieProduit $categorieMere
+     * @return Collection<CategorieProduit>
+    **/
+    public static function findCategoryFilles($categorieMere) {
+        if (!gettype($categorieMere)=="int") $categorieMere = $categorieMere->idcategorie;
+        return self::where('cat_idcategorie', $categorieMere)->get();
     }
 
-    public static function findCategoryFilles($idCategorieMere) {
-        return self::where('cat_idcategorie', $idCategorieMere)->get();
-    }
+    /**
+     * Renvoie le type de produit associé à cette catégorie
+     * @return TypeProduit
+    **/
     public function getTypeProduit() {
-        return $this->hasMany(TypeProduit::class, 'idcategorie');
+        return $this->belongsTo(TypeProduit::class, 'idcategorie')->get()->firstOrFail();
     }
 }

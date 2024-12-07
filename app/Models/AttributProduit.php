@@ -7,11 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class AttributProduit extends Model
 {
+    use HasFactory;
     protected $table = "attributproduit";
     protected $primaryKey = "idattribut";
     public $timestamps = false;
 
-    public function getValeurAttributs() {
+    /** 
+     * Renvoie les ValeursAttributs associées à l'attribut
+     * @return Collection<ValeurAttribut>
+    **/
+    public function getValeurAttribut() {
         return $this->hasMany(ValeurAttribut::class, 'idattribut', 'idattribut')->get();
     }
 }

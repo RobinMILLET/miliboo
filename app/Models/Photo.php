@@ -12,7 +12,11 @@ class Photo extends Model
     protected $primaryKey = "idphoto";
     public $timestamps = false;
 
-    public function getPhotoProduitColorations() {
+    /**
+     * Renvoie les PhotoProduitColoration qui réfèrent cette photo
+     * @return Collection<PhotoProduitColoration>
+    **/
+    public function getPhotoProduitColoration() {
         return $this->hasMany(PhotoProduitColoration::class, 'idphoto', 'idphoto')->get();
     }
 }

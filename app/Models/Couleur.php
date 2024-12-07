@@ -11,9 +11,4 @@ class Couleur extends Model
     protected $table = "couleur";
     protected $primaryKey = "idcouleur";
     public $timestamps = false;
-
-    protected $fillable = [
-        'nomcouleur',
-        'rgbcouleur',
-    ];
 }

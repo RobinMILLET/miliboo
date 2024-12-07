@@ -1,0 +1,105 @@
+#title-compte{
+    font-size: 32px;
+}
+
+#account{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;    
+}
+
+.div-compte{
+    flex: 1;
+    height: calc(100% - 20px);
+    margin: 10px;
+}
+
+#create{
+
+}
+
+.span-info{
+    font-size: 14px;
+}
+
+.input-compte{
+    width: 90%;
+    padding: 20px;
+    margin-bottom: 15px;
+
+    border: 1.5px solid rgb(179, 179, 179);
+    border-radius: 5px;
+    outline: none;
+}
+
+.input-compte::placeholder{
+    font-weight: 200;
+}
+
+#input-compte:focus{
+    outline: none;
+    box-shadow: 0px 0px 10px black;
+}
+
+.div-info{
+    display: flex;
+    gap: 5px;
+}
+
+#p-title{
+    margin-bottom: 10px;
+}
+
+.p-info {
+    font-size: 12px;
+    margin: 2px;
+    color: gray;
+}
+
+.div-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button-compte{
+    margin-top: 10%;
+    padding: 10px 20px 10px 20px;
+
+    border: none;
+    outline: none;
+    background-color: black;
+    color: white;
+}
+
+#connection{
+
+}
+
+#div-souvenir{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 5px;
+}
+
+#input-souvenir:checked{
+    accent-color: black;    
+    box-shadow: 0px 0px 10px black;
+}
+
+#p-souvenir{
+    font-size: 14px;
+    color: rgb(53, 53, 53);
+    margin: 0;
+}
+
+#p-oublie{
+    margin-top: 5px;
+}
+
+#a-oublie{
+    text-decoration: underline;
+    font-size: 14px;
+    color: rgb(53, 53, 53);
+}

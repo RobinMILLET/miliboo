@@ -1,0 +1,20 @@
+#content-erreur{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 50px;
+    padding-top: 200px;
+    padding-bottom: 200px;
+}
+
+#img-erreur{
+    height: 15vh;
+    aspect-ratio: 1;
+}
+
+#title-erreur{
+    white-space: nowrap;
+    text-decoration: underline;
+    color: gray;
+}

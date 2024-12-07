@@ -30,51 +30,26 @@
 
 
 <body>
+
     <script src="{{asset('js/detailProduit.js')}}" defer></script>
     <div class="divProduit">
         <div class="columnsProduit">
             <div class="colImagesProduit">
-
                 <?php
 
-                use App\Models\Produit;
-
-                $colorationPrincipale = $produit->colorationPrixMin();
-                // dd($colorationPrincipale);
-                //var_dump($colorationPrincipale->getPhotos());
-                // Récupération d'une photo
-                foreach ($colorationPrincipale->getPhotos() as $photo) {
-                    if ($photo) {
-                        $source = $photo->sourcephoto;
-                        $description = $photo->descriptionphoto;
-                    } // Si pas de photo, on prend la photo par défaut
-                    else {
-                        $source = "PLACEHOLDER.png";
-                        $description = "Non";
-                    }
-                    $source = '\\img\\' . $source;
-                    echo "<img src='$source' alt='$description'>";
-                }
-
+                use App\Http\Controllers\DetailProduitController;
+                $colorDispos = $colorationsDispos;
+                $colorationPrincipale = DetailProduitController::defColorationPrincipale($produit, $couleur);
+                echo $colorationPrincipale->getCouleur()->nomcouleur;
                 ?>
-
-                <!-- <img src="{{asset ('img/imagesProduitTest/creep1.jpg') }}">  -->
-                <!-- <img src="{{asset ('img/imagesProduitTest/creep2.jpg') }}">  -->
-                <!-- <img src="{{asset ('img/imagesProduitTest/creep3.png') }}">  -->
-                <!-- <img src="{{asset ('img/imagesProduitTest/creep4.png') }}">  -->
-                <!-- <img src="{{asset ('img/imagesProduitTest/creep5.png') }}">  -->
-                <!-- <img src="{{asset ('img/imagesProduitTest/creep6.png') }}">  -->
-                <!-- <img src="{{asset ('img/imagesProduitTest/creep7.png') }}">  -->
-                <!-- <img src="{{asset ('img/imagesProduitTest/creep8.png') }}">  -->
-                 
                 <details id="descProduit" class="descProduitAccordion">
                     <summary class="titreDescAccordion">
                         Description
                         <span class="flecheAccordionDesc">^</span>
                     </summary>
-                    <p  class="pProduitDesc">
+                    <p class="pProduitDesc">
                         <?php
-                        echo $colorationPrincipale->descriptioncoloration;
+                        DetailProduitController::getDescriptionProduit($colorationPrincipale);
                         ?>
                     </p>
                 </details>
@@ -96,9 +71,7 @@
                     <h1 class="titreProduit"> {{ $produit->nomproduit }}</h1>
 
                     <?php
-                    if ($colorationPrincipale->prixsolde) {
-                        echo "<h2 class='h2Promotion' style=background-color: black; text-color: white;>Promotion</h2>";
-                    }
+                    DetailProduitController::isPromotionProduit($colorationPrincipale);
                     ?>
 
                     <a class="aDescDetail" href="#descProduit">
@@ -107,11 +80,10 @@
 
                     <div class="divNoteProduit">
                         <?php
-                        $note = $produit->affficheNote();
+                        $note = DetailProduitController::getNoteProduit($produit);
                         $noteEtoile = $note['noteEtoiles'];
                         $nbNote = $note['nbAvis'];
                         echo "$noteEtoile $nbNote";
-
                         ?>
                     </div>
                     <div class="divColoris">
@@ -119,7 +91,7 @@
                         <div class="divListColoris">
 
                             <?php
-                            foreach ($produit->getCouleurs as $couleur) {
+                            foreach ($produit->getCouleur() as $couleur) {
                                 echo "<div class='carreCouleur' style='background-color: #$couleur->rgbcouleur;' title='$couleur->nomcouleur'></div>";
                             }
                             ?>
@@ -128,13 +100,19 @@
 
                         <div class="divPrixProduit">
                             <?php
-                            if ($colorationPrincipale->prixsolde) {
-                                echo "<p class='pPrixSoldeProduit'> $colorationPrincipale->prixsolde €</p>";
-                                echo "<p class=pPrixVenteProduit' style=text-decoration-line:line-through;> $colorationPrincipale->prixvente €</p>";
-                            } else {
-                                echo "<p class=pPrixVenteProduit'> $colorationPrincipale->prixvente €</p>";
-                            }
+                            DetailProduitController::affichagePrix($colorationPrincipale);
                             ?>
+                        </div>
+
+                        <div id="div-button-panier">
+                            <select name="" id="select-quantite-produit">
+                                <?php
+                                    for($i = 0; $i<30; $i++){
+                                        echo "<option value='$i'>$i</option>";
+                                    }
+                                ?>
+                            </select>
+                            <button id="button-achete">J'achète</button>
                         </div>
                     </div>
                 </div>
@@ -147,66 +125,35 @@
             </h2>
             <div class="headerAvis">
                 <div class="divImageAvis">
-                <?php
-                    $photos = ($colorationPrincipale->getPhotos());
-                    $photoAvis = current($photos);
-                    if ($photoAvis) {
-                        $sourceAvis = $photoAvis->sourcephoto;
-                    }
-                    else {
-                        $sourceAvis = "PLACEHOLDER.png";
-                    }
-                    $sourceAvis = '\\img\\' . $source;
-                    echo "<img class='imgHeaderAvis' src='$source'>";
-
+                    <?php
+                    DetailProduitController::affichagePhotoHeaderAvis($colorationPrincipale);
                     ?>
                 </div>
                 <div class="noteAvis">
                     <h4 class="titreNoteAvis">
                         <?php
                         $noteMoy = $note['noteMoy'];
-                            echo "$noteMoy/4";
+                        echo "$noteMoy/4";
                         ?>
                     </h4>
                     <p class="pNoteAvis">
-                    <?php
+                        <?php
                         $etoiles = $note['noteEtoiles'];
-                            echo "$etoiles";
+                        echo "$etoiles";
                         ?>
                     </p>
                     <p class="pNoteNbAvis">
                         <?php
-                            echo "$nbNote avis";
-                            ?>
+                        echo "$nbNote avis";
+                        ?>
                     </p>
                 </div>
             </div>
 
             <div class="divAvisClient">
                 <?php
-                $listAvis = $produit->getAvis();
-                foreach ($listAvis as $avis) {
-                    echo "<div class='divCommentaireClient'>";
+                DetailProduitController::affichageCommentaire($produit);
 
-                    echo "<div class='divClient'>";
-                    echo "<p class='nomClient'> Id client temporaire: $avis->idclient</p>";
-                    //A METTRE EN ETOILES
-                    echo "<p class='noteClient'> $avis->noteavis/4</p>";
-                    echo "</div>"; //FIN DIV CLIENT
-
-                    echo "<div class='divCommentaire'>";
-                    if ($avis->commentaireavis) {
-                        echo "<h4 class='titreCommentaire'> $avis->commentaireavis </h4>";
-                        echo "<div class='contentCommentaire'> $avis->commentaireavis </div>";
-                    }
-                    echo "</div>"; //FIN DIV COMMENTAIRE
-
-                    echo "<div class='timestampAvis'>";
-                    echo "<span class='timestampAvis'> $avis->dateavis </span>";
-                    echo "</div>"; //FIN DIV TIMESTAMPAVIS
-
-                    echo "</div>"; //FIN DIV COMMENTAIRECLIENT
-                }
                 ?>
             </div>
         </div>

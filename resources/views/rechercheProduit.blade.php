@@ -6,7 +6,10 @@
 @section('content')
         <script type="text/javascript">
             // Récupère le GET et le transfère en variable globale dans l'environnement JS
-            var $_GET = <?php echo json_encode($_GET); ?>;
+            var $_GET = <?php
+                use App\Http\Controllers\RechercheController;
+                echo json_encode($_GET); 
+            ?>;
         </script>
         <script src="{{asset('js/recherche.js')}}" defer></script>
         <section id="top">
@@ -15,11 +18,23 @@
             $valeursActives = [];
             $valeursPossibles = [];
             if($typeProduit) {
-                $attributs = $typeProduit->getAttributProduits();
+                $attributs = $typeProduit->getAttributProduit();
                 if (array_key_exists("filtres", $_GET)) {
                     $filtres = explode(" ", $_GET["filtres"]);
                 }
                 else $filtres = [];
+                //Affichage categorie
+
+                $categorie = $typeProduit->getCategorie();
+
+                $nomCategorie = $categorie->nomcategorie;
+                $descriptionCategorie = $categorie->descriptioncategorie;
+                
+                echo "<div class='headerCategorie'>";
+                echo "<h1>$nomCategorie</h1>";
+                echo "<p>$descriptionCategorie</p>";
+                echo "</div>";
+                
             }
 
             if ($typeProduit && $attributs->count()) {
@@ -27,7 +42,7 @@
                 echo "<section id='filtres'><ul class='ul-filtres'>";
                 foreach ($attributs as $attribut) {
                     echo "<li class='li-nom-filtre'><h3>".$attribut->nomattribut."</h3><div class='div-select-filtre'>";
-                    foreach ($attribut->getValeurAttributs() as $valeur) {
+                    foreach ($attribut->getValeurAttribut() as $valeur) {
                         // Si la valeur a déjà été utilisée, on ne créer pas de doublons
                         if (in_array($valeur->idattribut, array_keys($valeursPossibles))) {
                             if (in_array($valeur->valeur, $valeursPossibles[$valeur->idattribut])) continue;
@@ -49,10 +64,11 @@
                     echo "</div></li>";
                 }
                 echo "<input id='button-valide' type='button' value='Valider' onclick='apply()'></ul></section>";
+                $produits = RechercheController::filtre($produits, $valeursActives);
             }
             ?>
         <section id="mid">
-            <p class="left"><b id="count">{{ count($produits) }}</b> produits</p>
+            <p class="left"><b id="count">{{ count($produits) }}</b> produit(s)</p>
             <select onchange="setGet('tri',this.value,true)" class="right">
                 <option value="">Trier par:</option>
                 <option value="nom">Alphabétique</option>
@@ -67,7 +83,7 @@
                     // Si tri est null ou pas max, trier par prixMin
                     $triMin = (($_GET["tri"] ?? "nom") != "max");
                     foreach ($produits as $produit) {
-                        echo $produit->afficheRecherche($triMin, $valeursActives);
+                        echo $produit->afficheRecherche($triMin);
                     }
                 ?>
             </grid>

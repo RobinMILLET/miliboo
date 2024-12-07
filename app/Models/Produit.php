@@ -14,30 +14,15 @@ class Produit extends Model
     protected $primaryKey = "idproduit";
     public $timestamps = false;
 
-    private static $COEFMOTCLEF = [
-        "isequal" => 10,
-        "startswith" => 5,
-        "contains" => 1,
-        "notfound" => 0
-    ];
     private static $IGNOREMOTCLEF = [
-        "a", "dans", "par", "pour", "en", "vers", "avec", "de", "sans", "sur", "sous",
-        "au", "aux", "du", "des", "le", "les", "la"
+        "dans", "par", "pour", "vers", "avec", "sans", "sur", "sous", "aux",  "des", "les"
     ];
 
-    //TEST VICTOR
-    protected $fillable = [
-        'nomproduit',
-        'idtypeproduit',
-        'idpays',
-        'sourcenotice',
-        'sourceaspecttechnique',
-        'delailivraison',
-        'coutlivraison',
-        'nbpaiementmax',
-    ];
-
-    public function getCouleurs()
+    /**
+     * Renvoie les couleurs disponibles pour ce produit
+     * @return Collection<Couleur>
+    **/
+    public function getCouleur()
     {
         return $this->hasManyThrough(
             Couleur::class, 
@@ -46,27 +31,38 @@ class Produit extends Model
             'idcouleur', 
             'idproduit', 
             'idcouleur'  
-        );
+        )->get();
     }
 
-    public function getProduit()
-    {
-        return $this->belongsTo(Produit::class, 'idproduit', 'idproduit')->get();
-    }
-
-    public function getColorations() {
+    /**
+     * Renvoie les colorations liées à ce produit
+     * @return Collection<Coloration>
+    **/
+    public function getColoration() {
         return $this->hasMany(Coloration::class ,'idproduit', 'idproduit')->get();
     }
 
+    /**
+     * Renvoie les avis portants sur ce produit
+     * @return Collection<AvisProduit>
+    **/
     public function getAvis() {
         return $this->hasMany(AvisProduit::class ,'idproduit', 'idproduit')->get();
     }
 
+    /**
+     * Renvoie le typeproduit de ce produit
+     * @return TypeProduit
+    **/
     public function getTypeProduit() {
-        return $this->belongsTo(TypeProduit::class, 'idtypeproduit', 'idtypeproduit')->get();
+        return $this->belongsTo(TypeProduit::class, 'idtypeproduit', 'idtypeproduit')->get()->firstOrFail();
     }
 
-    public function getValeurAttributs() {
+    /**
+     * Renvoie les attributs de ce produit
+     * @return Collection<AttributProduit>
+    **/     
+    public function getValeurAttribut() {
         return $this->hasMany(ValeurAttribut::class, 'idproduit', 'idproduit')->get();
     }
 
@@ -74,7 +70,7 @@ class Produit extends Model
     public function colorationPrixMin($seulementVisibles = true) {
         $minPrice = PHP_INT_MAX;
         $colorationPrincipale = null;
-        foreach ($this->getColorations() as $coloration) {
+        foreach ($this->getColoration() as $coloration) {
             if ($seulementVisibles && !$coloration->estvisible) continue;
             $prixVente = $coloration->prixvente;
             if ($prixVente && (float)$prixVente < $minPrice) {
@@ -93,7 +89,7 @@ class Produit extends Model
     public function colorationPrixMax($seulementVisibles = true) {
         $maxPrice = PHP_INT_MIN;
         $colorationPrincipale = null;
-        foreach ($this->getColorations() as $coloration) {
+        foreach ($this->getColoration() as $coloration) {
             if ($seulementVisibles && !$coloration->estvisible) continue;
             $prixVente = $coloration->prixvente;
             if ($prixVente && (float)$prixVente > $maxPrice) {
@@ -108,35 +104,16 @@ class Produit extends Model
         }
         return $colorationPrincipale;
     }
-                
-
+             
     public function afficheRecherche($affichePrixMin = true, $valeursActives = null)
     {
-        // Filtrage en fonction des valeurs actives
-        if ($valeursActives) { // Si pas de filtre, check ok automatique
-            $valeursProduit = $this->getValeurAttributs();
-            $valide = false;
-            foreach ($valeursProduit as $valProd) {
-                // On passe le check si la valeur ne correspond pas aux ValeursActives
-                if (!in_array($valProd->idattribut, array_keys($valeursActives))) continue;
-                foreach ($valeursActives[$valProd->idattribut] as $valeur) {
-                    if ($valProd->valeur == $valeur) {
-                        $valide = true;
-                        break;
-                    }
-                    if ($valide) break;
-                }
-            }
-            if (!$valide) return "";
-        }
-
         // Itération à travers les colorations pour trouver la moins cher
         $colorationPrincipale = $affichePrixMin ?
             $this->colorationPrixMin() :
             $this->colorationPrixMax();
 
         // Récupération d'une photo
-        $photos = $colorationPrincipale->getPhotos();
+        $photos = $colorationPrincipale->getPhoto();
         if ($photos) {
             $source = $photos[0]->sourcephoto;
             $desc = $photos[0]->descriptionphoto;
@@ -157,7 +134,7 @@ class Produit extends Model
         $stars = ["☆☆☆☆", "★☆☆☆", "★★☆☆", "★★★☆", "★★★★"];
 
         // Couleurs disponibles
-        $couleurs = $this->getCouleurs()->where('estvisible', '=', true)->get();
+        $couleurs = $this->getCouleur(); // NE PREND PAS EN COMPTE Coloration.estVisible
         $rgbArray = [];
         foreach ($couleurs as $couleur) {
             $rgbArray[] = $couleur->rgbcouleur;
@@ -183,24 +160,22 @@ class Produit extends Model
         $nomProduit = "<h3>".$this->nomproduit."</h3>";
 
         // Ligne 1 : expedition, note moyenne et nbAvis
-        $expedition = "<span>Expédié sous ".substr($this->delailivraison, 0, 2)."h</span>";
+        $expedition = "<span class='span-delai'>Expédié sous ".substr($this->delailivraison, 0, 2)."h</span>";
         if ($nbAvis) {
             $avisProduit = "<span>".$stars[(int)$avgNote]."<span class='smalltext'>($nbAvis)</span></span>";
         }
         else { $avisProduit = "<span>Aucun avis</span>"; }
-        $ligne1 = "<p>$expedition$avisProduit</p>";
+        $ligne1 = "<p class='p-produit avis'>$expedition$avisProduit</p>";
 
         // Ligne 2 : Prix (soldé et/ou initial) / réduction
         if ($colorationPrincipale->prixsolde) {
-            $prixActuel = "<span>".$colorationPrincipale->prixsolde." €</span>";
-            $prixInitial = "<s><span>".$colorationPrincipale->prixvente." €</span></s>";
-            $reduc = 100*((float)$colorationPrincipale->prixvente
-                - (float)$colorationPrincipale->prixsolde)
-                / (float)$colorationPrincipale->prixvente;
-            $reduction = "<span class='reduc'>-".round($reduc, 0)."%</span>";
-            $ligne2 = "<p>$prixActuel$prixInitial$reduction</p>";
+            $prixActuel = "<span class='span-prix-solde'>".$colorationPrincipale->prixsolde." €</span>";
+            $prixInitial = "<s><span class='span-prix-vente'>".$colorationPrincipale->prixvente." €</span></s>";
+            
+            $reduction = "<span class='reduc'>-".round($colorationPrincipale->getReduc(), 0)."%</span>";
+            $ligne2 = "<p class='p-produit'>$prixActuel$prixInitial$reduction</p>";
         }
-        else { $ligne2 = "<p><span>".$colorationPrincipale->prixvente." €</span></p>"; }
+        else { $ligne2 = "<p class='p-produit'><span>".$colorationPrincipale->prixvente." €</span></p>"; }
 
         // Couleurs disponibles
         $NB_COULEURS_AFFICHEES = 4;
@@ -238,30 +213,25 @@ class Produit extends Model
     public static function compare($a, $b) {
         // Si un paramètre est un array, retourner la somme de leur indice de comparaison
         if (gettype($a) == "array") {
-            $sum = 0;
+            $indices = [];
             foreach ($a as $element) {
-                $sum += self::compare($element, $b);
+                $indices[] = self::compare($element, $b);
             }
-            return $sum;
+            return min($indices);
         }
         if (gettype($b) == "array") {
-            $sum = 0;
+            $indices = [];
             foreach ($b as $element) {
-                $sum += self::compare($a, $element);
+                $indices[] = self::compare($a, $element);
             }
-            return $sum;
+            return min($indices);
         }
         else { // LES COEFFICIENTS SONT MODIFIABLES EN TÊTE DE CLASSE
             // On ignore certains caractères et prépositions
             if (in_array($a, self::$IGNOREMOTCLEF) ||
                 in_array($b, self::$IGNOREMOTCLEF) ||
-                strlen($a) < 2 || strlen($b) < 2) return 0;
-            // On fait correspondre les checks d'appartenance avec leur coefficient
-            if ($a == $b) return self::$COEFMOTCLEF["isequal"];
-            if (str_starts_with($a, $b)) return self::$COEFMOTCLEF["startswith"];
-            if (str_contains($a, $b)) return self::$COEFMOTCLEF["contains"];
-            // Valeur par défaut (personalisable)
-            return self::$COEFMOTCLEF["notfound"];
+                strlen($a) <= 2 || strlen($b) <= 2) return PHP_INT_MAX;
+            return levenshtein($a, $b);
         }
         
     }
@@ -289,6 +259,21 @@ class Produit extends Model
             'noteMoy' => $avgNote,
             'noteEtoiles' => $avisProduit
         ];
+    }
+
+    public function filtre($valeursActives) {
+        if (!$valeursActives) return true; // Si pas de filtre, check ok automatique
+        $valeursProduit = $this->getValeurAttribut();
+        foreach ($valeursProduit as $valProd) {
+            // On passe le check si la valeur ne correspond pas aux ValeursActives
+            if (!in_array($valProd->idattribut, array_keys($valeursActives))) continue;
+            foreach ($valeursActives[$valProd->idattribut] as $valeur) {
+                if ($valProd->valeur == $valeur) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

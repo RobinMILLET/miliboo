@@ -47,10 +47,12 @@
 .produit h3 {
     margin-left: 2.5%;
     margin-right: 2.5%;
-    font-size: 1.5vw;
+    font-size: 1.8vh;
     overflow: hidden;
-    white-space: nowrap;
     text-overflow:ellipsis;
+
+    white-space: pre-wrap;
+    text-align: left;
 }
 
 .produit>*>*{
@@ -222,4 +224,47 @@
 #count{
     font-size: medium;
     color: black;
+}
+
+.headerCategorie {
+    font-size: large;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.p-produit{
+    text-align: left;
+}
+
+.avis{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.span-delai{
+    color: rgb(25, 135, 84);
+}
+
+.span-prix-solde{
+    font-weight: bold;
+    font-size: 2vh;
+    margin-right: 0;
+}
+
+.span-prix-vente{
+    font-size: 2vh;
+    margin-left: 0;
+    color: gray;
+    text-decoration-color: gray;
+}
+
+.reduc{
+    background-color: black;
+    color: white;
+    font-size: 1.6vh;
+
+    padding: 3px;
 }

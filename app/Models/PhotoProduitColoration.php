@@ -12,12 +12,27 @@ class PhotoProduitColoration extends Model
     protected $primaryKey = null;
     public $timestamps = false;
 
+    /**
+     * Renvoie la coloration liée à cete PhotoProduitColoration
+     * @return Coloration
+    **/
     public function getColoration() {
-        return $this->belongsTo(Coloration::class ,'idproduit', 'idproduit')->where('idcouleur', '=', $this->idcouleur)->get();
+        return $this->belongsTo(Coloration::class ,'idproduit', 'idproduit')->where('idcouleur', '=', $this->idcouleur)->get()->firstOrFail();
     }
 
+    /**
+     * Renvoie le produit lié à la PhotoProduitColoration
+     * @return Produit
+    **/
+    public function getProduit() {
+        return $this->belongsTo(Produit::class ,'idproduit', 'idproduit')->get()->firstOrFail();
+    }
+
+    /**
+     * Renvoie la photo liée à cete PhotoProduitColoration
+     * @return Photo
+    **/
     public function getPhoto() {
-        $photos = $this->hasOne(Photo::class ,'idphoto', 'idphoto')->get();
-        return $photos[0] ?? null;
+        return $this->hasOne(Photo::class ,'idphoto', 'idphoto')->get()->firstOrFail();
     }
 }

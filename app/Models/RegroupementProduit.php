@@ -12,6 +12,11 @@ class RegroupementProduit extends Model
     protected $primaryKey = "idregroupement";
     public $timestamps = false;
 
+
+    /**
+     * Renvoie les détails du regroupement
+     * @return Collection<DetailRegroupement>
+    **/
     public function getDetailRegroupement() {
         return $this->hasMany(DetailRegroupement::class, 'idregroupement')->get();
     }

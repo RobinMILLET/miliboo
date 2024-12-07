@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CategorieProduit;
 use Illuminate\Http\Request;
 use App\Models\Produit;
-use App\Models\RegroupementProduit;
 use App\Models\TypeProduit;
+use App\Models\CategorieProduit;
+use App\Models\RegroupementProduit;
 
 class RechercheController extends Controller
 {
@@ -14,7 +14,7 @@ class RechercheController extends Controller
     {
         $visible = [];
         foreach ($produits as $produit) {
-            foreach ($produit->getColorations() as $coloration) {
+            foreach ($produit->getColoration() as $coloration) {
                 if ($coloration->estvisible) {
                     $visible[] = $produit;
                     break;
@@ -64,17 +64,22 @@ class RechercheController extends Controller
     {
         $motclef = Produit::formatMotClef($motclef);
         // Affectation d'un indiceMotClef pour chaque produit
+        $minIndice = PHP_INT_MAX; $maxIndice = 0;
         foreach ($produits as $produit) {
             $indice = $produit->triParMotClef($motclef);
+            if ($indice < $minIndice) $minIndice = $indice;
+            if ($indice > $maxIndice) $maxIndice = $indice;
             $produit->indiceMotClef = $indice;
         }
-        // Uniquement les produits ayant au moins une correspondance partielle
-        $produits = array_filter($produits, function ($produit) {
-            return $produit->indiceMotClef > 0;
+        // Filtrage des produits par correspondance
+        $avgIndice = ($minIndice + $maxIndice)/3;
+        // uniquement les produits dont l'indice est en dessous de la moyenne
+        $produits = array_filter($produits, function ($produit) use ($avgIndice) {
+            return $produit->indiceMotClef <= $avgIndice;
         });
         // Tri en fonction de indiceMotClef
         usort($produits, function ($a, $b) {
-            return $b->indiceMotClef - $a->indiceMotClef;
+            return $a->indiceMotClef - $b->indiceMotClef;
         });
         return $produits;
     }
@@ -105,6 +110,14 @@ class RechercheController extends Controller
             default:
                 break; // Par défaut, il n'y a aucun tri appliqué (ordre du SGBD)
         }
+        return $produits;
+    }
+
+    public static function filtre($produits, $valeursActives) {
+        if (!$valeursActives) return $produits;
+        $produits = array_filter($produits, function ($produit) use ($valeursActives) {
+            return $produit->filtre($valeursActives);
+        });
         return $produits;
     }
 
@@ -139,7 +152,7 @@ class RechercheController extends Controller
     {
         $categorieFilles = CategorieProduit::findCategoryFilles($idCategorieMere);
         $typeProduits = $categorieFilles->map(function ($categorieFille) {
-            return $categorieFille->getTypeProduit->first();
+            return $categorieFille->getTypeProduit();
         });
 
         $typeProduits = $typeProduits->filter();
@@ -161,8 +174,8 @@ class RechercheController extends Controller
         $details = $regroupement->getDetailRegroupement();
         $produits = collect();
         foreach ($details as $detail ) {
-            $detailproduits = $detail->getProduits();
-            $produits = $produits->merge($detailproduits);
+            $detailproduits = $detail->getProduit();
+            $produits = $produits->push($detailproduits);
         }
         $produits = $produits->unique('idproduit');
         

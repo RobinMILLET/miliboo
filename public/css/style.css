@@ -11,8 +11,8 @@ body{
 }
 
 .marge{
-    margin-left: 200px;
-    margin-right: 200px;
+    margin-left: 12vw;
+    margin-right: 12vw;
 }
 
 /*
@@ -71,7 +71,7 @@ Image Miliboo
 }
 
 #imgsearch{
-    height: 50px;
+    height: 3vw;
     padding-left: 10px;
 }
 
@@ -79,7 +79,7 @@ Image Miliboo
 bar de recherche 
 */
 #recherchebar{
-    width: 600px;
+    width: 50%;
     height: 60px;
     border: 0px;
     font-size: large;
@@ -141,7 +141,6 @@ a{
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    gap: 40px;
 }
 
 .licategorie{
@@ -149,6 +148,8 @@ a{
     align-content: center;
     color: rgb(85, 85, 85);
     font-size: small;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 .container-title-cat{
@@ -172,49 +173,94 @@ a{
     z-index: 2;
 }
 
-.licategorie:hover #cat-chaise{
+.licategorie:not(:hover) #cat-canape{
+    transition-delay: 0s;
+}
+
+.licategorie:hover #cat-chaise {
     opacity: 1;
     z-index: 2;
 }
 
-.licategorie:hover #cat-bureau{
+.licategorie:not(:hover) #cat-chaise {
+    transition-delay: 0s;
+}
+
+.licategorie:hover #cat-bureau {
     opacity: 1;
     z-index: 2;
 }
 
-.licategorie:hover #cat-table{
+.licategorie:not(:hover) #cat-bureau {
+    transition-delay: 0s;
+}
+
+.licategorie:hover #cat-table {
     opacity: 1;
     z-index: 2;
 }
 
-.licategorie:hover #cat-rangement{
+.licategorie:not(:hover) #cat-table {
+    transition-delay: 0s;
+}
+
+.licategorie:hover #cat-rangement {
     opacity: 1;
     z-index: 2;
 }
 
-.licategorie:hover #cat-chambre{
+.licategorie:not(:hover) #cat-rangement {
+    transition-delay: 0s;
+}
+
+.licategorie:hover #cat-chambre {
     opacity: 1;
     z-index: 2;
 }
 
-.licategorie:hover #cat-enfant{
+.licategorie:not(:hover) #cat-chambre {
+    transition-delay: 0s;
+}
+
+.licategorie:hover #cat-enfant {
     opacity: 1;
     z-index: 2;
 }
 
-.licategorie:hover #cat-jardin{
+.licategorie:not(:hover) #cat-enfant {
+    transition-delay: 0s;
+}
+
+.licategorie:hover #cat-jardin {
     opacity: 1;
     z-index: 2;
 }
 
-.licategorie:hover #cat-luminaire{
+.licategorie:not(:hover) #cat-jardin {
+    transition-delay: 0s;
+}
+
+.licategorie:hover #cat-luminaire {
     opacity: 1;
     z-index: 2;
 }
 
-.licategorie:hover #cat-deco{
+.licategorie:not(:hover) #cat-luminaire {
+    transition-delay: 0s;
+}
+
+.licategorie:hover #cat-deco {
     opacity: 1;
     z-index: 2;
+}
+
+.licategorie:not(:hover) #cat-deco {
+    transition-delay: 0s;
+}
+
+.licategorie a{
+    color: rgb(99, 99, 99);
+    white-space: nowrap;
 }
 
 .categorie-menu{
@@ -223,7 +269,7 @@ a{
     width: calc(100% - var(--decay));/*calc(100vw - calc(var(--decay)*2));*/
     padding-top: 10px;
     padding-left: var(--decay);
-    height: 50%;
+    height: 30%;
     position: absolute;
     display: flex;
     justify-content: center;
@@ -233,7 +279,8 @@ a{
     z-index: -1;
     opacity: 0;
 
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
+    transition-delay: 0.3s;
 }
 
 .cat-colonne{

@@ -247,3 +247,35 @@ img {
     text-align: right;
     font-size: 0.9rem;
 }
+
+#div-button-panier{
+    height: 7vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 20px;
+}
+
+#select-quantite-produit{
+    flex: 1;
+    height: 90%;
+
+    font-size: 130%;
+    font-weight: bold;
+    color: gray;
+}
+
+#button-achete{
+    flex: 3;
+    height: 90%;
+
+    font-size: 140%;
+    font-weight: bold;
+
+    background-color: rgb(37, 35, 35);
+    color: white;
+
+    border: none;
+    outline: none;
+}

@@ -12,11 +12,27 @@ class DetailRegroupement extends Model
     protected $primaryKey = null;
     public $timestamps = false;
 
+    /**
+     * Renvoie la coloration liée à ce détail
+     * @return Coloration
+    **/
     public function getColorations() {
-        return $this->hasMany(Coloration::class ,'idproduit', 'idproduit')->where('idcouleur', '=', $this->idcouleur)->get();
+        return $this->hasMany(Coloration::class ,'idproduit', 'idproduit')->where('idcouleur', '=', $this->idcouleur)->get()->firstOrFail();
     }
 
-    public function getProduits() {
-        return $this->belongsTo(Produit::class, 'idproduit', 'idproduit')->get();
+    /**
+     * Renvoie le produit lié à ce détail
+     * @return Produit
+    **/
+    public function getProduit() {
+        return $this->belongsTo(Produit::class, 'idproduit', 'idproduit')->get()->firstOrFail();
+    }
+
+    /**
+     * Renvoie le regroupement lié à ce détail
+     * @return RegroupementProduit
+    **/
+    public function getRegroupement() {
+        return $this->belongsTo(RegroupementProduit::class, 'idregroupement', 'idregroupement')->get()->firstOrFail();
     }
 }

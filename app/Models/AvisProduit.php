@@ -11,6 +11,4 @@ class AvisProduit extends Model
     protected $table = "avisproduit";
     protected $primaryKey = "idavis";
     public $timestamps = false;
-
-    
 }
