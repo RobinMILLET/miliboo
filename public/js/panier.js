@@ -1,41 +1,43 @@
 function m(id) {
-    minus = document.getElementById("m"+id)
-    quant = document.getElementById("q"+id)
-    plus = document.getElementById("p"+id)
-    total = document.getElementById("t"+id)
+    let minus = document.getElementById("m"+id)
+    let quant = document.getElementById("q"+id)
+    let plus = document.getElementById("p"+id)
+    let total = document.getElementById("t"+id)
     plus.disabled = false
-    quantite = parseInt(quant.innerHTML)
-    if (quantite <= 2) minus.disabled = true
-    quant.innerHTML = quantite-1
     idproduit = id.split("-")[0]
     idcouleur = id.split("-")[1]
     fetch("/addPanier/"+idproduit+"/"+idcouleur+"/-1")
-    fetch("/prixPanier/"+idproduit+"/"+idcouleur)
-        .then(response => response.json())
-        .then(data => {
-            total.innerHTML = data.prix
-        });
-    getPrixPanier()
+        .then().then(_ => {
+            fetch("/prixPanier/"+idproduit+"/"+idcouleur)
+                .then(response => response.json())
+                .then(data => {
+                    quant.innerHTML = data.quant
+                    if (data.quant <= 1) minus.disabled = true
+                    total.innerHTML = data.prix
+                });
+            getPrixPanier()
+    });
 }
 
 function p(id) {
-    minus = document.getElementById("m"+id)
-    quant = document.getElementById("q"+id)
-    plus = document.getElementById("p"+id)
-    total = document.getElementById("t"+id)
+    let minus = document.getElementById("m"+id)
+    let quant = document.getElementById("q"+id)
+    let plus = document.getElementById("p"+id)
+    let total = document.getElementById("t"+id)
     minus.disabled = false
-    quantite = parseInt(quant.innerHTML)
-    if (quantite >= 98) plus.disabled = true
-    quant.innerHTML = quantite+1
     idproduit = id.split("-")[0]
     idcouleur = id.split("-")[1]
     fetch("/addPanier/"+idproduit+"/"+idcouleur+"/1")
-    fetch("/prixPanier/"+idproduit+"/"+idcouleur)
-        .then(response => response.json())
-        .then(data => {
-            total.innerHTML = data.prix
-        });
-    getPrixPanier()
+        .then().then(_ => {
+            fetch("/prixPanier/"+idproduit+"/"+idcouleur)
+                .then(response => response.json())
+                .then(data => {
+                    quant.innerHTML = data.quant
+                    if (data.quant >= 99) plus.disabled = true
+                    total.innerHTML = data.prix
+                });
+            getPrixPanier()
+    });
 }
 
 function d(id) {
@@ -48,9 +50,9 @@ function d(id) {
 }
 
 function getPrixPanier() {
-    panier = document.getElementById("prixpanier")
-    total = document.getElementById("prixtotal")
-    fidel = document.getElementById("info-fidelite")
+    let panier = document.getElementById("prixpanier")
+    let total = document.getElementById("prixtotal")
+    let fidel = document.getElementById("info-fidelite")
     fetch("/prixPanier")
         .then(response => response.json())
         .then(data => {

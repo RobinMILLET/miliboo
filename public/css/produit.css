@@ -17,15 +17,15 @@ img {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    max-width: 100%; /* Ensure the container doesn't overflow */
+    max-width: 100%;
 }
 
 .columnsProduit {
     display: flex;
     gap: 8%;
     align-items: flex-start;
-    width: 100%; /* Ensure the columns span the available space */
-    max-width: 95%; /* Optional: limit the total width if desired */
+    width: 100%;
+    max-width: 95%;
 }
 
 .colImagesProduit {
@@ -77,25 +77,25 @@ img {
     font-weight: bold;
     cursor: pointer;
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-between;
     align-items: center;
 }
 
 .titreDescAccordion::-webkit-details-marker {
-    display: none; /* Hides the default arrow */
-  }
+    display: none;
+}
 
 .flecheAccordionDesc {
     font-size: 16px;
     transform: rotate(90deg);
-    transition: transform 0.3s ease; /* Smooth rotation effect */
-  }
+    transition: transform 0.3s ease;
+}
 
 .descProduitAccordion[open] {
     background-color: #f9f9f9;
 }
 
-.descProduitAccordion[open] .flecheAccordionDesc{
+.descProduitAccordion[open] .flecheAccordionDesc {
     transform: rotate(180deg);
 }
 
@@ -151,25 +151,25 @@ img {
     font-weight: bold;
     cursor: pointer;
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-between;
     align-items: center;
 }
 
 .titreEntretienAccordion::-webkit-details-marker {
-    display: none; 
-  }
+    display: none;
+}
 
 .flecheAccordionEntretien {
     font-size: 16px;
     transform: rotate(90deg);
     transition: transform 0.3s ease;
-  }
+}
 
 .descProduitEntretien[open] {
     background-color: #f9f9f9;
 }
 
-.descProduitEntretien[open] .flecheAccordionEntretien{
+.descProduitEntretien[open] .flecheAccordionEntretien {
     transform: rotate(180deg);
 }
 
@@ -224,23 +224,24 @@ img {
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
     justify-content: space-between;
-    border-bottom: 1px solid black ;
+    border-bottom: 1px solid black;
 }
 
 .divClient {
-    padding-right: 0.5rem;
-    padding-left: 0.5rem;
+    flex: 0 0 20%; 
+    padding-right: 1rem;
+    padding-left: 1rem;
+    margin-right: 10px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
-    width: 25%;
+    border-right: 1px solid #000000; 
 }
 
 .commentaireClient {
-    flex-grow: 1;
+    flex: 1; 
     text-align: left;
-    width: 50%;
 }
 
 .timestampAvis {
@@ -248,25 +249,73 @@ img {
     font-size: 0.9rem;
 }
 
-#div-button-panier{
+#div-button-panier {
     height: 7vh;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
 
     gap: 20px;
 }
 
-#select-quantite-produit{
-    flex: 1;
-    height: 90%;
+#div-button-quantite {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    font-size: 130%;
-    font-weight: bold;
-    color: gray;
+    margin: 0;
+    padding: 0;
 }
 
-#button-achete{
+.button-quantite {
+    font-weight: bolder;
+    font-size: 20px;
+    height: 25px;
+    aspect-ratio: 1;
+    padding: 0;
+    margin: 0;
+
+    background: none;
+    border: none;
+    border-radius: 3px;
+
+    transition: all 0.2s ease;
+}
+
+.button-quantite:hover {
+    background-color: rgba(175, 174, 174, 0.288);
+}
+
+.input-quantite {
+    max-width: 20%;
+
+    text-align: center;
+    font-size: large;
+
+    border: none;
+    background-color: transparent;
+
+    transition: all 0.5s ease;
+}
+
+.input-quantite:hover {
+    background-color: rgb(202, 202, 202);
+    border-radius: 10px;
+}
+
+.input-quantite:focus {
+    background-color: rgb(202, 202, 202);
+    border-radius: 10px;
+    outline: none;
+}
+
+.input-quantite::placeholder {
+    text-align: center;
+    font-size: large;
+}
+
+#button-achete {
     flex: 3;
     height: 90%;
 
@@ -278,4 +327,66 @@ img {
 
     border: none;
     outline: none;
+}
+
+.imgAvisClient {
+    max-width: 20%;
+    max-height: auto;
+    margin: 10px;
+}
+
+.elementPreview {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.elementPreview .closePreview {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.contentPreview {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    border-radius: 10px;
+}
+
+.titreReponseCommentaire {
+    font-size: 120%;
+    font-weight: bold;
+    color: #3a3a3a;
+    text-decoration: underline;
+}
+
+.nomClient {
+    font-size: 120%;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.pPromotion {
+    background-color: black;
+    color: white;
+    font-size: 1.6vh;
+    padding: 3px;
+}
+
+.span-delai{
+    background-color: rgb(25, 135, 84);
+    color: rgb(255, 255, 255);
+    font-weight: bold;
 }

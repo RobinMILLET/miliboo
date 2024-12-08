@@ -189,7 +189,10 @@ class Produit extends Model
 
         // Fin
         $div = "<div class='produit'>$img$nomProduit$ligne1$ligne2$divCircles</div>";
-        return "<a href='/produit/idproduit".$this->idproduit."'>$div</a>";
+
+        //Modif Victor pour clean l'URL avec coloration
+        $urlProduitColoration = "idproduit" . $this->idproduit . "/coloration" . $colorationPrincipale->idcouleur; 
+        return "<a href='/produit/".$urlProduitColoration."'>$div</a>";
     }
 
     public static function formatMotClef($motclef) {

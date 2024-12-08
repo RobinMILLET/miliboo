@@ -46,9 +46,12 @@
             <tbody>
                 <?php
                     use App\Http\Controllers\PanierController;
+                    PanierController::fixPanier();
                     $colorations = $_SESSION["panier"];
-                    foreach ($colorations as $coloration) {
-                        echo PanierController::afficheLigneCookie($coloration);
+                    if ($colorations and gettype($colorations) == "array") {
+                        foreach ($colorations as $coloration) {
+                            echo PanierController::afficheLigneCookie($coloration);
+                        }
                     }
                 ?>
             </tbody>

@@ -58,7 +58,8 @@ class PanierController extends Controller
     public static function afficheLigneCookie($ligne) {
         // ligne = [idproduit, idcouleur, quantite]
         $coloration = Coloration::where('idproduit', '=', $ligne[0])
-            ->where('idcouleur', '=', $ligne[1])->firstOrFail();
+            ->where('idcouleur', '=', $ligne[1])->first();
+        if (!$coloration) return "Erreur sur p".$ligne[0]." c".$ligne[1];
         $quantite = $ligne[2];
         return self::afficheLigne($coloration, $quantite);
     }
@@ -68,6 +69,19 @@ class PanierController extends Controller
         return view("panier", [
             "colorations" => Coloration::all(),
         ]);
+    }
+
+    public static function fixPanier() {
+        $newPanier = array();
+        foreach($_SESSION["panier"] as $panier) {
+            if (count($panier) != 3) continue;
+            $coloration = Coloration::where('idproduit', '=', $panier[0
+                ])->where('idcouleur', '=', $panier[1])->first();
+            if (!$coloration) continue;
+            if ($panier[2] < 1 || $panier[2] > 99) continue;
+            $newPanier[] = $panier;
+        }
+        $_SESSION["panier"] = $newPanier;
     }
 
     public static function prixLignePanier_($idproduit, $idcouleur, $quantite = null) {
@@ -81,9 +95,10 @@ class PanierController extends Controller
         return $quantite * $coloration->prixvente;
     }
 
-    public static function prixLignePanier($idproduit, $idcouleur, $quantite = null) {
-        $prix = self::prixLignePanier_($idproduit, $idcouleur, $quantite);
-        return response()->json(["prix" => round($prix, 2)]);
+    public static function prixLignePanier($idproduit, $idcouleur) {
+        $prix = self::prixLignePanier_($idproduit, $idcouleur);
+        $quant = self::findLignePanier($idproduit, $idcouleur)[2];
+        return response()->json(["prix" => round($prix, 2), "quant" => $quant]);
     }
 
     public static function prixPanier() {
@@ -98,9 +113,13 @@ class PanierController extends Controller
         $idproduit = intval($idproduit);
         $idcouleur = intval($idcouleur);
         $quantite = intval($quantite);
+        $coloration = Coloration::where('idproduit', '=', $idproduit)
+            ->where('idcouleur', '=', $idcouleur)->first();
+        if (!$coloration) return response()->json([
+            "message" => "p$idproduit c$idcouleur inconnu"]);
         $index = self::findIndexPanier($idproduit, $idcouleur);
         if ($index == -1) {
-            if ($quantite == 0) return;
+            if ($quantite <= 0) return;
             $_SESSION["panier"][] = [$idproduit, $idcouleur, $quantite];
         }
         else {
@@ -112,6 +131,7 @@ class PanierController extends Controller
                 $_SESSION["panier"][$index][2] = $quantite;
             }
         }
+        self::fixPanier();
         // TODO: update le cookie ici
     }
 

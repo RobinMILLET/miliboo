@@ -38,9 +38,10 @@
                 <?php
 
                 use App\Http\Controllers\DetailProduitController;
+
                 $colorDispos = $colorationsDispos;
-                $colorationPrincipale = DetailProduitController::defColorationPrincipale($produit, $couleur);
-                echo $colorationPrincipale->getCouleur()->nomcouleur;
+                $colorationProduit = $colorationChoisie;
+                $colorationPrincipale = DetailProduitController::defColorationPrincipale($colorationChoisie);
                 ?>
                 <details id="descProduit" class="descProduitAccordion">
                     <summary class="titreDescAccordion">
@@ -69,11 +70,6 @@
             <div class="colPresentationProduit">
                 <div class="cardProduit">
                     <h1 class="titreProduit"> {{ $produit->nomproduit }}</h1>
-
-                    <?php
-                    DetailProduitController::isPromotionProduit($colorationPrincipale);
-                    ?>
-
                     <a class="aDescDetail" href="#descProduit">
                         Description détaillée
                     </a>
@@ -91,8 +87,11 @@
                         <div class="divListColoris">
 
                             <?php
-                            foreach ($produit->getCouleur() as $couleur) {
-                                echo "<div class='carreCouleur' style='background-color: #$couleur->rgbcouleur;' title='$couleur->nomcouleur'></div>";
+                            foreach ($produit->getColoration() as $coloration) {
+                                $couleur = $coloration->getCouleur();
+                                $urlColoration = route('produit.show', ['id' => $produit->idproduit, 'idcoloration' => $coloration->idcouleur]);
+
+                                echo "<a href='$urlColoration' class='carreCouleur' style='background-color: #$couleur->rgbcouleur;' title='$couleur->nomcouleur $couleur->idcouleur'></a>";
                             }
                             ?>
 
@@ -105,14 +104,14 @@
                         </div>
 
                         <div id="div-button-panier">
-                            <select name="" id="select-quantite-produit">
-                                <?php
-                                    for($i = 0; $i<30; $i++){
-                                        echo "<option value='$i'>$i</option>";
-                                    }
-                                ?>
-                            </select>
-                            <button id="button-achete">J'achète</button>
+                            <button id='minusOne' class='button-quantite' disabled onclick="minusOne()">-</button>
+                            <input id='quant' class='input-quantite' type="text" value="1" onchange="verif()"></input>
+                            <button id='plusOne' class='button-quantite' onclick="plusOne()">+</button>
+                            <button id="button-achete" onclick='achete(<?php
+                                                                        echo $colorationChoisie->idproduit;
+                                                                        echo ",";
+                                                                        echo $colorationChoisie->idcouleur;
+                                                                        ?>)'>J'achète</button>
                         </div>
                     </div>
                 </div>
@@ -153,8 +152,11 @@
             <div class="divAvisClient">
                 <?php
                 DetailProduitController::affichageCommentaire($produit);
-
                 ?>
+                <div id="imagePreview" class="elementPreview">
+                    <span class="closePreview" onclick="closePreview()">&times;</span>
+                    <img class="contentPreview" id="previewImage">
+                </div>
             </div>
         </div>
 </body>
