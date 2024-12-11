@@ -25,7 +25,6 @@
 .input-compte{
     width: 90%;
     padding: 20px;
-    margin-bottom: 15px;
 
     border: 1.5px solid rgb(179, 179, 179);
     border-radius: 5px;
@@ -39,6 +38,19 @@
 #input-compte:focus{
     outline: none;
     box-shadow: 0px 0px 10px black;
+}
+
+.div-input{
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+}
+
+.p-obligatoire{
+    color: gray;
+    font-size: 10px;
+    font-weight: bold;
+    margin-bottom: 10px;
 }
 
 .div-info{
@@ -69,6 +81,11 @@
     border: none;
     outline: none;
     background-color: black;
+    color: white;
+}
+
+#a-compte{
+    font-size: 14px;
     color: white;
 }
 

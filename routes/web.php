@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\CookieController;
 use App\Http\Controllers\DetailProduitController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RechercheController;
 use App\Http\Controllers\PanierController;
+use App\Models\ProduitSimilaire;
 use Illuminate\Support\Facades\Route;
 
 
@@ -33,9 +35,16 @@ Route::get('/erreur', function(){
     return view('erreur');
 })->name('erreur');
 
-Route::get('/compte', function(){
-    return view('compte');
-})->name('compte');
+/*
+| Utilisateur
+*/
+
+Route::get('/compte',[LoginController::class, 'index'])->name('compte');
+Route::post('/login', [LoginController::class, 'tryLogin']);
+
+Route::get('/creationcompte', function(){
+    return view('creationcompte');
+})->name('creationcompte');
 
 /*
 | Produits
@@ -44,13 +53,9 @@ Route::get('/produit/idproduit{id}/coloration{idcoloration}', [DetailProduitCont
 
 Route::get('/panier',[PanierController::class, 'index'])->name('panier');
 
+Route::get('/prixPanier', [PanierController::class, 'prixPanier']);
 Route::get('/setPanier/{idproduit}/{idcouleur}/{idquantite}', [PanierController::class, 'setLignePanier']);
 Route::get('/addPanier/{idproduit}/{idcouleur}/{idquantite}', [PanierController::class, 'addToPanier']);
-
-Route::get('/prixPanier', [PanierController::class, 'prixPanier']);
-Route::get('/prixPanier/{idproduit}/{idcouleur}', [PanierController::class, 'prixLignePanier']);
-Route::get('/prixPanier/{idproduit}/{idcouleur}/{quantite}', [PanierController::class, 'prixLignePanier']);
-
 
 /*
 | Recherche
@@ -63,6 +68,7 @@ Route::get('/categorie/{idTypeProduit}',[RechercheController::class, 'showByCate
 Route::get('/regroupement/{idRegroupement}',[RechercheController::class, 'showByRegroupement'])->name('produits.parRegroupement');
     
 Route::get('/categorieMere/{idCategorie}',[RechercheController::class, 'showByCategoryMere'])->name('produits.parCategorieMere');
+
     
 /*
 | Gestion des cookies
@@ -74,3 +80,10 @@ Route::get('/cookie', function() {
 Route::get('/setcookie/{cle}/{valeur}/{duree}', [CookieController::class, 'setCookie']);
 Route::get('/getcookie/{cle}/{route}', [CookieController::class, 'getCookie']);
 Route::get('/delcookie/{cle}', [CookieController::class, 'delCookie']);
+
+/*
+| Pour les tests random
+*/
+Route::get('/test', function() {
+    return view('test');
+});

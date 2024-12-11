@@ -40,27 +40,27 @@ function minusOne() {
     quant.value = quantite-1
 }
 
-function plusOne() {
+function plusOne(max) {
     minusBtn = document.getElementById("minusOne")
     quant = document.getElementById("quant")
     plusBtn = document.getElementById("plusOne")
     minusBtn.disabled = false
     quantite = parseInt(quant.value)
-    if (quantite >= 98) plusBtn.disabled = true
+    if (quantite >= max-1) plusBtn.disabled = true
     quant.value = quantite+1
 }
 
-function verif() {
+function verif(max) {
     minusBtn = document.getElementById("minusOne")
     quant = document.getElementById("quant")
     plusBtn = document.getElementById("plusOne")
     quantite = parseInt(quant.value)
-    if (quantite < 1) quantite = 1
-    if (quantite > 99) quantite = 99
+    if (isNaN(quantite) || quantite < 1) quantite = 1
+    if (quantite > max) quantite = max
     quant.value = quantite
     if (quantite <= 2) minusBtn.disabled = true
     else minusBtn.disabled = false
-    if (quantite >= 98) plusBtn.disabled = true
+    if (quantite >= max-1) plusBtn.disabled = true
     else plusBtn.disabled = false
 }
 
@@ -68,8 +68,10 @@ function achete(idproduit, idcouleur) {
     quant = document.getElementById("quant")
     quantite = parseInt(quant.value)
     fetch("/addPanier/"+idproduit+"/"+idcouleur+"/"+quantite)
-        .then().then(data => {
+        .then(response => response.json())
+        .then(data => {
             window.location.href = "/panier"
+            console.log(data.message)
         });
 }
 
@@ -90,4 +92,41 @@ window.onclick = function(event) {
     if (event.target == modal) {
         modal.style.display = 'none';
     }
+}
+
+
+
+
+
+
+
+
+const buttonScrollRight = document.querySelectorAll("#button-scroll-right");
+const buttonScrollLeft = document.querySelectorAll("#button-scroll-left");
+const itemWidth = (document.querySelector('.produitCarroussel').offsetWidth + 20) * 4;
+
+buttonScrollLeft.forEach(button => {
+    button.addEventListener("click", () => {
+        scrollLeft(button);
+    })
+})
+
+buttonScrollRight.forEach(button => {
+    button.addEventListener("click", () => {
+        scrollRight(button);
+    })
+})
+
+function scrollLeft(dom) {
+    dom.parentElement.querySelector('.topProduitsCarroussel').scrollBy({
+        left: -itemWidth,
+        behavior: 'smooth' 
+    });
+}
+
+function scrollRight(dom) {
+    dom.parentElement.querySelector('.topProduitsCarroussel').scrollBy({
+        left: itemWidth,
+        behavior: 'smooth' 
+    });
 }

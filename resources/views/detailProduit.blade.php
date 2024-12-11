@@ -1,15 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>@yield('title')</title>
-
-        <link rel="stylesheet" type="text/css" href="{{asset('css/produit.css')}}"/>   
-
-    </head> -->
-
 @extends('layouts.app')
 
 @section('title', $produit->nomproduit)
@@ -23,9 +11,6 @@
 
 <div class="product-detail">
     <h1>{{ $produit->nomproduit }}</h1>
-    <!--<p><strong>IdPays:</strong> ${{ $produit->idpays }}</p>
-    <p><strong>Source Notice:</strong> {{ $produit->sourcenotice }}</p>
-    <p><strong>Type Produit:</strong> {{ $produit->idtypeproduit ?? 'Uncategorized' }}</p>-->
 </div>
 
 
@@ -42,6 +27,15 @@
                 $colorDispos = $colorationsDispos;
                 $colorationProduit = $colorationChoisie;
                 $colorationPrincipale = DetailProduitController::defColorationPrincipale($colorationChoisie);
+
+                $consultationActuelle = array("coloration" => $colorationPrincipale);
+                if(!in_array($consultationActuelle, $_SESSION['historiqueConsultation'])) {
+                    array_unshift($_SESSION['historiqueConsultation'], $consultationActuelle);
+                }
+                $_SESSION['historiqueConsultation'] = array_slice($_SESSION['historiqueConsultation'], 0, 10);
+                // Stockage dans les cookies pour garder l'historique apres fermeture session
+                //setcookie('cookieDernieresConsultations', json_encode($_SESSION['historiqueConsultation']), time() + $cookieDuration, '/')
+
                 ?>
                 <details id="descProduit" class="descProduitAccordion">
                     <summary class="titreDescAccordion">
@@ -105,13 +99,14 @@
 
                         <div id="div-button-panier">
                             <button id='minusOne' class='button-quantite' disabled onclick="minusOne()">-</button>
-                            <input id='quant' class='input-quantite' type="text" value="1" onchange="verif()"></input>
-                            <button id='plusOne' class='button-quantite' onclick="plusOne()">+</button>
-                            <button id="button-achete" onclick='achete(<?php
-                                                                        echo $colorationChoisie->idproduit;
-                                                                        echo ",";
-                                                                        echo $colorationChoisie->idcouleur;
-                                                                        ?>)'>J'achète</button>
+                            <input id='quant' class='input-quantite' type="text" value="1" onchange='verif(<?php echo $colorationChoisie->quantitestock ?>)'></input>
+                            <button id='plusOne' class='button-quantite' onclick='plusOne(<?php echo $colorationChoisie->quantitestock ?>)'>+</button>
+                            <button id="button-achete" onclick='achete(
+                            <?php
+                            echo $colorationChoisie->idproduit;
+                            echo ",";
+                            echo $colorationChoisie->idcouleur;
+                            ?>)'>J'achète</button>
                         </div>
                     </div>
                 </div>
@@ -157,6 +152,32 @@
                     <span class="closePreview" onclick="closePreview()">&times;</span>
                     <img class="contentPreview" id="previewImage">
                 </div>
+            </div>
+        </div>
+
+        <div class="divListeProduits marge">
+            <div class="divProduitsSimilaire">
+                <?php
+
+                $lesProduitsSimilaire = DetailProduitController::getProduitsSimilaire($produit);
+                DetailProduitController::affichageProduitsSimilaire($lesProduitsSimilaire);
+
+                ?>
+            </div>
+
+            <div class="divProduitsAimes">
+                <?php
+                $topProduits = DetailProduitController::getProduitsLikes($produit);
+                DetailProduitController::affichageTopProduitsLikes($topProduits);
+                ?>
+            </div>
+
+            <div class="divProduitsConsultes">
+                <?php
+                $sessionHistorique = $_SESSION['historiqueConsultation'];
+                $produitsConsultes = DetailProduitController::getProduitsConsultes($sessionHistorique);
+                DetailProduitController::affichageProduitsConsultes($produitsConsultes);
+                ?>
             </div>
         </div>
 </body>

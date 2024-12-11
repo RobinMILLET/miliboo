@@ -7,6 +7,7 @@ use App\Models\Produit;
 use App\Models\TypeProduit;
 use App\Models\CategorieProduit;
 use App\Models\RegroupementProduit;
+use App\Models\ProduitSimilaire;
 
 class RechercheController extends Controller
 {
@@ -183,4 +184,5 @@ class RechercheController extends Controller
             'produits' => self::recherche($produits)
         ]);
     }
+
 }

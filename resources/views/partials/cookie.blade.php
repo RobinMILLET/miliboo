@@ -83,21 +83,7 @@
                                         <p>Ces cookies permettent de garder en mémoire si vous avez accepté les cookies pour que nous ne vous demandions pas à chaque interaction votre consentement. Vous pourrez tout de même revenir sur votre décision en cliquant sur le logo des cookies afin de les reconfigurer à n’importe quel moment. </p>
                                     </div>
                                 </details>
-                                <details class="detail-cookie">
-                                    <summary class="detail-titre marge-cookie">
-                                        <div class="div-title-detail">
-                                            <span class="deployant">+</span>
-                                            <p class="title-cookie">Cookie id securite </p>
-                                        </div>
-                                        <label class="switch">
-                                            <input id="cookieIdSecurite" data="idSecurite" type="checkbox" autocomplete="off">
-                                            <span class="slider round"></span>
-                                        </label>
-                                    </summary>
-                                    <div class="detail-div-cookie marge-cookie">
-                                        <p>Ces cookies permettent de que vous vous connectiez automatiquement que vous revenez sur le Site Miliboo pour que cela soit plus pratique pour vous.</p>
-                                    </div>
-                                </details>
+                               
                                 <details class="detail-cookie">
                                     <summary class="detail-titre marge-cookie">
                                         <div class="div-title-detail">

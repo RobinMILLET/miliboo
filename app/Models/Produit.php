@@ -66,6 +66,22 @@ class Produit extends Model
         return $this->hasMany(ValeurAttribut::class, 'idproduit', 'idproduit')->get();
     }
 
+
+    /**
+     * Renvoie les attributs de ce produit
+     * @return Collection<ProduitSimilaire>
+    **/  
+    public function getProduitSimilaire(){
+        return $this->hasMany(ProduitSimilaire::class, 'pro_idproduit', 'idproduit')->get();
+    }
+
+    /**
+     * Renvoie les client ayant aimes ce produit
+     * @return Collection<Client>
+    **/    
+    public function getAimeParClient() {
+        return $this->belongsToMany(Client::class, 'a_aimer', 'idproduit', 'idclient');
+    }
     
     public function colorationPrixMin($seulementVisibles = true) {
         $minPrice = PHP_INT_MAX;

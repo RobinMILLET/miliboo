@@ -7,15 +7,12 @@ function m(id) {
     idproduit = id.split("-")[0]
     idcouleur = id.split("-")[1]
     fetch("/addPanier/"+idproduit+"/"+idcouleur+"/-1")
-        .then().then(_ => {
-            fetch("/prixPanier/"+idproduit+"/"+idcouleur)
-                .then(response => response.json())
-                .then(data => {
-                    quant.innerHTML = data.quant
-                    if (data.quant <= 1) minus.disabled = true
-                    total.innerHTML = data.prix
-                });
-            getPrixPanier()
+        .then(response => response.json())
+        .then(data => {
+            quant.innerHTML = data.quantite
+            if (data.quantite <= 1) minus.disabled = true
+            total.innerHTML = data.prixligne
+            getPrixPanier(data.prixpanier)
     });
 }
 
@@ -28,15 +25,12 @@ function p(id) {
     idproduit = id.split("-")[0]
     idcouleur = id.split("-")[1]
     fetch("/addPanier/"+idproduit+"/"+idcouleur+"/1")
-        .then().then(_ => {
-            fetch("/prixPanier/"+idproduit+"/"+idcouleur)
-                .then(response => response.json())
-                .then(data => {
-                    quant.innerHTML = data.quant
-                    if (data.quant >= 99) plus.disabled = true
-                    total.innerHTML = data.prix
-                });
-            getPrixPanier()
+        .then(response => response.json())
+        .then(data => {
+            quant.innerHTML = data.quantite
+            if (data.quantite >= data.quantitemax) plus.disabled = true
+            total.innerHTML = data.prixligne
+            getPrixPanier(data.prixpanier)
     });
 }
 
@@ -44,22 +38,17 @@ function d(id) {
     idproduit = id.split("-")[0]
     idcouleur = id.split("-")[1]
     fetch("/setPanier/"+idproduit+"/"+idcouleur+"/0")
-        .then().then(data => {
+        .then(response => response.json())
+        .then(data => {
             window.location.reload()
+            console.log(data.message)
         });
 }
 
-function getPrixPanier() {
-    let panier = document.getElementById("prixpanier")
-    let total = document.getElementById("prixtotal")
-    let fidel = document.getElementById("info-fidelite")
-    fetch("/prixPanier")
-        .then(response => response.json())
-        .then(data => {
-            panier.innerHTML = data.prix
-            total.innerHTML = data.prix
-            fidel.innerHTML = fidelite(data.prix) + "€ OFFERT"
-        });
+function getPrixPanier(prixpanier) {
+    document.getElementById("prixpanier").innerHTML = prixpanier
+    document.getElementById("prixtotal").innerHTML = prixpanier
+    document.getElementById("info-fidelite").innerHTML = fidelite(prixpanier) + "€ OFFERT"
 }
 
 function fidelite($prix) {

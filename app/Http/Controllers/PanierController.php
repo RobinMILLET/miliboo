@@ -12,7 +12,8 @@ class PanierController extends Controller
         $id = $coloration->idproduit."-".$coloration->idcouleur;
         $photo = $coloration->getPhoto()->first();
         $produit = $coloration->getProduit();
-        $nom = "<p class='p-name'>$produit->nomproduit</p>";
+        $href = "href='/produit/idproduit$coloration->idproduit/coloration$coloration->idcouleur'";   
+        $nom = "<a $href><p class='p-name'>$produit->nomproduit</p></a>";
 
         // Photo
         if ($photo) {
@@ -23,7 +24,7 @@ class PanierController extends Controller
             $source = "PLACEHOLDER.png";
             $desc = "Image par défaut";
         }
-        $img = "<td class='td-article'><img src='/img/$source' alt='$desc'></td>";
+        $img = "<td class='td-article'><a $href><img src='/img/$source' alt='$desc'></a></td>";
         
         // Prix et réduction
         if (!$coloration->prixsolde) {
@@ -42,7 +43,7 @@ class PanierController extends Controller
 
         // Quantités
         $disablelow = $quantite <= 1 ? "disabled" : "";
-        $disablehigh = $quantite >= 99 ? "disabled" : "";
+        $disablehigh = $quantite >= $coloration->quantitestock ? "disabled" : "";
         $quantites = "<td class='td-quantite'><div class='div-quantite'>" .
                     "<button id='m$id' class='button-quantite' onclick=\"m('$id')\" $disablelow>-</button>" .
                     "<label id='q$id' class='label-quantite'>$quantite</label>" .
@@ -59,7 +60,7 @@ class PanierController extends Controller
         // ligne = [idproduit, idcouleur, quantite]
         $coloration = Coloration::where('idproduit', '=', $ligne[0])
             ->where('idcouleur', '=', $ligne[1])->first();
-        if (!$coloration) return "Erreur sur p".$ligne[0]." c".$ligne[1];
+        if (!$coloration) return "Erreur sur P:".$ligne[0]." C:".$ligne[1];
         $quantite = $ligne[2];
         return self::afficheLigne($coloration, $quantite);
     }
@@ -84,29 +85,18 @@ class PanierController extends Controller
         $_SESSION["panier"] = $newPanier;
     }
 
-    public static function prixLignePanier_($idproduit, $idcouleur, $quantite = null) {
-        $idproduit = intval($idproduit); $idcouleur = intval($idcouleur);
-        if (!$quantite) $quantite = self::findLignePanier($idproduit, $idcouleur)[2];
-        $coloration = Coloration::where('idproduit', '=', $idproduit)
-            ->where('idcouleur', '=', $idcouleur)->firstOrFail();
-        if ($coloration->prixsolde) {
-            return $coloration->prixsolde * $quantite;
-        }
-        return $quantite * $coloration->prixvente;
-    }
-
-    public static function prixLignePanier($idproduit, $idcouleur) {
-        $prix = self::prixLignePanier_($idproduit, $idcouleur);
-        $quant = self::findLignePanier($idproduit, $idcouleur)[2];
-        return response()->json(["prix" => round($prix, 2), "quant" => $quant]);
-    }
-
-    public static function prixPanier() {
+    public static function prixPanier($route = true) {
         $prix = 0;
         foreach ($_SESSION["panier"] as $ligne) {
-            $prix += self::prixLignePanier_($ligne[0], $ligne[1], $ligne[2]);
+            $coloration = Coloration::where('idproduit', '=', $ligne[0])
+                ->where('idcouleur', '=', $ligne[1])->first();
+            if (!$coloration) continue;
+            $prixcoloration = $coloration->prixsolde ?? $coloration->prixvente;
+            $prix += $prixcoloration * $ligne[2];
         }
-        return response()->json(["prix" => round($prix, 2)]);
+        if ($route) return response()->json([
+            "prixpanier" => round($prix, 2)]);
+        return round($prix, 2);
     }
 
     public static function setLignePanier($idproduit, $idcouleur, $quantite) {
@@ -116,10 +106,12 @@ class PanierController extends Controller
         $coloration = Coloration::where('idproduit', '=', $idproduit)
             ->where('idcouleur', '=', $idcouleur)->first();
         if (!$coloration) return response()->json([
-            "message" => "p$idproduit c$idcouleur inconnu"]);
+            "message" => "P:$idproduit C:$idcouleur ; Objet inconnu"]);
+
+        $quantMax = $coloration->quantitestock;
         $index = self::findIndexPanier($idproduit, $idcouleur);
         if ($index == -1) {
-            if ($quantite <= 0) return;
+            if ($quantite <= 0) return response()->json(["message" => "Aucun ajout"]);
             $_SESSION["panier"][] = [$idproduit, $idcouleur, $quantite];
         }
         else {
@@ -127,12 +119,23 @@ class PanierController extends Controller
                 unset($_SESSION["panier"][$index]);
             }
             else {
-                if ($quantite > 99) $quantite = 99;
+                if ($quantite > $quantMax) $quantite = $quantMax;
                 $_SESSION["panier"][$index][2] = $quantite;
             }
         }
+
         self::fixPanier();
-        // TODO: update le cookie ici
+        $consentement = CookieController::getCookie("cookieConsentement");
+        if ($consentement && $consentement[1]) {
+            $response = CookieController::setCookie("cookieConservationPanier", $_SESSION["panier"], 1, "mois");
+        }
+        else $response = response()->json(["message" => "Panier mis à jour"]);
+        
+        $prixcoloration = $coloration->prixsolde ?? $coloration->prixvente;
+        $response->setData(["idproduit" => $idproduit, "idcouleur" =>$idcouleur,
+            "quantite" => $quantite, "quantitemax" => $quantMax, "prix" => round($prixcoloration,2),
+            "prixligne" => round($prixcoloration*$quantite,2), "prixpanier" => self::prixPanier(false)]);
+        return $response;
     }
 
     public static function addToPanier($idproduit, $idcouleur, $quantite) {
@@ -142,7 +145,7 @@ class PanierController extends Controller
         $ligne = self::findLignePanier($idproduit, $idcouleur);
         $total = $ligne ? $ligne[2] : 0;
         $total += $quantite;
-        self::setLignePanier($idproduit, $idcouleur, $total);
+        return self::setLignePanier($idproduit, $idcouleur, $total);
     }
 
     public static function findLignePanier($idproduit, $idcouleur) {

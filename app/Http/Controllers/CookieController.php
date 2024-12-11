@@ -40,7 +40,7 @@ class CookieController extends Controller
     public static function getCookie($cle, $route = false) {
         $valeur = Cookie::get($cle);
         $valeur = json_decode($valeur, true);
-        if (!$route) return $valeur;
+        if (!$route) return json_decode($valeur, true);
         return response()->json(["message" => "Cookie '".$cle."' récupéré.", "valeur" => $valeur]);
     }
 

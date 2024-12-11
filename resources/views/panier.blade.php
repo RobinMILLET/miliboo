@@ -108,7 +108,11 @@
     </div>
 </div>
 <script>
-    getPrixPanier()
+    fetch("/prixPanier")
+        .then(response => response.json())
+        .then(data => {
+            getPrixPanier(data.prixpanier)
+    });
 </script>
 
 @endsection
