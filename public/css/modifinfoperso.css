@@ -1,0 +1,168 @@
+#background-info-perso{
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgb(0, 0, 0, 0.7); 
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+#div-bk-modif{
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    box-sizing: border-box;
+    padding: 2vw;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.input{
+    flex: 1;
+    padding: 15px;
+
+    border: 1.5px solid rgb(179, 179, 179);
+    border-radius: 5px;
+    outline: none;
+
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.input::placeholder{
+    font-weight: 200;
+}
+
+#adresse{
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.div-input{
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    width: 100%;
+}
+
+#info-perso{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+#select-civilite{
+    flex: 0.5;
+}
+
+#div-date-naissance{
+    width: 40%;
+}
+
+#zone{
+    width: 100%;
+    display: flex;
+    gap: 10px;
+}
+
+#telephone{
+    width: 100%;
+    display: flex;
+    gap: 10px;
+}
+
+.select-telephone{
+    padding: 14px 10px 14px 10px;
+    box-sizing: border-box;
+    background-color: rgb(230, 230, 230);
+    font-size: 15px;
+    border-radius: 5px 0px 0px 5px;
+    border: none;
+}
+
+.div-telephone{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+
+.p-obligatoire{
+    color: gray;
+    font-size: 10px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-left: auto;
+}
+
+#div-header-modif{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+
+    border-bottom: 1px solid rgb(192, 192, 192);
+    margin-bottom: 1.5vh;
+}
+
+.title-part{
+    font-weight: 300;
+}
+
+#button-ferme-perso{
+    background-color: black;
+    color: white;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    padding: 5px 7px 5px 7px;
+
+    transition: all 0.5s ease;
+}
+
+#button-ferme-perso:hover{
+    filter: invert(100%);
+}
+
+#email{
+    width: 100%;
+}
+
+#accepte-modif{
+    margin-top: 5vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    border-top: 1px solid rgb(192, 192, 192);
+}
+
+#button-valide{
+    margin-top: 2%;
+    margin-bottom: 2%;
+    padding: 10px 20px 10px 20px;
+
+    border: none;
+    outline: none;
+    background-color: green;
+    color: white;
+}

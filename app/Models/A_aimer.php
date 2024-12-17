@@ -9,12 +9,14 @@ class A_aimer extends Model
 {
     use HasFactory;
     protected $table = 'a_aimer';
-    protected $primaryKey = null;
     public $timestamps = false;
+    
+    //IMPORTANT POUR LES INSERTS
+    protected $fillable = ['idclient', 'idproduit'];
 
     public function getProduit()
     {
-        return $this->hasMany(Produit::class, 'idproduit', 'idproduit')->get();
+        return $this->belongsTo(Produit::class, 'idproduit', 'idproduit')->get()->firstOrFail();
     }
 
     public function getClient()

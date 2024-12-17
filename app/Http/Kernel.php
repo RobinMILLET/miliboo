@@ -17,6 +17,7 @@ class Kernel extends HttpKernel
         // \App\Http\Middleware\TrustHosts::class,
 
         //COOKIES
+        \App\Http\Middleware\InitializeClient::class,
         \App\Http\Middleware\InitializePanier::class,
         \App\Http\Middleware\InitializeHistorique::class,
 

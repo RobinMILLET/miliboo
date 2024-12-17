@@ -3488,3 +3488,9 @@ SELECT
     FLOOR(RANDOM() * 5 + 1),   -- Génère un nombre aléatoire entre 1 et 5 pour col2
     1                          -- Valeur fixe 1 pour col3
 FROM generate_series(1, 10);   -- Crée 10 lignes
+
+--ALTER TABLE miliboo.client RENAME COLUMN saltmdp TO remembertoken;
+--ALTER TABLE miliboo.client ALTER COLUMN remembertoken TYPE char (256);
+--ALTER TABLE miliboo.client ALTER COLUMN remembertoken DROP NOT NULL;
+--UPDATE miliboo.client set remembertoken = null;
+--ALTER TABLE miliboo.client ADD limitetoken DATE NULL; 

@@ -100,7 +100,7 @@
     border-radius: 5px;
 }
 
-#li-required{
+.li-required{
     font-size: 15px;
     padding: 10px 5px 10px 5px;
     border-bottom: 1px solid gray;
@@ -251,4 +251,18 @@
     outline: none;
     background-color: black;
     color: white;
+}
+
+#button-valide:disabled{
+    opacity: 0.5;
+    cursor: default;
+}
+
+#button-valide a{
+    color: white;
+    font-size: 2vh;
+}
+
+.noreq {
+    color: red;
 }

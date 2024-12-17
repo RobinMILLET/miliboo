@@ -1,0 +1,65 @@
+#div-info-perso{
+    box-sizing: border-box;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#title-info-perso{
+    font-weight: 200;
+    font-size: medium;
+}
+
+#content-info-perso{
+    display: flex;
+    gap: 20px;
+}
+
+.adresse-section{
+    flex: 1;
+    border: 1px solid rgb(192, 192, 192);
+    border-radius: 5px;
+    box-sizing: border-box;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 3vh;
+}
+
+.header-adresse{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.button{
+    padding: 1vh;
+    padding-left: 1.5vh;
+    padding-right: 1.5vh;
+    background-color: black;
+    color: white;
+    border: none;
+}
+
+.p-info-perso{
+    font-size: 14px;
+    margin: 0.5vh;
+    color: rgb(70, 70, 70);
+}
+
+#header-livraison{
+    border-bottom: 1px solid rgb(192, 192, 192);
+}
+
+.adresse{
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+}
+
+.adresse-info{
+    display: flex;
+    justify-content: space-between;
+}
+
+#button-adresse{
+    height: 50%;
+}

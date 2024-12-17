@@ -11,15 +11,15 @@ use Illuminate\Support\Facades\Cookie;
 
 class InitializePanier
 {
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
-        $connected = false; // Si utilisateur connecté
+        $connected = $_SESSION['client'] ?? null;
 
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
         if (!isset($_SESSION["panier"])) {
-            $cookie = Cookie::get("cookieConservationPanier");
+            $cookie = $request->cookie("cookieConservationPanier");
             if ($connected) {
                 if ($cookie) {
                     // Fusion paniers

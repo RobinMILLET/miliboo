@@ -33,7 +33,8 @@
             </div>
             <ul id="test">
                 <li>    <a href=""> <img class="imgtest" src="{{ asset('img/question.png') }}" alt="image d'aide"></li>    </a>
-                <li>    <a href="{{ route('compte') }}"> <img class="imgtest" src="{{ asset('img/user.png') }}" alt="image compte"></li>        </a>
+                <li><a href="{{ route('espaceclient')}}"> <img class='imgtest' src='/img/user.png' alt='image compte'>
+            </li>        </a>
                 <li>    <a href="{{ route('panier') }}"> <img class="imgtest" src="{{ asset('img/basket.png') }}" alt="image panier"></li>      </a>
             </ul>
         </div>

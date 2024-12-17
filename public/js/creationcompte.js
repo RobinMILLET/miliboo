@@ -2,12 +2,83 @@ const radioProfessionnel = document.getElementById("radio-professionnel");
 const radioParticulier = document.getElementById("radio-particulier");
 const infoProDiv = document.getElementById("info-pro");
 
-radioProfessionnel.addEventListener("change", function(){
-    infoProDiv.style.height = "auto";
-    infoProDiv.style.visibility = "visible";
-})
+if(radioProfessionnel)
+    radioProfessionnel.addEventListener("change", function(){
+        infoProDiv.style.height = "auto";
+        infoProDiv.style.visibility = "visible";
+    })
 
-radioParticulier.addEventListener("change", function(){
-    infoProDiv.style.visibility = "collapse";
-    infoProDiv.style.height = "0";
-})
+if(radioParticulier)
+    radioParticulier.addEventListener("change", function(){
+        infoProDiv.style.visibility = "collapse";
+        infoProDiv.style.height = "0";
+    })
+
+function validateReq(passwd, value, id) {
+    obj = document.getElementById(id)
+    submit = document.getElementById("button-valide")
+    if (!passwd || value) {
+        obj.classList.remove("noreq")
+    }
+    else {
+        obj.classList.add("noreq")
+        submit.disabled = true
+    }
+
+}
+
+function hasLowerCase(str) {
+    return str.toUpperCase() != str;
+}
+
+function hasUpperCase(str) {
+    return str.toLowerCase() != str;
+}
+
+function hasNumber(str) {
+    return /\d/.test(str);
+}
+
+function hasSpecialChar(str) {
+    test = /[!@#$%^&*()\-+={}[\]:;"'<>,.?\/|\\]/;
+    return test.test(str);
+}
+
+function validatePassword() {
+    passwd = document.getElementById("password").value
+    passwdCon = document.getElementById("passwordConfirm").value
+    submit = document.getElementById("button-valide")
+    submit.disabled = false
+    validateReq(passwd, passwd.length >= 12, "req1")
+    validateReq(passwd, hasLowerCase(passwd), "req2")
+    validateReq(passwd, hasUpperCase(passwd), "req3")
+    validateReq(passwd, hasNumber(passwd), "req4")
+    validateReq(passwd, hasSpecialChar(passwd), "req5")
+    validateReq(passwd && passwdCon, passwd == passwdCon, "req6")
+}
+
+function validateCP() {
+    cp = document.getElementById("cp").value
+    submit = document.getElementById("button-valide")
+    submit.disabled = false
+    validateReq(cp, cp.length == 5 && !isNaN(cp), "cp")
+}
+
+function validateTel(id) {
+    tel = document.getElementById(id).value
+    submit = document.getElementById("button-valide")
+    submit.disabled = false
+    validateReq(tel, tel.length == 9 && !isNaN(tel), id)
+}
+
+function checkVille() {
+    cp = encodeURIComponent(document.getElementById("cp").value)
+    ville = document.getElementById("ville")
+    if (!ville.value) return
+    value = encodeURIComponent(ville.value)
+    fetch("/villeApprox/" + cp + "/" + value)
+        .then(response => response.json())
+        .then(data => {
+            if(data.ville) ville.value = data.ville
+    });
+}

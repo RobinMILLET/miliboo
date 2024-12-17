@@ -1,0 +1,166 @@
+#background-avis{
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgb(0, 0, 0, 0.7); 
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+#div-bk-avis{
+    position: relative;
+    width: 60vw;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    box-sizing: border-box;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+
+#adresse{
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+#titre-avis{
+    margin-top: 0;
+}
+
+#form-avis{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 20px;  
+}
+
+.div-section-avis{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.titre-section-avis{
+    margin: 0;
+}
+
+.input{
+    width: 75%;
+    padding: 15px;
+
+    border: 1.5px solid rgb(179, 179, 179);
+    border-radius: 5px;
+    outline: none;
+
+    text-align: center;
+}
+
+.input::placeholder{
+    font-weight: 200;
+}
+
+#input:focus{
+    outline: none;
+    box-shadow: 0px 0px 10px black;
+}
+
+.drop-zone {
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    padding: 50px;
+    text-align: center;
+    cursor: pointer;
+    width: 75%;
+    box-sizing: border-box;
+
+    transition: background-color 0.3s ease;
+}
+
+.drop-zone.dragover {
+    background-color: #e0e0e0;
+}
+
+#image-drop{
+    flex-direction: row !important;
+}
+
+#ul-file{
+    margin: 0;
+    padding: 0;
+}
+
+#input-image p {
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+#div-button-avis{
+    width: 50%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    gap: 1vh;
+    align-items: center;
+}
+
+.span-avis{
+    background-color: white;
+    border: none;
+    aspect-ratio: 1;
+    font-size: 3vh;
+}
+
+#button-valide{
+    padding: 10px 20px 10px 20px;
+
+    border: none;
+    outline: none;
+    background-color: black;
+    color: white;
+    transform: scale(1.2);
+}
+
+#close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: #333;
+}
+
+#close-button:hover {
+    color: #000;
+    transform: scale(1.1);
+}
+
+#image-preview-container img {
+    max-width: 100px;
+    max-height: 100px;
+    margin: 5px;
+    border: 1px solid #ccc;
+}

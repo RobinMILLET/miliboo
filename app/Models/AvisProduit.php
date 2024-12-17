@@ -10,7 +10,10 @@ class AvisProduit extends Model
     use HasFactory;
     protected $table = "avisproduit";
     protected $primaryKey = "idavis";
+    public $incrementing = true;
     public $timestamps = false;
+
+    protected $fillable = [''];
 
         /**
      * Renvoie le client lié à l'avis

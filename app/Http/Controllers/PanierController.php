@@ -125,16 +125,24 @@ class PanierController extends Controller
         }
 
         self::fixPanier();
-        $consentement = CookieController::getCookie("cookieConsentement");
-        if ($consentement && $consentement[1]) {
-            $response = CookieController::setCookie("cookieConservationPanier", $_SESSION["panier"], 1, "mois");
+        $consentement = CookieController::getCookie("cookieConsentement", false);
+        if ($consentement && $consentement[1] && false) {
+            $cookie = CookieController::setCookie("cookieConservationPanier", $_SESSION["panier"], 1, "mois", false);
         }
-        else $response = response()->json(["message" => "Panier mis à jour"]);
-        
-        $prixcoloration = $coloration->prixsolde ?? $coloration->prixvente;
-        $response->setData(["idproduit" => $idproduit, "idcouleur" =>$idcouleur,
-            "quantite" => $quantite, "quantitemax" => $quantMax, "prix" => round($prixcoloration,2),
-            "prixligne" => round($prixcoloration*$quantite,2), "prixpanier" => self::prixPanier(false)]);
+        else $cookie = null;
+        $message = $cookie ? "Cookie 'cookieConservationPanier' mis à jour." : "Panier mis à jour.";
+
+        $prixColoration = $coloration->prixsolde ?? $coloration->prixvente;
+        $response = response()->json([
+            "message" => $message,
+            "idproduit" => $idproduit,
+            "idcouleur" => $idcouleur,
+            "quantite" => $quantite,
+            "quantitemax" => $quantMax,
+            "prix" => round($prixColoration,2),
+            "prixligne" => round($prixColoration*$quantite,2),
+            "prixpanier" => self::prixPanier(false)]);
+        if ($cookie) $response->cookie($cookie);
         return $response;
     }
 

@@ -1,0 +1,62 @@
+#div-info-commande{
+    box-sizing: border-box;
+}
+
+.p-info{
+    font-weight: 100;
+    font-size: small;
+    color: rgb(75, 75, 75);
+}
+
+.div-info{
+    border: 1px solid rgb(192, 192, 192);
+    border-radius: 5px;
+    box-sizing: border-box;
+    padding: 5px;
+}
+
+#div-info-fidelite{
+    width: 50%;
+    margin-left: auto;
+    box-sizing: border-box;
+
+    margin-top: 3vh;
+}
+
+#table-commande{
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 3vh;
+}
+
+thead{
+    border-bottom: 1px solid rgb(192, 192, 192);
+}
+
+th{
+    font-size: 1.5vh;
+    text-align: left;
+}
+
+.tr-body{
+    background-color: rgb(240, 240, 240);
+    box-sizing: border-box;
+    border-bottom: 1px solid rgb(192, 192, 192);
+}
+
+.tr-body td{
+    padding: 10px;
+    padding-left: 0;
+    font-size: 1.5vh;
+}
+
+.button-detail{
+    padding: 1vh;
+    background-color: black;
+    color: white;
+    border: none;
+}
+
+.button-detail:hover{
+    filter: invert(30%);
+}

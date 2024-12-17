@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Contracts\Auth\Authenticatable;
 
 class Client extends Model
 {
@@ -14,10 +13,26 @@ class Client extends Model
     protected $table = "client";
     protected $primaryKey = "idclient";
     public $timestamps = false;
-    protected $hidden = ['hashmdp'];
+    public $incrementing = true;
+    protected $keyType = 'int';
+    protected $hidden = ['hashmdp', 'rememberme'];
+    protected $fillable = [
+        'nomclient', 'prenomclient', 'civiliteclient',
+        'emailclient', 'telfixeclient', 'telportableclient',
+        'datecreationcompte', 'hashmdp', 'pointfideliteclient',
+        'newslettermiliboo', 'newsletterpartenaires'];
 
     public function getProduitsAimes() {
         return $this->belongsToMany(Produit::class, 'a_aimer', 'idclient', 'idproduit');
+    }
+
+    public function getCommande() {
+        return $this->hasMany(Commande::class, 'idclient', 'idclient')->get();
+    }
+
+
+    public function getAdresse(){
+        return $this->hasOne(Adresse::class, 'idclient', 'idclient')->get()->first();
     }
 
     public function checkPassword($password) {
@@ -25,12 +40,28 @@ class Client extends Model
         return Hash::check($password, rtrim($this->hashmdp));
     }
 
+    public function checkToken() {
+        if ($this->limitetoken < now()) {
+            $this->remembertoken = null;
+            $this->limitetoken = null;
+            $this->save();
+        }
+    }
+
     public static function auth($login, $password) {
-        // null: email inconnu ; false: mauvais mdp ; Client: OK
         // TODO: index sur emails dans BdD
-        $client = self::where('emailclient', $login)->first();
+        $client = Client::where('emailclient', strtolower($login))->first();
         if (!$client) return null;
-        if (!$client->checkPassword($password)) return false;
+        if (!$client->checkPassword($password)) return null;
+        $client->checkToken();
+        return $client;
+    }
+
+    public static function loginByToken($login, $token) {
+        $client = Client::where('emailclient', strtolower($login))->first();
+        if (!$client) return null;
+        $client->checkToken();
+        if ($client->remembertoken == $token) return null;
         return $client;
     }
 }

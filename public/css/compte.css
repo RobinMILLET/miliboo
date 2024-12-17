@@ -31,6 +31,10 @@
     outline: none;
 }
 
+.error {
+    border-color: red;
+}
+
 .input-compte::placeholder{
     font-weight: 200;
 }
@@ -119,4 +123,13 @@
     text-decoration: underline;
     font-size: 14px;
     color: rgb(53, 53, 53);
+}
+
+.error-msg{
+    color: red;
+    display: none;
+}
+
+.used{
+    display: block;
 }

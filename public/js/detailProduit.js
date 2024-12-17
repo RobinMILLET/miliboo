@@ -130,3 +130,63 @@ function scrollRight(dom) {
         behavior: 'smooth' 
     });
 }
+
+
+const background = document.querySelector("#background-avis");
+const openAvis = document.querySelector("#button-depose-avis");
+if (openAvis) {
+openAvis.addEventListener("click", () => {
+    background.style.display = "flex";
+})}
+
+
+
+
+
+//Envoi une requete POST au backend pour ajouter le produit au like du client
+//Manque le changement d'interface (coeur deja rempli si le client consulte un produit liké precedemment)
+const imgLike = document.querySelector("#img-like");
+let isLiked = imgLike.getAttribute("data-liked") === "true";
+imgLike.addEventListener("click", () => {
+    console.log("Like")
+    imgLike.style.transform = "scale(1.2)";
+
+    setTimeout(() => {
+        let idProduit = imgLike.getAttribute("data-idproduit");
+        let liked = imgLike.getAttribute("data-liked") === "true";
+        let newStatutLike = !liked
+
+        imgLike.setAttribute("data-liked", newStatutLike ? "true" : "false");
+        imgLike.src = newStatutLike ? "../../img/coeur-like.png" : "../../img/coeur.png";
+
+
+        fetch('/toggle-like', {
+            method: 'POST',
+            headers: {
+                'Content-Type' : 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        },
+        body: JSON.stringify({
+            idProduit : idProduit,
+            liked: newStatutLike
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.redirection) {
+            console.log("Redirection vers la page de connexion...")
+            window.location.href = '/compte';
+        }
+        else if (data.success) {
+            let statutLike = data.statutLike;
+            console.log("Produit like")
+            console.log(imgLike.getAttribute("data-idproduit"))
+            imgLike.style.transform = "scale(1)";
+        }
+        else {
+            console.log("Erreur lors de l'envoi du like");
+        }
+    })
+    .catch(error => console.error("Echec requete:", error));
+},60);
+});

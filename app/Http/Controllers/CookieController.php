@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Crypt;
 
 class CookieController extends Controller
 {
@@ -30,23 +31,40 @@ class CookieController extends Controller
         return $duree;
     }
 
-    public static function setCookie($cle, $valeur, $duree, $unite = null) {
+    public static function setRequestCookie(Request $request, $cle, $valeur, $duree, $unite = null) {
+        $duree = self::convertir($duree, $unite);
+        return $request->cookie($cle, $valeur, $duree);
+    }
+
+    public static function setCookie($cle, $valeur, $duree, $unite = null, $route = true) {
         $valeur = json_encode($valeur);
         $duree = self::convertir($duree, $unite);
         $cookie = Cookie::make($cle, $valeur, $duree);
+        if (!$route) return $cookie;
         return response()->json(["message" => "Cookie '".$cle."' mis à jour."])->cookie($cookie);
     }
 
-    public static function getCookie($cle, $route = false) {
+    public static function getRequestCookie(Request $request, $cle) {
+        $cookie = $request->cookie($cle);
+            if ($cookie) {
+                $data = Crypt::decryptString($cookie);
+                $value = json_decode(explode("|", $data, 2)[1], true);
+                return $value;
+            }
+            return null;
+        }
+
+    public static function getCookie($cle, $route = true) {
         $valeur = Cookie::get($cle);
         $valeur = json_decode($valeur, true);
         if (!$route) return json_decode($valeur, true);
         return response()->json(["message" => "Cookie '".$cle."' récupéré.", "valeur" => $valeur]);
     }
 
-    public static function delCookie($cle)
+    public static function delCookie($cle, $route = true)
     {
-        Cookie::queue(Cookie::forget($cle));
-        return response()->json(["message" => "Cookie '".$cle."' supprimé."]);
+        $cookie = Cookie::forget($cle);
+        if (!$route) return $cookie;
+        return response()->json(["message" => "Cookie '".$cle."' supprimé."])->cookie($cookie);
     }
 }

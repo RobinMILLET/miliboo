@@ -35,7 +35,7 @@ function setCookie(cle, valeur, duree, unite = "j") {
 }
 
 function getCookie(cle) {
-    return fetch("/getcookie/" + encodeURIComponent(cle) + "/" + encodeURIComponent(true))
+    return fetch("/getcookie/" + encodeURIComponent(cle))
         .then(response => response.json())
         .then(data => {
             console.log(data.message);

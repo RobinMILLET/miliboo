@@ -12,8 +12,11 @@
 <h2 class="marge"  id="title-compte">Créer un compte ou se connecter</h2>
 
 <div class="marge" id="account">
-    <div class="div-compte" id="create">
+    <?php $createError = session()->get('error')=="create" ? " used" : ""; ?>
+    <form method="POST" action="/testCreate" class="div-compte" id="create">
+    @csrf
         <p>Je suis nouveau client - <span class="span-info">Créer un compte</span></p>
+        <p class="span-info error-msg{{$createError}}">Cette adresse e-mail est déjà utilisée !</p>
         <div class="div-input">
             <input type="email" placeholder="Votre adresse e-mail *" class="input-compte" name="email" required>
             <p class="p-obligatoire">* obligatoire</p>
@@ -41,19 +44,19 @@
         </div>
 
         <div class="div-button">
-            <button class="button-compte"><a href="{{ route('creationcompte') }}" id="a-compte">Créer mon compte</a></button>
+            <button class="button-compte" type="submit">Créer mon compte</button>
         </div>
-    </div>
-
+</form>
+    <?php $loginError = session()->get('error')=="login" ? " error" : ""; ?>
     <form method="POST" action="/login" class="div-compte" id="connection">
         @csrf
         <p>Je suis déjà client - <span class="span-info">Se connecter</span></p>
         <div class="div-input">
-            <input name="email" type="email" placeholder="Votre adresse e-mail *" class="input-compte" name="email" required>
+            <input name="email" type="email" placeholder="Votre adresse e-mail *" class="input-compte{{$loginError}}" required>
             <p class="p-obligatoire">* obligatoire</p>
         </div>
         <div class="div-input">
-            <input name="password" type="password" placeholder="Mot de passe *" class="input-compte" name="mdp" required>
+            <input name="password" type="password" placeholder="Mot de passe *" class="input-compte{{$loginError}}" required>
             <p class="p-obligatoire">* obligatoire</p>
         </div>
 

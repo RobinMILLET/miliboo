@@ -11,15 +11,15 @@ use Illuminate\Support\Facades\Cookie;
 
 class InitializeHistorique
 {
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
-        $connected = false; // Si utilisateur connecté
+        $connected = $_SESSION['client'] ?? null;
 
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
         if (!isset($_SESSION["historiqueConsultation"])) {
-            $cookie = Cookie::get("cookieDernieresConsultations");
+            $cookie = $request->cookie("cookieDernieresConsultations");
             if ($connected) {
                 if ($cookie) {
                     // 

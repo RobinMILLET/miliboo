@@ -1,0 +1,273 @@
+<?php
+/*
+Prerequisites
+Sending SMS notifications in Laravel is powered by Vonage (formerly known as Nexmo).
+ Before you can send notifications via Vonage, you need 
+ to install the laravel/vonage-notification-channel and guzzlehttp/guzzle packages:
+*/
+
+composer require laravel/vonage-notification-channel guzzlehttp/guzzle
+
+
+
+/*
+The package includes a configuration file.
+ However, you are not required to export this configuration file to your own application.
+  You can simply use the VONAGE_KEY and VONAGE_SECRET environment variables to define your Vonage public and secret keys.
+
+After defining your keys, you should set a VONAGE_SMS_FROM environment variable 
+that defines the phone number that your SMS messages should be sent from by default.
+You may generate this phone number within the Vonage control panel:
+*/
+VONAGE_SMS_FROM=15556666666
+
+
+
+
+
+
+/*
+Formatting SMS Notifications
+If a notification supports being sent as an SMS, 
+you should define a toVonage method on the notification class.
+ This method will receive a $notifiable entity and should 
+ return an Illuminate\Notifications\Messages\VonageMessage instance:
+*/
+<?php
+use Illuminate\Notifications\Messages\VonageMessage;
+   
+/**
+ * Get the Vonage / SMS representation of the notification.
+ */
+public function toVonage(object $notifiable): VonageMessage
+{
+    return (new VonageMessage)
+                ->content('Your SMS message content');
+}
+
+
+
+
+
+
+/*
+Unicode Content
+If your SMS message will contain unicode characters, you should call the unicode method when constructing the VonageMessage instance:
+<?php
+use Illuminate\Notifications\Messages\VonageMessage;
+ 
+/**
+ * Get the Vonage / SMS representation of the notification.
+ */
+public function toVonage(object $notifiable): VonageMessage
+{
+    return (new VonageMessage)
+                ->content('Your unicode message')
+                ->unicode();
+}
+
+
+
+/*
+Customizing the "From" Number
+If you would like to send some notifications from a phone number that is different from the phone number 
+specified by your VONAGE_SMS_FROM environment variable, 
+you may call the from method on a VonageMessage instance:
+
+<?php
+use Illuminate\Notifications\Messages\VonageMessage;
+ 
+/**
+ * Get the Vonage / SMS representation of the notification.
+ */
+public function toVonage(object $notifiable): VonageMessage
+{
+    return (new VonageMessage)
+                ->content('Your SMS message content')
+                ->from('15554443333');
+}
+
+
+/*
+Adding a Client Reference
+If you would like to keep track of costs per user, team, or client, you may add a "client reference" to the notification.
+Vonage will allow you to generate reports using this client reference so that you can better 
+understand a particular customer's SMS usage. 
+The client reference can be any string up to 40 characters:*/
+
+use Illuminate\Notifications\Messages\VonageMessage;
+ 
+/**
+ * Get the Vonage / SMS representation of the notification.
+ */
+public function toVonage(object $notifiable): VonageMessage
+{
+    return (new VonageMessage)
+                ->clientReference((string) $notifiable->id)
+                ->content('Your SMS message content');
+}
+
+
+
+
+/*
+Routing SMS Notifications
+To route Vonage notifications to the proper phone number, define a routeNotificationForVonage method on your notifiable entity:
+
+*/
+ 
+ namespace App\Models;
+  
+ use Illuminate\Foundation\Auth\User as Authenticatable;
+ use Illuminate\Notifications\Notifiable;
+ use Illuminate\Notifications\Notification;
+  
+ class User extends Authenticatable
+ {
+     use Notifiable;
+  
+     /**
+      * Route notifications for the Vonage channel.
+      */
+     public function routeNotificationForVonage(Notification $notification): string
+     {
+         return $this->phone_number;
+     }
+ }
+
+
+
+
+ 
+/*=========================================================================
+ 2eme solution possible
+
+ ============================================================================*/
+/*
+Pour envoyer un SMS depuis Laravel, vous pouvez utiliser un service de SMS comme Twilio, 
+Nexmo (désormais appelé Vonage) ou d'autres services de messagerie. Laravel dispose d'une intégration facile avec ces services via des packages,
+ comme Twilio ou Vonage, mais ici je vais vous expliquer comment envoyer un SMS en utilisant Twilio en tant qu'exemple.
+
+Étape 1 : Installer le package Twilio
+Tout d'abord, vous devez installer le package Twilio via Composer. Exécutez cette commande dans votre terminal à la racine de votre projet Laravel :
+*/
+bash
+Copier le code
+composer require twilio/sdk
+/*Étape 2 : Configurer les variables d'environnement
+Ensuite, vous devez configurer les informations d'identification Twilio dans votre fichier .env. 
+Ajoutez les lignes suivantes (vous pouvez obtenir vos informations d'identification Twilio sur leur site Web après la création d'un compte) :
+*/
+env
+Copier le code
+TWILIO_SID=your_twilio_sid
+TWILIO_AUTH_TOKEN=your_twilio_auth_token
+TWILIO_PHONE_NUMBER=your_twilio_phone_number
+/*Étape 3 : Créer un service d'envoi de SMS
+Vous pouvez créer un service pour gérer l'envoi des SMS. Créez un fichier SmsService.php dans le dossier app/Services/ (vous pouvez créer le dossier Services si ce n'est pas déjà fait).
+
+php
+Copier le code
+*/
+
+
+namespace App\Services;
+
+use Twilio\Rest\Client;
+
+class SmsService
+{
+    protected $twilioClient;
+    protected $twilioNumber;
+
+    public function __construct()
+    {
+        // Initialiser le client Twilio avec les informations d'identification
+        $this->twilioClient = new Client(
+            env('TWILIO_SID'),
+            env('TWILIO_AUTH_TOKEN')
+        );
+
+        // Récupérer le numéro de téléphone Twilio configuré dans .env
+        $this->twilioNumber = env('TWILIO_PHONE_NUMBER');
+    }
+
+    public function sendSms($to, $message)
+    {
+        // Utilisation de l'API Twilio pour envoyer un SMS
+        $this->twilioClient->messages->create(
+            $to, // Le numéro de téléphone destinataire
+            [
+                'from' => $this->twilioNumber, // Votre numéro Twilio
+                'body' => $message // Le message à envoyer
+            ]
+        );
+    }
+}
+/*
+Étape 4 : Utiliser le service dans un contrôleur
+Dans votre contrôleur, vous pouvez maintenant injecter ce service et utiliser la méthode sendSms pour envoyer un SMS. Par exemple, dans un contrôleur :
+
+php
+Copier le code
+*/
+
+
+namespace App\Http\Controllers;
+
+use App\Services\SmsService;
+use Illuminate\Http\Request;
+
+class SmsController extends Controller
+{
+    protected $smsService;
+
+    public function __construct(SmsService $smsService)
+    {
+        $this->smsService = $smsService;
+    }
+
+    public function send(Request $request)
+    {
+        // Valider les données
+        $request->validate([
+            'to' => 'required|phone', // Vous pouvez ajouter une validation de numéro
+            'message' => 'required|string'
+        ]);
+
+        // Envoyer le SMS
+        $this->smsService->sendSms($request->to, $request->message);
+
+        return response()->json(['message' => 'SMS envoyé avec succès']);
+    }
+}
+/*
+Étape 5 : Définir une route pour l'envoi de SMS
+Ajoutez une route dans le fichier routes/web.php pour tester l'envoi de SMS :
+
+php
+Copier le code
+*/
+use App\Http\Controllers\SmsController;
+
+Route::post('/send-sms', [SmsController::class, 'send']);
+
+
+/*Étape 6 : Tester l'envoi de SMS
+Vous pouvez maintenant envoyer un SMS en envoyant une requête POST à l'URL /send-sms avec les paramètres to (numéro du destinataire) et message (contenu du SMS).
+
+Exemple de requête avec Postman ou cURL :
+
+bash
+Copier le code
+*/
+
+curl -X POST http://votre-domaine/send-sms \
+     -d "to=+1234567890" \
+     -d "message=Bonjour, ceci est un test de SMS"
+
+/*
+Cela enverra un SMS au numéro que vous avez spécifié dans la requête.
+
+Conclusion
+Vous avez maintenant un service Laravel pour envoyer des SMS via Twilio. Vous pouvez adapter cette méthode pour d'autres fournisseurs de SMS en utilisant leurs API respectives et en modifiant la classe SmsService.

@@ -6,6 +6,7 @@ use DateInterval;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Mockery\Generator\StringManipulation\Pass\Pass;
+use Illuminate\Support\Facades\File;
 
 class Produit extends Model
 {
@@ -119,6 +120,10 @@ class Produit extends Model
             }
         }
         return $colorationPrincipale;
+    }
+
+    public function getAspectTechnique(){
+        
     }
              
     public function afficheRecherche($affichePrixMin = true, $valeursActives = null)

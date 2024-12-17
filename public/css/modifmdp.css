@@ -1,0 +1,85 @@
+#container-modif-mdp{
+    border: 1px solid rgb(192, 192, 192);
+    border-radius: 5px;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+#title-modif-mdp{
+    font-weight: 200;
+}
+
+#p-mail{
+    background-color: #cff4fc;
+    box-sizing: border-box;
+    padding: 15px;
+    border-radius: 5px;
+
+    color: rgb(29, 97, 119);
+}
+
+#div-input{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input{
+    max-width: 30%;
+    padding: 10px;
+
+    border: 1.5px solid rgb(179, 179, 179);
+    border-radius: 5px;
+    outline: none;
+
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.input::placeholder{
+    font-weight: 200;
+}
+
+.input:checked{
+    outline: none;
+    box-shadow: 0px 0px 10px black;
+}
+
+#ul-mdp-required{
+    width: calc(50% - 14px);
+    padding: 0;
+    color: rgb(131, 131, 131);
+
+    border: 1px solid rgb(131, 131, 131);
+    border-radius: 5px;
+}
+
+.li-required{
+    font-size: 15px;
+    padding: 10px 5px 10px 5px;
+    border-bottom: 1px solid gray;
+}
+
+#button-valide{
+    margin-top: 2%;
+    margin-bottom: 2%;
+    padding: 10px 20px 10px 20px;
+
+    border: none;
+    outline: none;
+    background-color: black;
+    color: white;
+}
+
+.error {
+    border-color: red;
+}
+
+.noreq {
+    color: red;
+}
+
+#button-valide:disabled{
+    opacity: 0.5;
+    cursor: default;
+}

@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Models\Produit;
 use App\Models\Coloration;
 use App\Models\AvisProduit;
+use App\Models\DetailCommande;
 use App\Models\PhotoAvis;
 use App\Models\ProduitSimilaire;
+use App\Models\A_aimer;
+use Illuminate\Support\Facades\DB;
 
 
 class DetailProduitController extends Controller
@@ -24,6 +28,16 @@ class DetailProduitController extends Controller
             return redirect()->route('erreur');
         }
 
+        $isLiked = false;
+        if(isset ($_SESSION['client'])) {
+            $client = $_SESSION['client'];
+            $idCLient = $client->idclient;
+
+            $isLiked = A_aimer::where('idclient', $idCLient)
+                        ->where('idproduit', $id)
+                        ->exists();
+        }
+
         $colorationDispos = $produit->getColoration();
 
         $colorationChoisie = $colorationDispos->where('idcouleur', $idcouleur)->first();
@@ -35,7 +49,8 @@ class DetailProduitController extends Controller
         return view('detailProduit', [
             'produit' => $produit,
             'colorationsDispos' => $colorationDispos,
-            'colorationChoisie' => $colorationChoisie
+            'colorationChoisie' => $colorationChoisie,
+            'isLiked' => $isLiked
         ]);
     }
 
@@ -99,6 +114,30 @@ class DetailProduitController extends Controller
         }
     }
 
+    public static function getAspectTechnique($produit){
+        $filePath = $produit->sourceaspecttechnique;
+        $file = fopen($filePath, 'r');
+        if($file){
+            $content = "";
+            $lines = [];
+            while (($line = fgets($file)) !== false) {
+                // Ajouter chaque ligne au tableau
+                $lines[] = $line;
+            }
+
+            // Fermer le fichier
+            fclose($file);
+
+             // Utiliser foreach pour parcourir chaque ligne
+            foreach ($lines as $line) {
+                $content = $content . $line . "<br>";
+            }
+            echo $content;
+        }
+        else{
+            echo "impossible d'ouvrir le fichier";
+        }
+    }
 
     /**
      * Affiche la premiere photo d'une paire coloration / produit 
@@ -349,5 +388,109 @@ class DetailProduitController extends Controller
             echo "<a class='prixVenteCarroussel prix'> $prixVente €</a>";
         }
         echo "</div>";
+    }
+
+
+    public static function affichageDeposerAvis($produit) {
+        $idProduit = $produit->idproduit;
+        $client = $_SESSION['client'];
+        if($client) {
+            $commandesCLients = $client -> getCommande();
+            $produitsCommandes = collect();
+            
+            foreach ($commandesCLients as $commande) {
+                $detailsCommande = DetailCommande::where('idcommande', $commande->idcommande)->get();
+                $produitsCommandes = $produitsCommandes->merge($detailsCommande);
+
+            }
+            $produitsCommandes = $produitsCommandes->unique('idproduit');
+            if ($produitsCommandes->contains('idproduit', $idProduit)) {
+                echo "<button id='button-depose-avis'>Déposer un avis</button>";
+            }
+        }
+    }
+
+    public function addAvis(Request $request) 
+    {
+        try {
+            $idClient = $_SESSION['client']->idclient;
+            $idProduit = $request->input('idProduit');
+            
+            
+            $avisExistant = DB::table('avisproduit')->where('idclient', $idClient)->where('idproduit', $idProduit)->first();
+            
+            if ($avisExistant) {
+                return response()->json(['success' => false, 'message' => 'Vous avez déjà déposé un avis sur ce produit.'], 400);
+            }
+
+            //Insert Avis
+            $idAvis = DB::table('avisproduit')->insertGetId([
+                'idproduit' => $idProduit,
+                'idclient' => $idClient,
+                'noteavis' => $request->input('note'),
+                'dateavis' => date('Y-m-d'),
+                'commentaireavis' => $request->input('description'),
+                'reponsemiliboo' => null,
+                'nomavis' => $request->input('titre')
+            ], 'idavis');
+
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $filename = "avis{$idAvis}_" . uniqid() . '.' . $image->getClientOriginalExtension();
+                    $image->move(public_path('img/imagesavis'), $filename);
+    
+                    // Insert Photo
+                    $idPhoto = DB::table('photo')->insertGetId([
+                        'sourcephoto' => "imagesavis/" . $filename,
+                        'descriptionphoto' => "Photo avis {$idAvis}"
+                    ], 'idphoto');
+    
+                    // Insert Photoavis 
+                    DB::table('photoavis')->insert([
+                        'idavis' => $idAvis,
+                        'idphoto' => $idPhoto
+                    ]);
+                }
+            }
+    
+            return response()->json(['success' => true]);
+    
+        } catch (\Exception $e) {
+            Log::error('Error in storeAvis:', ['message' => $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Une erreur serveur est survenue.'], 500);
+        }
+    }
+    /**
+     * Ajoute le produit like par le client dans la table a_aimer
+     * Redirige vers la page de connexion si le client n'est pas connecté
+     **/
+    public function toggleLike(Request $request) 
+    {
+        if (!$_SESSION['client']) {
+            return response()->json(['redirection' => true]);
+        }
+
+        $client = $_SESSION['client'];
+        $idClient = $client->idclient;
+        $idProduit = $request->input('idProduit');
+        $liked = $request->input('liked');
+
+        $likeExistant = A_aimer::where('idclient', $idClient)->where('idproduit', $idProduit)->first();
+
+        if ($liked && !$likeExistant) {
+            Log::info("Insert like client $idClient produit $idProduit");
+            DB::table('a_aimer')->insert([
+                'idclient' => $idClient,
+                'idproduit' => $idProduit
+            ]);
+        }
+        elseif (!$liked && $likeExistant) {
+            Log::info("Delete like client $idClient produit $idProduit");
+            DB::table('a_aimer')
+                ->where('idclient', $idClient)
+                ->where('idproduit', $idProduit)
+                ->delete();
+        }
+        return response()->json(['success' => true, 'statutLike' => $liked]);
     }
 }

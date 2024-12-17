@@ -4,10 +4,13 @@
 
 @section('css')
 <link rel="stylesheet" type="text/css" href="{{asset('css/produit.css')}}" />
+<link rel="stylesheet" href="{{ asset('css/deposeavis.css') }}">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 
 @section('content')
 
+@include('partials.deposeavis')
 
 <div class="product-detail">
     <h1>{{ $produit->nomproduit }}</h1>
@@ -23,13 +26,14 @@
                 <?php
 
                 use App\Http\Controllers\DetailProduitController;
+                use App\Models\Produit;
 
                 $colorDispos = $colorationsDispos;
                 $colorationProduit = $colorationChoisie;
                 $colorationPrincipale = DetailProduitController::defColorationPrincipale($colorationChoisie);
 
                 $consultationActuelle = array("coloration" => $colorationPrincipale);
-                if(!in_array($consultationActuelle, $_SESSION['historiqueConsultation'])) {
+                if (!in_array($consultationActuelle, $_SESSION['historiqueConsultation'])) {
                     array_unshift($_SESSION['historiqueConsultation'], $consultationActuelle);
                 }
                 $_SESSION['historiqueConsultation'] = array_slice($_SESSION['historiqueConsultation'], 0, 10);
@@ -45,6 +49,18 @@
                     <p class="pProduitDesc">
                         <?php
                         DetailProduitController::getDescriptionProduit($colorationPrincipale);
+                        ?>
+                    </p>
+                </details>
+
+                <details id="aspectTechProduit" class="aspectTechAccordion">
+                    <summary class="titreDescAccordion">
+                        Aspect Technique
+                        <span class="flecheAccordionDesc">^</span>
+                    </summary>
+                    <p class="pProduitAspectTech">
+                        <?php
+                        DetailProduitController::getAspectTechnique($produit);
                         ?>
                     </p>
                 </details>
@@ -96,17 +112,64 @@
                             DetailProduitController::affichagePrix($colorationPrincipale);
                             ?>
                         </div>
+                        <div class="divStockRestant">
+                            <?php
+                            $qteStock = $colorationChoisie->quantitestock;
+                            switch ($qteStock) {
+                                case 0:
+                                    echo "<br><p class=\"infer10stock\">Rupture de stock!</p><br>";
+                                    break;
+                                case 1:
+                                    echo "<br><p class=\"infer10stock\">Il ne reste qu'un seul exemplaire !</p><br>";
+                                    break;
+                                case ($qteStock < 10):
+                                    echo "<br><p class=\"infer10stock\">Il ne reste que $colorationChoisie->quantitestock exemplaires !</p><br>";
+                                    break;
+                                default:
+                                    echo "<br><p class=\"super10stock\"><B>Cette article est en stock</B></p><br>";
+                                    break;
+                            }
 
+
+                            //   ______          _                        __      _                      
+                            //   |  ____|        | |                      / _|    (_)                     
+                            //   | |__ __ _ _   _| |_   _ __   __ _ ___  | |_ __ _ _ _ __ ___    ___ __ _ 
+                            //   |  __/ _` | | | | __| | '_ \ / _` / __| |  _/ _` | | '__/ _ \  / __/ _` |
+                            //   | | | (_| | |_| | |_  | |_) | (_| \__ \ | || (_| | | | |  __/ | (_| (_| |
+                            //   |_|  \__,_|\__,_|\__| | .__/ \__,_|___/ |_| \__,_|_|_|  \___|  \___\__,_|
+                            //                         | |                                                
+                            //                         |_|                                                
+                            
+                            // if ($colorationChoisie->quantitestock == 1) {
+                            //     echo "<br><p class=\"infer10stock\">Il ne reste qu'un seul exemplaire !</p><br>";
+                            // } else {
+                            //     if ($colorationChoisie->quantitestock == 0) {
+                            //         echo "<br><p class=\"infer10stock\">Il ne reste que un seul exemplaire !</p><br>";
+                            //     } else {
+                            //         if ($colorationChoisie->quantitestock < 10) {
+                            //             echo "<br><p class=\"infer10stock\">Il ne reste que $colorationChoisie->quantitestock exemplaires !</p><br>";
+                            //         } else {
+                            //             echo "<br><p class=\"super10stock\"><B>Cette article est en stock</B></p><br>";
+                            //         }
+                            //     }
+                            // }
+                            ?>
+
+                        </div>
                         <div id="div-button-panier">
-                            <button id='minusOne' class='button-quantite' disabled onclick="minusOne()">-</button>
-                            <input id='quant' class='input-quantite' type="text" value="1" onchange='verif(<?php echo $colorationChoisie->quantitestock ?>)'></input>
-                            <button id='plusOne' class='button-quantite' onclick='plusOne(<?php echo $colorationChoisie->quantitestock ?>)'>+</button>
+                            <div>
+                                <button id='minusOne' class='button-quantite' disabled onclick="minusOne()">-</button>
+                                <input id='quant' class='input-quantite' type="text" value="1" onchange='verif(<?php echo $colorationChoisie->quantitestock ?>)'></input>
+                                <?php $disable = $colorationChoisie->quantitestock == 1 ? " disabled" : ""; ?>
+                                <button id='plusOne' class='button-quantite' onclick='plusOne(<?php echo $colorationChoisie->quantitestock ?>)'{{$disable}}>+</button>
+                            </div>
                             <button id="button-achete" onclick='achete(
                             <?php
                             echo $colorationChoisie->idproduit;
                             echo ",";
                             echo $colorationChoisie->idcouleur;
                             ?>)'>J'achète</button>
+                            <img id="img-like" src="{{ $isLiked ? asset('img/coeur-like.png') : asset('img/coeur.png') }}" data-liked="{{ $isLiked ? 'true' : 'false' }}" data-idproduit="{{ $produit->idproduit }}" alt="">
                         </div>
                     </div>
                 </div>
@@ -151,6 +214,12 @@
                 <div id="imagePreview" class="elementPreview">
                     <span class="closePreview" onclick="closePreview()">&times;</span>
                     <img class="contentPreview" id="previewImage">
+                </div>
+
+                <div class="ajouterAvis">
+                    <?php
+                    DetailProduitController::affichageDeposerAvis($produit);
+                    ?>
                 </div>
             </div>
         </div>
