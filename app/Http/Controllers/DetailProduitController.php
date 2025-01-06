@@ -98,13 +98,14 @@ class DetailProduitController extends Controller
     }
 
     /**
-     * Affiche les informations de prix d'une coloration, y compris le prix de vente 
+     * Affiche les informations de prix d'une coloration, y compris le prix de vente
      * et le montant d'une promotion si elle existe
      **/
     public static function affichagePrix($colorationPrincipale)
     {
         $produit = $colorationPrincipale->getProduit();
         echo "<span class='span-delai'>Expédié sous " . substr($produit->delailivraison, 0, 2) . "h</span>";
+        echo "<div id='div-prix'>";
         if ($colorationPrincipale->prixsolde) {
             echo "<p class='pPrixSoldeProduit'> $colorationPrincipale->prixsolde €</p>";
             echo "<p class=pPrixVenteProduit' style=text-decoration-line:line-through;> $colorationPrincipale->prixvente €</p>";
@@ -112,35 +113,41 @@ class DetailProduitController extends Controller
         } else {
             echo "<p class=pPrixVenteProduit'> $colorationPrincipale->prixvente €</p>";
         }
+        echo "</div>";
     }
 
     public static function getAspectTechnique($produit){
         $filePath = $produit->sourceaspecttechnique;
-        $file = fopen($filePath, 'r');
-        if($file){
-            $content = "";
-            $lines = [];
-            while (($line = fgets($file)) !== false) {
-                // Ajouter chaque ligne au tableau
-                $lines[] = $line;
-            }
-
-            // Fermer le fichier
-            fclose($file);
-
-             // Utiliser foreach pour parcourir chaque ligne
-            foreach ($lines as $line) {
-                $content = $content . $line . "<br>";
-            }
-            echo $content;
+        if (is_null($filePath)) {
+            echo "Source aspect technique non renseignée";
         }
-        else{
-            echo "impossible d'ouvrir le fichier";
+        else {
+            $file = fopen($filePath, 'r');
+            if($file){
+                $content = "";
+                $lines = [];
+                while (($line = fgets($file)) !== false) {
+                    // Ajouter chaque ligne au tableau
+                    $lines[] = $line;
+                }
+    
+                // Fermer le fichier
+                fclose($file);
+    
+                 // Utiliser foreach pour parcourir chaque ligne
+                foreach ($lines as $line) {
+                    $content = $content . $line . "<br>";
+                }
+                echo $content;
+            }
+            else{
+                echo "impossible d'ouvrir le fichier";
+            }
         }
     }
 
     /**
-     * Affiche la premiere photo d'une paire coloration / produit 
+     * Affiche la premiere photo d'une paire coloration / produit
      * Pour l'affichage de la partie commentaire
      **/
     public static function affichagePhotoHeaderAvis($colorationPrincipale)
@@ -180,13 +187,6 @@ class DetailProduitController extends Controller
 
             echo "<div class='divCommentaire'>";
             if ($avis->commentaireavis) {
-                echo "<h4 class='titreCommentaire'> $avis->nomavis </h4>";
-                echo "<div class='contentCommentaire'> $avis->commentaireavis </div>";
-                if ($avis->reponsemiliboo) {
-                    echo "<br>";
-                    echo "<div class='titreReponseCommentaire'> Réponse de Miliboo : </div>";
-                    echo "<div class='reponseCommentaire'> $avis->reponsemiliboo </div>";
-                }
                 //ATTENTION SI PLUSIEURS PHOTOS POUR UN AVIS
                 if ($photoAvis) {
                     $sourcePhotoAvis = '\\img\\' . $photoAvis->sourcephoto;
@@ -194,13 +194,29 @@ class DetailProduitController extends Controller
 
                     echo "<img class=imgAvisClient src='$sourcePhotoAvis' alt='$descriptionPhotoAvis' onClick='showPreviewImage(this)'>";
                 }
+                echo "<div class='text-content-avis'>";
+                echo "<h4 class='titreCommentaire'> $avis->nomavis </h4>";
+                echo "<div class='contentCommentaire'> $avis->commentaireavis </div>";
+                if ($avis->reponsemiliboo) {
+                    echo "<br>";
+                    echo "<div class='titreReponseCommentaire'> Réponse de Miliboo : </div>";
+                    echo "<div class='reponseCommentaire'> $avis->reponsemiliboo </div>";
+                }
+                echo "</div>";
             }
             echo "</div>"; //FIN DIV COMMENTAIRE
 
             echo "<div class='timestampAvis'>";
-            echo "<span class='timestampAvis'> $avis->dateavis </span>";
+            $dateFormatee = date('d/m/Y', strtotime($avis->dateavis));
+            echo "<span class='timestampAvis'> $dateFormatee </span>";
             echo "</div>"; //FIN DIV TIMESTAMPAVIS
 
+            if (isset($_SESSION['admin']) &&!$avis->reponsemiliboo) {
+                echo "<form class='form-reponse-admin' data-idavis='{$avis->idavis}'>";
+                echo "<textarea class='input-reponse-admin' placeholder='Répondre à cet avis...'></textarea>";
+                echo "<button type='submit' class='button-reponse-admin'>Envoyer</button>";
+                echo "</form>";
+            }
             echo "</div>"; //FIN DIV COMMENTAIRECLIENT
         }
     }
@@ -364,7 +380,7 @@ class DetailProduitController extends Controller
             $sourcePhoto = '\\img\\' . $photosColoration->sourcephoto;
             $descriptionPhoto = $photosColoration->descriptionphoto;
             echo "<a href='/produit/$urlProduitColoration'><img class='img-carroussel' src='{$sourcePhoto}' alt='$descriptionPhoto'></a>";
-            
+
             self::affichagePrixCarroussel($coloration);
 
             echo "</div>";
@@ -397,7 +413,7 @@ class DetailProduitController extends Controller
         if($client) {
             $commandesCLients = $client -> getCommande();
             $produitsCommandes = collect();
-            
+
             foreach ($commandesCLients as $commande) {
                 $detailsCommande = DetailCommande::where('idcommande', $commande->idcommande)->get();
                 $produitsCommandes = $produitsCommandes->merge($detailsCommande);
@@ -410,15 +426,15 @@ class DetailProduitController extends Controller
         }
     }
 
-    public function addAvis(Request $request) 
+    public function addAvis(Request $request)
     {
         try {
             $idClient = $_SESSION['client']->idclient;
             $idProduit = $request->input('idProduit');
-            
-            
+
+
             $avisExistant = DB::table('avisproduit')->where('idclient', $idClient)->where('idproduit', $idProduit)->first();
-            
+
             if ($avisExistant) {
                 return response()->json(['success' => false, 'message' => 'Vous avez déjà déposé un avis sur ce produit.'], 400);
             }
@@ -438,23 +454,23 @@ class DetailProduitController extends Controller
                 foreach ($request->file('images') as $image) {
                     $filename = "avis{$idAvis}_" . uniqid() . '.' . $image->getClientOriginalExtension();
                     $image->move(public_path('img/imagesavis'), $filename);
-    
+
                     // Insert Photo
                     $idPhoto = DB::table('photo')->insertGetId([
                         'sourcephoto' => "imagesavis/" . $filename,
                         'descriptionphoto' => "Photo avis {$idAvis}"
                     ], 'idphoto');
-    
-                    // Insert Photoavis 
+
+                    // Insert Photoavis
                     DB::table('photoavis')->insert([
                         'idavis' => $idAvis,
                         'idphoto' => $idPhoto
                     ]);
                 }
             }
-    
+
             return response()->json(['success' => true]);
-    
+
         } catch (\Exception $e) {
             Log::error('Error in storeAvis:', ['message' => $e->getMessage()]);
             return response()->json(['success' => false, 'message' => 'Une erreur serveur est survenue.'], 500);
@@ -464,7 +480,7 @@ class DetailProduitController extends Controller
      * Ajoute le produit like par le client dans la table a_aimer
      * Redirige vers la page de connexion si le client n'est pas connecté
      **/
-    public function toggleLike(Request $request) 
+    public function toggleLike(Request $request)
     {
         if (!$_SESSION['client']) {
             return response()->json(['redirection' => true]);
@@ -493,4 +509,32 @@ class DetailProduitController extends Controller
         }
         return response()->json(['success' => true, 'statutLike' => $liked]);
     }
+
+    public function repondreAvis(Request $request)
+    {
+        try {
+            if (!isset($_SESSION['admin'])) {
+                return response()->json(['success' => false, 'message' => 'Accès non autorisé.'], 403);
+            }
+
+            $request->validate([
+                'idavis' => 'required|integer',
+                'reponse' => 'required|string',
+            ]);
+
+            $avis = AvisProduit::find($request->input('idavis'));
+            if (!$avis) {
+                return response()->json(['success' => false, 'message' => 'Avis non trouvé.'], 404);
+            }
+
+            $avis->reponsemiliboo = $request->input('reponse');
+            $avis->save();
+
+            return response()->json(['success' => true, 'message' => 'Réponse enregistrée avec succès.']);
+
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de la réponse à l\'avis : ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Une erreur est survenue.'], 500);
+    }
+}
 }

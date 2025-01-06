@@ -1,0 +1,169 @@
+#div-paiement{
+    margin-top: 5vh;
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+    gap: 1vh;
+}
+
+#title-panier{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#title-panier h1{
+    font-weight: 500;
+}   
+
+#progress-panier{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10vw;
+    height: 7vh;
+    
+    --decay: 300px;
+    padding-left: var(--decay);
+    padding-right: var(--decay);
+}
+
+#progress-panier::before {
+    content: '';
+    position: absolute;
+    left: calc(50vw - 23vw / 2);
+    width: 22vw; 
+    height: 2px;
+    background-color: rgba(0, 0, 0);
+    transform: translateY(-50%);
+    z-index: 0;
+}
+
+.etape{
+    height: 20%;
+    aspect-ratio: 1;
+    padding: 10px;
+    border-radius: 100px;
+    background-color: black;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+}
+
+.div-input{
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    width: 100%;
+}
+
+.p-paiement{
+    margin-top: 0;
+    font-size: 2.5vh;
+}
+
+#resume{
+    flex: 1;
+}
+
+#div-resume-produit{
+    border: 1px solid rgba(128, 128, 128, 0.4);
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 1vh;
+
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+}
+
+#container-produit{
+    width: 100%;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.4);
+}
+
+.produit{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#price{
+    width: 50%;
+}
+
+.div-ligne-resume{
+    display: flex;
+    justify-content: space-between;
+}
+
+#div-container-adresse{
+    display: flex;
+    gap: 1vh;
+}
+
+#div-container-adresse>*{
+    font-size: 1.5vh;
+}
+
+.adresse{
+    flex: 1;
+    border: 1px solid rgba(128, 128, 128, 0.4);
+    border-radius: 5px;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.p-title-adresse{
+    background-color: rgba(177, 177, 177, 0.26);
+    padding: 1vh;
+    margin: 0;
+}
+
+.info-adresse>*{
+    padding: 0.3vh;
+    margin: 0.3vh;
+}
+
+.input-check{
+    accent-color: black;
+}
+
+.red {
+    color: red;
+}
+
+#id-radio{
+    display: flex;
+    justify-content: space-between;
+}
+
+#p-title-expiration{
+    margin-bottom: 0.8vh;
+}
+
+#div-select-paiement{
+    flex: 1;
+}
+
+#form-carte{
+    margin-top: 2vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+}
+
+.input-radio{
+    accent-color: black;
+}
+
+#div-expiration{
+    display: flex;
+}

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Cookie;
 use App\Http\Controllers\LoginController;
+use App\Models\Client;
 use Illuminate\Auth\Events\Login;
 
 class InitializeClient
@@ -23,6 +24,12 @@ class InitializeClient
             if ($cookie) {
                 $_SESSION["client"] = LoginController::tryLoginByToken($cookie[0], $cookie[1]);
             }
+        }
+        else if ($_SESSION["client"]) {
+            // Update client if it changed
+            $_SESSION["client"] = Client::find($_SESSION["client"]->idclient);
+            $_SESSION["client"]->derniereutilisation = now();
+            $_SESSION["client"]->save();
         }
         return $next($request);
     }

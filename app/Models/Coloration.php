@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\Composition;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,8 +10,18 @@ class Coloration extends Model
 {
     use HasFactory;
     protected $table = "coloration";
-    protected $primaryKey = null;
+    protected $primaryKey = ['idproduit', 'idcouleur'];
+    public $incrementing = false;
     public $timestamps = false;
+    protected $fillable = [
+        'idproduit',
+        'idcouleur',
+        'prixvente',
+        'prixsolde',
+        'quantitestock',
+        'descriptioncoloration',
+        'estvisible',
+    ];
 
     /**
      * Renvoie le produit lié à la coloration
@@ -55,6 +66,15 @@ class Coloration extends Model
         return 100*((float)$this->prixvente
                 - (float)$this->prixsolde)
                 / (float)$this->prixvente;
+    }
+    
+    // public function getComposition() {
+    //     return $this->belongsToMany(Composition::class, 'idproduit', 'idproduit')->get();
+    // }
+
+    public function produit()
+    {
+        return $this->belongsTo(Produit::class, 'idproduit', 'idproduit');
     }
 
 }

@@ -34,9 +34,29 @@ class Adresse extends Model
         return $this->hasOne(Departement::class, 'iddepartement', 'iddepartement')->get()->first();
 
     }
+
     public function getClient(){
         return $this->belongsTo(Client::class, 'idclient', 'idclient')->get()->first();
     }
 
+    public function completeArray() {
+        return [
+            "nomAdresse" => $this->nomadresse,
+            "numeroRue" => $this->numerorue,
+            "nomRue" => $this->nomrue,
+            "codePostal" => $this->codepostaladresse,
+            "ville" => $this->getVille()->nomville,
+            "departement" => $this->getDepartement()->nomdepartement,
+            "pays" => $this->getPays()->nompays,
+        ];
+    }
+
+    public function anonym() {
+        $this->nomadresse = "";
+        $this->numerorue = "";
+        $this->nomrue = "";
+        $this->codepostaladresse = "00000";
+        $this->save();
+    }
 }
 

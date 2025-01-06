@@ -11,4 +11,17 @@ class Paiement extends Model
     protected $table = 'paiement';
     protected $primaryKey = 'idcommande';
     public $timestamps = false;
+
+    public function getTypePaiement() {
+        return $this->hasOne(TypePaiement::class, 'idtypepaiement', 'idtypepaiement')->get()->first();
+    }
+
+    public function completeArray() {
+        return [
+            "datePaiement" => $this->datepaiement,
+            "montantPaiement" => $this->montantpaiement,
+            "indicePaiement" => $this->indicepaiement,
+            "typePaiement" => $this->getTypePaiement()->nomtypepaiement
+        ];
+    }
 }

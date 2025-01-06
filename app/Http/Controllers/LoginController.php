@@ -54,14 +54,15 @@ class LoginController extends Controller
 
     public static function logOut() {
         $_SESSION["client"] = null;
-        return redirect('/compte');
+        $cookie = CookieController::delCookie("cookieIdSecurite", false);
+        return redirect('/compte')->cookie($cookie);
     }
 
     public static function createForm(Request $request) {
         $request->validate([
             'email' => 'required|email'
         ]);
-        $client = Client::where('emailclient', $request->email)->first();
+        $client = Client::getByEmail($request->email);
         if ($client) return redirect()->back()->with('error', "create");
         return redirect('creationcompte')->with('email', $request->email);
     }

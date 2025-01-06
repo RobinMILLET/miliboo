@@ -8,14 +8,20 @@
 
 @section('content-compte')
 
+<?php
+    use App\Http\Controllers\DetailCommandeController;
+    use App\Models\Commande;
+    $idcommande = (int)$_GET['id'];
+    $commande = Commande::find($idcommande);
+    DetailCommandeController::getSuivi($commande);
+?>
+
 <div id="container-detail-commande">
-        <?php
-        use App\Http\Controllers\DetailCommandeController;
-        use App\Models\Commande;
+    <?php
         $idcommande = (int)$_GET['id'];
         $commande = Commande::find($idcommande);
         DetailCommandeController::getEntete($commande);
-        ?>
+    ?>
     </div>
     <h2 id="h2-title-detail">Adresse</h2>
     <div id="div-adresse-detail">
@@ -58,12 +64,12 @@
         </tbody>
         <tfoot>
             <tr class="tr-foot">
-                <td>Total :</td>
+                <td id="td-total">Total :</td>
                 <td></td>
                 <td></td>
                 <td></td>
                 <?php
-                    echo "<td class='td-total'>$prixTotal</td>";
+                    echo "<td id='td-total-prix'>$prixTotal</td>";
                 ?>
             </tr>
         </tfoot>

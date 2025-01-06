@@ -3166,11 +3166,17 @@ INSERT INTO detailCommande(idCommande,idProduit,idCouleur,quantitecommande) VALU
 /* INSERT : DETAILCOMPOSITION                                   */
 /*==============================================================*/
 Insert into DetailComposition(  idproduit, idcouleur, idcomposition, quantitecomposition) VALUES
-(1,1,1,4),
-(2,2,1,2),
-(3,3,2,3),
-(4,4,2,2),
-(5,5,2,3);
+(1,5,1,4),
+(2,4,1,2),
+(3,11,2,3),
+(4,7,2,2),
+(5,4,2,3),
+(21,5,3,1),
+(50,14,3,1),
+(15,5,4,3),
+(1,7,4,3),
+(7,5,5,2),
+(9,5,5,2);
 
 /*==============================================================*/
 /* INSERT : DETAILPANIER                                        */
@@ -3493,4 +3499,12 @@ FROM generate_series(1, 10);   -- Crée 10 lignes
 --ALTER TABLE miliboo.client ALTER COLUMN remembertoken TYPE char (256);
 --ALTER TABLE miliboo.client ALTER COLUMN remembertoken DROP NOT NULL;
 --UPDATE miliboo.client set remembertoken = null;
---ALTER TABLE miliboo.client ADD limitetoken DATE NULL; 
+--ALTER TABLE miliboo.client ADD limitetoken DATE NULL;
+
+--ALTER TABLE miliboo.client ADD emailveriftoken char (64); 
+--ALTER TABLE miliboo.client ADD emailverifdate TIMESTAMP NULL; 
+--ALTER TABLE miliboo.client ADD telveriftoken char (6); 
+--ALTER TABLE miliboo.client ADD telverifdate TIMESTAMP NULL; 
+--ALTER TABLE miliboo.client ADD derniereutilisation TIMESTAMP; 
+--update client set derniereutilisation = datecreationcompte
+--ALTER TABLE miliboo.client ALTER COLUMN derniereutilisation SET NOT NULL;

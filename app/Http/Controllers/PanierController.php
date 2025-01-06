@@ -33,7 +33,7 @@ class PanierController extends Controller
         }
         else {
             $trueprice = $coloration->prixsolde;
-            $reduc = "<p class='p-price prix'>$coloration->prixsolde €</p>";
+            $reduc = "<p class='p-price prix'>$coloration->prixsolde</p>";
             $pourcent = "<div class='div-reduc-pourcent'><p class='p-pourcent'>-".round($coloration->getReduc(), 0)."%</p></div>";
             $original = "<p class='p-reduc prix'>au lieu de $coloration->prixvente</p>";
         }

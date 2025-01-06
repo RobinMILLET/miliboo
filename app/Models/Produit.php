@@ -14,6 +14,16 @@ class Produit extends Model
     protected $table = "produit";
     protected $primaryKey = "idproduit";
     public $timestamps = false;
+    protected $fillable = [
+        'idtypeproduit',
+        'idpays',
+        'nomproduit',
+        'sourcenotice',
+        'sourceaspecttechnique',
+        'delailivraison',
+        'coutlivraison',
+        'nbpaiementmax',
+    ];
 
     private static $IGNOREMOTCLEF = [
         "dans", "par", "pour", "vers", "avec", "sans", "sur", "sous", "aux",  "des", "les"
@@ -26,12 +36,12 @@ class Produit extends Model
     public function getCouleur()
     {
         return $this->hasManyThrough(
-            Couleur::class, 
-            Coloration::class, 
-            'idproduit', 
-            'idcouleur', 
-            'idproduit', 
-            'idcouleur'  
+            Couleur::class,
+            Coloration::class,
+            'idproduit',
+            'idcouleur',
+            'idproduit',
+            'idcouleur'
         )->get();
     }
 
@@ -62,16 +72,15 @@ class Produit extends Model
     /**
      * Renvoie les attributs de ce produit
      * @return Collection<AttributProduit>
-    **/     
+    **/
     public function getValeurAttribut() {
         return $this->hasMany(ValeurAttribut::class, 'idproduit', 'idproduit')->get();
     }
 
-
     /**
      * Renvoie les attributs de ce produit
      * @return Collection<ProduitSimilaire>
-    **/  
+    **/
     public function getProduitSimilaire(){
         return $this->hasMany(ProduitSimilaire::class, 'pro_idproduit', 'idproduit')->get();
     }
@@ -79,11 +88,11 @@ class Produit extends Model
     /**
      * Renvoie les client ayant aimes ce produit
      * @return Collection<Client>
-    **/    
+    **/
     public function getAimeParClient() {
         return $this->belongsToMany(Client::class, 'a_aimer', 'idproduit', 'idclient');
     }
-    
+
     public function colorationPrixMin($seulementVisibles = true) {
         $minPrice = PHP_INT_MAX;
         $colorationPrincipale = null;
@@ -123,9 +132,9 @@ class Produit extends Model
     }
 
     public function getAspectTechnique(){
-        
+
     }
-             
+
     public function afficheRecherche($affichePrixMin = true, $valeursActives = null)
     {
         // Itération à travers les colorations pour trouver la moins cher
@@ -192,7 +201,7 @@ class Produit extends Model
         if ($colorationPrincipale->prixsolde) {
             $prixActuel = "<span class='span-prix-solde'>".$colorationPrincipale->prixsolde." €</span>";
             $prixInitial = "<s><span class='span-prix-vente'>".$colorationPrincipale->prixvente." €</span></s>";
-            
+
             $reduction = "<span class='reduc'>-".round($colorationPrincipale->getReduc(), 0)."%</span>";
             $ligne2 = "<p class='p-produit'>$prixActuel$prixInitial$reduction</p>";
         }
@@ -200,7 +209,7 @@ class Produit extends Model
 
         // Couleurs disponibles
         $NB_COULEURS_AFFICHEES = 4;
-        $bonusRgb = (count($rgbArray) <= $NB_COULEURS_AFFICHEES) ? "" : 
+        $bonusRgb = (count($rgbArray) <= $NB_COULEURS_AFFICHEES) ? "" :
             "<p> +".count($rgbArray) - $NB_COULEURS_AFFICHEES."</p>";
         $circles = [];
         foreach (array_slice($rgbArray, 0, $NB_COULEURS_AFFICHEES) as $rgb) {
@@ -212,7 +221,7 @@ class Produit extends Model
         $div = "<div class='produit'>$img$nomProduit$ligne1$ligne2$divCircles</div>";
 
         //Modif Victor pour clean l'URL avec coloration
-        $urlProduitColoration = "idproduit" . $this->idproduit . "/coloration" . $colorationPrincipale->idcouleur; 
+        $urlProduitColoration = "idproduit" . $this->idproduit . "/coloration" . $colorationPrincipale->idcouleur;
         return "<a href='/produit/".$urlProduitColoration."'>$div</a>";
     }
 
@@ -257,7 +266,7 @@ class Produit extends Model
                 strlen($a) <= 2 || strlen($b) <= 2) return PHP_INT_MAX;
             return levenshtein($a, $b);
         }
-        
+
     }
 
     //TEST AFFICHAGE NOTE DANS LE DETAIL PRODUIT VICTOR // CODE DE ROBIN
@@ -265,7 +274,7 @@ class Produit extends Model
     public function affficheNote() {
         $avis = $this->getAvis();
         $nbAvis = $avis->count();
-        
+
         $sumNote = 0;
         foreach ($avis as $avisProduit) {
             $sumNote += (int)$avisProduit->noteavis;
@@ -301,4 +310,4 @@ class Produit extends Model
     }
 
 }
-
+//Test victor Nvim

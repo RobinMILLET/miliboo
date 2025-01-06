@@ -14,6 +14,9 @@ class AvisProduit extends Model
     public $timestamps = false;
 
     protected $fillable = [''];
+    protected $casts = [
+        'dateavis' => 'date',
+    ];
 
         /**
      * Renvoie le client lié à l'avis
@@ -26,11 +29,34 @@ class AvisProduit extends Model
 
 
             /**
-     * Renvoie la ou les photo(s) liée(s) à l'avis
+     * Renvoie la première photo liée à l'avis
      * @return PhotoAvis
     **/
-    public function getPhotoAvis() 
+    public function getPhotoAvis()
     {
         return $this->belongsTo(PhotoAvis::class, 'idavis', 'idavis')->get()->first();
+    }
+
+    public function getProduit()
+    {
+        return $this->belongsTo(Produit::class, 'idproduit', 'idproduit')->get()->first();
+    }
+
+    public function completeArray() {
+        return [
+            "noteAvis" => $this->noteavis,
+            "dateAvis" => $this->dateavis,
+            "commentaireAvis" => $this->commentaireavis,
+            "produitAvis" => $this->getProduit()->nomproduit,
+            "photos" => $this->hasMany(PhotoAvis::class, "idavis", "idavis")->get()->count()
+        ];
+    }
+
+    public function anonym() {
+        $photos = $this->hasMany(PhotoAvis::class, "idavis", "idavis")->get();
+        foreach ($photos as $photo) {
+            //$photo->getPhoto()->delete();
+        }
+        $photos->map->delete();
     }
 }

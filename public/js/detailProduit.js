@@ -24,9 +24,9 @@ window.addEventListener('resize', matchColumnHeights);
 function matchColumnHeights() {
     const colImages = document.querySelector('.colImagesProduit');
     const colPresentation = document.querySelector('.colPresentationProduit');
-    
+
     const colImagesHeight = colImages.offsetHeight;
-    
+
     colPresentation.style.height = `${colImagesHeight}px`;
 }
 
@@ -120,14 +120,14 @@ buttonScrollRight.forEach(button => {
 function scrollLeft(dom) {
     dom.parentElement.querySelector('.topProduitsCarroussel').scrollBy({
         left: -itemWidth,
-        behavior: 'smooth' 
+        behavior: 'smooth'
     });
 }
 
 function scrollRight(dom) {
     dom.parentElement.querySelector('.topProduitsCarroussel').scrollBy({
         left: itemWidth,
-        behavior: 'smooth' 
+        behavior: 'smooth'
     });
 }
 
@@ -189,4 +189,45 @@ imgLike.addEventListener("click", () => {
     })
     .catch(error => console.error("Echec requete:", error));
 },60);
+});
+
+document.querySelectorAll('.form-reponse-admin').forEach(form => {
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const idAvis = form.getAttribute('data-idavis');
+        const reponse = form.querySelector('.input-reponse-admin').value;
+
+        if (!reponse) {
+            alert('Veuillez entrer une réponse.');
+            return;
+        }
+
+        try {
+            const response = await fetch('/repondre-avis', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                },
+                body: JSON.stringify({
+                    idavis: idAvis,
+                    reponse: reponse,
+                }),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert('Réponse enregistrée avec succès.');
+                form.reset();
+                window.location.reload();
+            } else {
+                alert(result.message || 'Erreur lors de l\'enregistrement de la réponse.');
+            }
+        } catch (error) {
+            console.error('Erreur :', error);
+            alert('Une erreur est survenue.');
+        }
+    });
 });

@@ -11,6 +11,11 @@ class PhotoProduitColoration extends Model
     protected $table = "photoproduitcoloration";
     protected $primaryKey = null;
     public $timestamps = false;
+    protected $fillable = [
+        'idproduit',
+        'idcouleur',
+        'idphoto',
+    ];
 
     /**
      * Renvoie la coloration liée à cete PhotoProduitColoration

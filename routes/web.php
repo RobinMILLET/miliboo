@@ -13,8 +13,18 @@ use App\Http\Controllers\ProduitsAimesController;
 use App\Http\Controllers\PaiementController;
 use App\Http\Controllers\EspaceClientController;
 use App\Http\Controllers\DetailCommandeController;
+use App\Http\Controllers\CompositionController;
+use App\Http\Controllers\LoginServicesController;
+use App\Http\Controllers\ModifContactController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Models\CompositionProduit;
 use App\Models\ProduitSimilaire;
+use App\Models\ServiceMiliboo;
+use App\Http\Controllers\ColorationController;
+use App\Http\Controllers\DetailCompositionController;
+use App\Http\Controllers\LivraisonController;
 use Illuminate\Support\Facades\Route;
+
 
 
 /*
@@ -52,11 +62,21 @@ Route::get('/compte',[LoginController::class, 'index'])->name('compte');
 Route::get('/login', [LoginController::class, 'tryLogin']);
 Route::post('/login', [LoginController::class, 'tryLogin']);
 Route::post('/modMdp', [InfoPersoController::class, 'tryChangeMdp']);
+Route::post('/modMail', [ModifContactController::class, 'changeMail']);
 Route::post('/testCreate', [LoginController::class, 'createForm']);
 Route::post('/tryMod', [InfoPersoController::class, 'tryModifInfo']);
 Route::post('/tryCreate', [CreationCompteController::class, 'tryCreateCompte']);
 Route::get('/villeApprox/{cp}/{nom}', [CreationCompteController::class, 'villeApprox']);
 Route::get('/logout', [LoginController::class, 'logOut']);
+Route::post('/sendVerifMail', [ModifContactController::class, 'sendVerifMail']);
+Route::get('/verif/{id}/{token}', [ModifContactController::class, 'verifMail']);
+Route::post('/sendVerifTel', [ModifContactController::class, 'sendVerifTel']);
+Route::post('/verifTel', [ModifContactController::class, 'verifTel']);
+Route::post('/json', [InfoPersoController::class, 'clientJson'])->name("json");
+Route::get('/json', [InfoPersoController::class, 'clientJson']);
+Route::get('/anonym/{confirm}', [InfoPersoController::class, 'clientAnonym']);
+Route::get('/delAdr/{id}', [InfoPersoController::class, 'delAdr']);
+Route::post('/addAdr', [InfoPersoController::class, 'addAdr'])->name('addAdr');
 
 
 function reqLogin($route) {
@@ -85,6 +105,10 @@ Route::get('/infoperso', function(){
     return reqLogin('infoperso');
 })->name('infoperso');
 
+Route::post('/infoperso', function(){
+    return reqLogin('infoperso');
+})->name('infoperso');
+
 Route::get('/detailcommande', function(){
     return reqLogin('detailcommande');
 })->name('detailcommande');
@@ -92,6 +116,10 @@ Route::get('/detailcommande', function(){
 Route::get('/modifmdp', function(){
     return reqLogin('modifmdp');
 })->name('modifmdp');
+
+Route::get('/modifcontact', function(){
+    return reqLogin('modifcontact');
+})->name('modifcontact');
 
 /*
 | Produits
@@ -101,8 +129,12 @@ Route::get('/produit/idproduit{id}/coloration{idcoloration}', [DetailProduitCont
 Route::get('/panier',[PanierController::class, 'index'])->name('panier');
 
 Route::get('/prixPanier', [PanierController::class, 'prixPanier']);
-Route::get('/setPanier/{idproduit}/{idcouleur}/{idquantite}', [PanierController::class, 'setLignePanier']);
-Route::get('/addPanier/{idproduit}/{idcouleur}/{idquantite}', [PanierController::class, 'addToPanier']);
+Route::get('/setPanier/{idproduit}/{idcouleur}/{quantite}', [PanierController::class, 'setLignePanier']);
+Route::get('/addPanier/{idproduit}/{idcouleur}/{quantite}', [PanierController::class, 'addToPanier']);
+
+Route::get('/etapelivraison',[LivraisonController::class, 'index'])->name('etapelivraison');
+Route::get('/paiement',[PaiementController::class, 'index'])->name('paiement');
+Route::post('/paieCB', [PaiementController::class, 'paieCB'])->name('paieCB');
 
 /*
 | Recherche
@@ -113,10 +145,10 @@ Route::get('/recherche',
 Route::get('/categorie/{idTypeProduit}',[RechercheController::class, 'showByCategory'])->name('produits.parCategorie');
 
 Route::get('/regroupement/{idRegroupement}',[RechercheController::class, 'showByRegroupement'])->name('produits.parRegroupement');
-    
+
 Route::get('/categorieMere/{idCategorie}',[RechercheController::class, 'showByCategoryMere'])->name('produits.parCategorieMere');
 
-    
+
 /*
 | Gestion des cookies
 */
@@ -146,6 +178,11 @@ Route::get('/commande', [CommandeController::class, 'index'])->name('commande');
 Route::get('/espaceclient/produitsaimes', [ProduitsAimesController::class, 'show'])->name('compte.aimes');
 
 /*
+Composition
+*/
+Route::get('/composition',[CompositionController::class, 'index'])->name("composition");
+Route::get('/detailcomposition/idcomposition{idcomposition}',[DetailCompositionController::class, 'index'])->name("composition.detail");
+/*
 | Pour la requete like
 */
 Route::post('/toggle-like', [DetailProduitController::class, 'toggleLike']);
@@ -154,3 +191,27 @@ Route::post('/toggle-like', [DetailProduitController::class, 'toggleLike']);
 | Pour la requete deposerAvis
 */
 Route::post('/add-avis', [DetailProduitController::class, 'addAvis'])->name('add-avis');
+
+/* Dashboard Admin*/
+Route::get('/admin/dashboard', [AdminDashboardController::class, 'show'])
+    ->name('admin.dashboard')
+    ->middleware('admin_session');
+
+/* Login admin */
+Route::prefix('admin')->group(function () {
+    Route::get('/login', [LoginServicesController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('/login', [LoginServicesController::class, 'login'])->name('admin.login.submit');
+    Route::get('/logout', [LoginServicesController::class, 'logout'])->name('admin.logout');
+});
+
+/* Reponse service vente */
+Route::post('/repondre-avis', [DetailProduitController::class, 'repondreAvis'])->name('repondre.avis');
+
+/* Ajout Produit */
+Route::post('/admin/produit/ajouter', [AdminDashboardController::class, 'ajouterProduit'])->name('admin.ajouter.produit');
+
+/* Requete donnees coloration */
+Route::get('/coloration-data', [ColorationController::class, 'getColorationData']);
+
+/* Requete directeur vente */
+Route::post('/coloration/{idproduit}/{idcouleur}/update', [ColorationController::class, 'update']);

@@ -9,8 +9,12 @@ class Photo extends Model
 {
     use HasFactory;
     protected $table = "photo";
-    protected $primaryKey = null;
+    protected $primaryKey = "idphoto";
     public $timestamps = false;
+    protected $fillable = [
+        'sourcephoto',
+        'descriptionphoto',
+    ];
 
     /**
      * Renvoie les PhotoProduitColoration qui réfèrent cette photo

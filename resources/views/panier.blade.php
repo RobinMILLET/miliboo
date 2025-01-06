@@ -15,10 +15,6 @@
         <h1>Résumé de votre commande</h1>
     </div>
 
-    <div id="info-panier" class="marge">
-        <p>Pendant le Black Friday, les délais de livraison peuvent être allongés. Veuillez-nous excuser pour la gêne occasionnée.</p>
-    </div>
-
     <div id="progress-panier" class="marge">
         <div class="etape"><p>1</p></div>
         <div class="etape"><p>2</p></div>
@@ -93,6 +89,7 @@
                 <p id="title-fidelite">Points fidélité</p>
                 <p><span id="info-fidelite">19.50€ offert</span> sur votre prochaine commande pour votre achat</p>
             </div>
+            <!--
             <div id="promo">
                 <p id="title-promo">Code promo</p>
                 <div id="div-input-promo">
@@ -100,10 +97,11 @@
                     <button id="button-promo">OK</button>
                 </div>
             </div>
+                -->
         </div>
         <div class="marge" id="div-button">
             <div id="achats"><form action="{{ route('homepage') }}"><button id="button-achats"><p id="p-achats"><u>Continuer mes achats</u></p></button></form></div>
-            <div id="commande"><button id="button-commande"><p id="p-commande"> Valider ma commande</p></button></div>
+            <div id="commande"><a href="{{ route('etapelivraison') }}"><button id="button-commande"><p id="p-commande"> Valider ma commande</p></button></a></div>
         </div>
     </div>
 </div>

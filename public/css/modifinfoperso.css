@@ -1,4 +1,4 @@
-#background-info-perso{
+.background{
     position: fixed;
     top: 0;
     left: 0;
@@ -12,7 +12,7 @@
     justify-content: center;
 }
 
-#div-bk-modif{
+#div-bk{
     background-color: white;
     border: 2px solid black;
     border-radius: 10px;
@@ -112,7 +112,7 @@
     margin-left: auto;
 }
 
-#div-header-modif{
+.div-header-modif{
     width: 100%;
     display: flex;
     align-items: center;
@@ -127,7 +127,7 @@
     font-weight: 300;
 }
 
-#button-ferme-perso{
+.button-ferme{
     background-color: black;
     color: white;
     border: none;
@@ -138,7 +138,7 @@
     transition: all 0.5s ease;
 }
 
-#button-ferme-perso:hover{
+#button-ferme:hover{
     filter: invert(100%);
 }
 
@@ -156,7 +156,7 @@
     border-top: 1px solid rgb(192, 192, 192);
 }
 
-#button-valide{
+#button-valide, #button-valide2{
     margin-top: 2%;
     margin-bottom: 2%;
     padding: 10px 20px 10px 20px;
@@ -165,4 +165,19 @@
     outline: none;
     background-color: green;
     color: white;
+
+    transition: all 0.5s ease;
+}
+
+#button-valide:hover, #button-valide2:hover{
+    background-color: gray;
+    color: black;
+}
+
+.noreq {
+    color: red;
+}
+
+#nomadr {
+    margin-bottom: 10px;
 }

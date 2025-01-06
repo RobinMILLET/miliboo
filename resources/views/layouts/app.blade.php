@@ -15,27 +15,37 @@
 <body>
 
     @include('partials.cookie')
-    
-    <div class="info-bar-haut">    
-        Livraison gratuite & expédition en 24/72h !<sup>(1)</sup>    
+
+    <div class="info-bar-haut">
+        Livraison gratuite & expédition en 24/72h !<sup>(1)</sup>
     </div>
-    
+
     <nav class="barre-recherche-info marge">
         <a class="Miliboologo" href="{{ route('homepage')}}">
-            <img class="Miliboologo" href="{{ route('homepage')}}" src="{{ asset('/img/logo_Miliboo_fr.svg') }}" alt="Logomiliboo">    
+            <img class="Miliboologo" href="{{ route('homepage')}}" src="{{ asset('/img/logo_Miliboo_fr.svg') }}" alt="Logomiliboo">
         </a>
         <div id="contenu-recherchebar">
-            <div id="recherche-zone">    
+            <div id="recherche-zone">
                 <form id="form-style" action="{{ route('produit.recherche') }}" method="GET">
                     <span><img id="imgsearch" src="{{asset('img/search.png')}}" alt="image recherche"></span>
                     <input id="recherchebar" type="text" placeholder="Je recherche..." name="motclef" value="{{ request()->input('q') }}" >
                 </form>
             </div>
             <ul id="test">
-                <li>    <a href=""> <img class="imgtest" src="{{ asset('img/question.png') }}" alt="image d'aide"></li>    </a>
-                <li><a href="{{ route('espaceclient')}}"> <img class='imgtest' src='/img/user.png' alt='image compte'>
-            </li>        </a>
-                <li>    <a href="{{ route('panier') }}"> <img class="imgtest" src="{{ asset('img/basket.png') }}" alt="image panier"></li>      </a>
+                <li>
+                    <a class="show-detail" href=""> <p class="p-detail">Aide</p> <img class="imgtest" src="{{ asset('img/question.png') }}" alt="image d'aide"></a>
+                </li>
+                <li>
+                    <a class="show-detail" href="{{ route('espaceclient')}}"> <p class="p-detail">Compte</p> <img class='imgtest' src='/img/user.png' alt='image compte'></a>
+                </li>
+                <li>
+                    <a class="show-detail" href="{{ route('panier') }}"> <p class="p-detail">Panier</p> <img class="imgtest" src="{{ asset('img/basket.png') }}" alt="image panier"></a>
+                </li>
+                @if(isset($_SESSION['admin']) && $_SESSION['admin'] !== null)
+                    <li>
+                        <a class="show-detail" href="{{ route('admin.dashboard') }}"> <p class="p-detail">Admin</p> <img class="imgtest" src="{{ asset('img/admin.png') }}" alt="image admin"></a>
+                    </li>
+                @endif
             </ul>
         </div>
     </nav>
@@ -44,6 +54,7 @@
             <a href="{{ route('produits.parRegroupement', 1)}}" class="navigation-regroupement">Nouveautés</a>
             <a href="{{ route('produits.parRegroupement', 2)}}" class="navigation-regroupement">Promotion</a>
             <a href="{{ route('produits.parRegroupement', 3)}}" class="navigation-regroupement">Made in FRANCE</a>
+            <a href="{{ route('composition') }}" class="navigation-regroupement">Composition</a>
         </div>
         <div>
             <a href="" class="navigation-pro">Espace Pro</a>
@@ -64,7 +75,7 @@
                         <div class="cat-colonne">
                             <ul class="ul-sous-cat">
                                 <li><a href="{{route('produits.parCategorie', 14)}}">Fauteuil</a></li>
-                               
+
                             </ul>
                         </div>
                         <div class="cat-colonne div-cat-img" >
@@ -79,11 +90,11 @@
                             <ul class="ul-sous-cat">
                                 <li><a href="{{route('produits.parCategorie', 15)}}">Chaise</a></li>
                                 <li><a href="{{route('produits.parCategorie', 16)}}">Chaise design</a></li>
-                                
-                                
+
+
                             </ul>
                         </div>
-                        <div class="cat-colonne">                            
+                        <div class="cat-colonne">
                             <ul class="ul-sous-cat">
                             <li><a href="{{route('produits.parCategorie', 17)}}">Tabouret</a></li>
                             </ul>
@@ -192,7 +203,7 @@
                             <ul class="ul-sous-cat">
                                 <li><a href="{{route('produits.parCategorie', 30)}}">Lampe à poser</a></li>
                                 <li><a href="{{route('produits.parCategorie', 31)}}">Suspension</a></li>
-                                
+
                             </ul>
                         </div>
                         <div class="cat-colonne"></div>
@@ -225,7 +236,7 @@
     <div class="container">
         @yield('content')
     </div>
-    
+
     <div id="service">
         <div class="marge" id="div-bandeau">
         <ul id="ul-service">
@@ -264,47 +275,47 @@
         </div>
     </div>
     <footer>
-        <div id="container-footer"> 
+        <div id="container-footer">
             <div class="lignes">
-                <div id="c1"> 
+                <div id="c1">
                     <h3 class="title-footer">à propos de Miliboo</h3>
                     <ul class="ul-footer">
-                        <li><a href="">Qui sommes nous et nos engagements</a></li>
+                        <!-- <li><a href="">Qui sommes nous et nos engagements</a></li>
                         <li><a href="">Mentions légales</a></li>
                         <li><a href="">Moyens de paiement</a></li>
                         <li><a href="">Livraison</a></li>
-                        <li><a href="">Conditions générales de Vente</a></li>
+                        <li><a href="">Conditions générales de Vente</a></li> -->
                         <li><a href="{{ route('confidentialite') }}">Politique de protection des données personnelles</a></li>
-                        <li><a href="">Conditions générales d'utilisation du site</a></li>
+                        <!-- <li><a href="">Conditions générales d'utilisation du site</a></li>
                         <li><a href="">Droit informatique et libertés</a></li>
                         <li><a href="">Carte de fidelité et parrainage</a></li>
                         <li><a href="">Valeurs éco-responsables</a></li>
                         <li><a href="">Rejoignez-nous</a></li>
                         <li><a href="">Index égalité femme homme</a></li>
-                        <li><a href="">Espace investisseurs</a></li>
+                        <li><a href="">Espace investisseurs</a></li> -->
                     </ul>
                 </div>
                 <div id="c2">
                     <h3 class="title-footer">Aide & Contact</h3>
                     <ul class="ul-footer">
-                        <li><a href="">Besoin d'aide</a></li>
+                        <!-- <li><a href="">Besoin d'aide</a></li>
                         <li><a href="">Espace presse</a></li>
                         <li><a href="">Avis Clients</a></li>
                         <li><a href="">Plan du site</a></li>
                         <li><a href="">Promotions meubles</a></li>
-                        <li><a href="">Recherche féquentes</a></li>
+                        <li><a href="">Recherche féquentes</a></li> -->
                     </ul>
                     <h3 class="title-footer">Miliboo sur le Net</h3>
                     <ul class="ul-footer">
-                        <li><a href="">Miliboo-blog</a></li>
-                        <li><a href="">Nos Partenaires</a></li>
+                        <!-- <li><a href="">Miliboo-blog</a></li>
+                        <li><a href="">Nos Partenaires</a></li> -->
                     </ul>
                 </div>
-                <div id="c3"> 
+                <div id="c3">
                     <img src="{{asset('img/logo_Miliboo_fr.svg')}}" alt="salut" class="Miliboologo">
                 </div>
-            </div>  
-            <div class="lignes"> 
+            </div>
+            <div class="lignes">
                 <h3>Moyens de paiement</h3>
             </div>
             <div></div>

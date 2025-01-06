@@ -15,6 +15,22 @@ body{
     margin-right: 12vw;
 }
 
+.grid {
+    text-align: left;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.grid>* {
+    text-align: center;
+    margin: 0;
+    display: inline-block;
+    margin: 0.5%;
+    vertical-align: middle;
+}
+
 /*
 Bar d'info en haut de la page
 */
@@ -119,6 +135,7 @@ a{
     text-decoration: none;
     color: black;
     font-size: x-large;
+    position: relative;
 }
 
 #navigation-regroupement{
@@ -388,3 +405,132 @@ a{
     color: rgb(110, 110, 110);
 }
 
+.p-detail{
+    position: absolute;
+    opacity: 0;
+    width: auto;
+    min-width: 100%;
+    text-align: center;
+    top: 70%;
+    left: 50%;
+    transform: translateX(-35%);
+
+    font-size: 2vh;
+    box-sizing: border-box;
+    padding: 5px;
+    background-color: black;
+    color: white;
+
+    border-radius: 5px;
+
+    transition: all 0.1s ease;
+}
+
+.p-detail::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid black;
+}
+
+.show-detail:hover > .p-detail{
+    opacity: 1;
+}
+
+.input{
+    flex: 1;
+    padding: 15px;
+
+    border: 1.5px solid rgb(179, 179, 179);
+    border-radius: 5px;
+    outline: none;
+
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.input::placeholder{
+    font-weight: 200;
+}
+
+.input:checked{
+    outline: none;
+    box-shadow: 0px 0px 10px black;
+}
+
+.button{
+    padding: 1vh;
+    background-color: black;
+    color: white;
+    border: none;
+}
+
+.button:hover{
+    filter: invert(30%);
+}
+
+#container-partials-adresse{
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+}
+
+.div-input-adresse{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.div-gap{
+    gap: 1vh;
+}
+
+.div-input{
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    width: 100%;
+}
+
+#telephone{
+    width: 100%;
+    display: flex;
+    gap: 10px;
+}
+
+.title-telephone{
+    margin-bottom: 0;
+}
+
+.select-telephone{
+    padding: 14px 10px 14px 10px;
+    box-sizing: border-box;
+    background-color: rgb(230, 230, 230);
+    font-size: 15px;
+    border-radius: 5px 0px 0px 5px;
+    border: none;
+}
+
+.div-telephone{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+
+#select-civilite{
+    flex: 0.35;
+}
+
+.input-name{
+    flex: 1;
+}
+
+#input-ville{
+    flex: 2.5;
+}

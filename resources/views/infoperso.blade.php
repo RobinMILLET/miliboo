@@ -10,10 +10,19 @@
 @section('content-compte')
 
 @include('partials.modifinfoperso')
+@include('partials.modifadresse')
 <?php
 use App\Http\Controllers\InfoPersoController;
 InfoPersoController::getInfoPerso();
 ?>
+<br>
+<button class='button' onclick="window.location.href='/json'">
+    Récupérer mes informations personnelles
+</button>
+<br><br><br>
+<button class='button' style="color:red" onclick="anonym()">
+    Supprimer mon compte
+</button>
 <!-- <div id="div-info-perso">
     <h3 id="title-info-perso">Mes informations personnelles</h3>
 
@@ -51,6 +60,6 @@ InfoPersoController::getInfoPerso();
         </div>
     </div>
 </div> -->
-<script src="{{ asset('js/modifinfoperso.js') }}"></script>
+<script src="{{ asset('js/modifinfo.js') }}"></script>
 
 @endsection

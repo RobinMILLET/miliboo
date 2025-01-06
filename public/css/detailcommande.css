@@ -88,6 +88,113 @@ th{
     border-bottom: 1px solid rgb(192, 192, 192);
 }
 
-.td-total{
+#td-total{
+    padding: 1vh 0px 1vh 0px;
+}
+
+#td-total-prix{
     color: red;
+}
+
+#progress-statut{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    box-sizing: border-box;
+    margin-bottom: 3vh;
+}
+
+#div-etape{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15vw;
+    height: 13vh;
+}
+
+#div-contentieux{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#div-etape::before {
+    --w: 38.4vw;
+    content: '';
+    position: absolute;
+    left: calc(50% - calc(var(--w) / 2));
+    width: var(--w); 
+    height: 2px;
+    background-color: rgba(0, 0, 0, 0.3);
+    transform: translateY(-50%);
+    z-index: 0;
+}
+
+#div-etape.half-colored::after {
+    --w: 38.4vw;
+    content: '';
+    position: absolute;
+    left: calc(50% - calc(var(--w) / 2));
+    width: calc(var(--w) / 2); 
+    height: 2px;
+    background-color: green;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+#div-etape.all-colored::after {
+    --w: 38.4vw;
+    content: '';
+    position: absolute;
+    left: calc(50% - calc(var(--w) / 2));
+    width: var(--w); 
+    height: 2px;
+    background-color: green;
+    transform: translateY(-50%);
+    z-index: 0;
+}
+
+#div-etape.all-colored-fail::after {
+    --w: 38.4vw;
+    content: '';
+    position: absolute;
+    left: calc(50% - calc(var(--w) / 2));
+    width: var(--w); 
+    height: 2px;
+    background-color: red;
+    transform: translateY(-50%);
+    z-index: 0;
+}
+
+.etape{
+    height: 1.5vw;
+    width: 5vw;
+    padding: 0.7vw;
+    border-radius: 25px;
+    background-color: black;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+}
+
+.p-statut{
+    font-size: 1.5vh;
+}
+
+.etape-success{
+    background-color: green;
+}
+
+.etape-failed{
+    background-color: gray;
+}
+
+.etape-contentieux{
+    background-color: red;
 }

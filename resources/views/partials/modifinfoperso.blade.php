@@ -12,15 +12,16 @@ if (session('error')) {
 $infos = InfoPersoController::getInfos();
 
 ?>
+<link rel="stylesheet" href="{{ asset('css/modifinfoperso.css') }}">
 <body>
     <form method="POST" action="/tryMod" id="form">
     @csrf
-    <div id="background-info-perso">
-        <div id="div-bk-modif">
+    <div class="background" id="background-info-perso">
+        <div id="div-bk">
             <div id="adresse">    
-                <div id="div-header-modif">
-                    <h2 class="title-part">Modifier mon adresse de facturation</h2> 
-                    <button id="button-ferme-perso" type="button">X</button>
+                <div class="div-header-modif">
+                    <h2 class="title-part">Modifier mes informations personnelles</h2> 
+                    <button class="button-ferme" type="button">X</button>
                 </div>   
                 <div id="info-perso">
                     <div class="div-input">
@@ -105,5 +106,5 @@ $infos = InfoPersoController::getInfos();
         </div>
     </div>
     </form>
-    <script src="{{ asset('js/creationcompte.js') }}"></script>
+    <script src="{{ asset('js/creationcompte.js') }}"defer></script>
 </body>

@@ -1,0 +1,38 @@
+
+.produit {
+    border: 2px solid lightgray;
+    border-radius: 10%;
+    width: 20vw;
+    height: 20vw;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.img-comp {
+    width: 80%;
+    height: 60%;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.produit>*{
+    font-size: 1vw;
+    display: block;
+    margin: 1%;
+    padding: 0;
+}
+
+.p-titre-comp{
+    font-size: 2vh;
+    font-weight: 600;
+}
+
+.p-prix-comp{
+    font-size: 1.5vh;
+    font-weight: bold;
+}

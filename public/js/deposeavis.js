@@ -63,11 +63,7 @@ inputImage.addEventListener('change', (event) => {
 });
 
 function addFile(files) {
-    Array.from(files).forEach(file => {
-        li = document.createElement("li");
-        li.textContent = file.name;
-        ulFile.appendChild(li);
-    })
+    // previewImage(files);
 }
 
 const imagePreviewContainer = document.getElementById("image-preview-container");
@@ -91,6 +87,24 @@ inputImage.addEventListener('change', (event) => {
         reader.readAsDataURL(file); 
     });
 });
+
+// function previewImage(files){
+//     // imagePreviewContainer.innerHTML = '';
+
+//     Array.from(files).forEach(file => {
+//         const reader = new FileReader();
+
+//         reader.onload = function(e) {
+//             const imgElement = document.createElement('img');
+//             imgElement.src = e.target.result;
+//             imgElement.style.width = '100px';
+//             imgElement.style.margin = '5px'; 
+//             imagePreviewContainer.appendChild(imgElement); 
+//         };
+
+//         reader.readAsDataURL(file); 
+//     });
+// };
 
 const form = document.getElementById('form-avis');
 form.addEventListener("submit", async function (event) {
@@ -152,7 +166,7 @@ form.addEventListener("submit", async function (event) {
             displayMessage(result.message || "Erreur : Impossible de soumettre l'avis.", "error");
         }
     } catch (error) {
-        displayMessage("Erreur de connexion. Veuillez réessayer.", "error");
+        displayMessage("Impossible de soumettre plusieurs avis.", "error");
         console.error(error);
     }
 });

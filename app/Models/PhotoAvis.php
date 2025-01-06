@@ -9,7 +9,7 @@ class PhotoAvis extends Model
 {
     use HasFactory;
     protected $table = "photoavis";
-    protected $primaryKey = null;
+    protected $primaryKey = "idavis";
     public $timestamps = false;
 
         /**

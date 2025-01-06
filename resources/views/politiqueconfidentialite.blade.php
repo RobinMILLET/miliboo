@@ -7,7 +7,7 @@
 
 @section('content')
 <div class="marge">
-<h1>Politique de confidentialite</h1>
+<h1>Politique de confidentialité</h1>
 
     <ul id="table-matiere">
         <li class="li-table">

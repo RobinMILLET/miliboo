@@ -15,8 +15,8 @@
         <div id="div-input">
             <?php $mdpError = session()->get('error')=="mdp" ? " error" : ""; ?>
             <input id="ancienmdp" name="ancienmdp" class="input{{$mdpError}}" type="password" placeholder="Ancien mot de passe" required>
-            <input id="password" name="password" class="input" type="password" placeholder="Nouveau mot de passe" required onchange="validatePassword()">
-            <input id="passwordConfirm" name="passwordConfirm" class="input" type="password" placeholder="Confirmer mot de passe" required onchange="validatePassword()">
+            <input id="password" name="password" class="input" type="password" placeholder="Nouveau mot de passe" required onkeyup="validatePassword()">
+            <input id="passwordConfirm" name="passwordConfirm" class="input" type="password" placeholder="Confirmer mot de passe" required onkeyup="validatePassword()">
         </div>
         <ul id="ul-mdp-required">
             <li id="req1" class="li-required">12 caractères</li>

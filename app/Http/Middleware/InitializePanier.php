@@ -7,6 +7,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Log;
 
 
 class InitializePanier
@@ -19,7 +20,7 @@ class InitializePanier
             session_start();
         }
         if (!isset($_SESSION["panier"])) {
-            $cookie = $request->cookie("cookieConservationPanier");
+            $cookie = CookieController::getRequestCookie($request, "cookieConservationPanier");
             if ($connected) {
                 if ($cookie) {
                     // Fusion paniers

@@ -78,7 +78,7 @@
         </section>
 
         <section id="recherche">
-            <grid id="grid">
+            <grid class="grid">
                 <?php 
                     // Si tri est null ou pas max, trier par prixMin
                     $triMin = (($_GET["tri"] ?? "nom") != "max");

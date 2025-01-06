@@ -9,6 +9,7 @@ class A_aimer extends Model
 {
     use HasFactory;
     protected $table = 'a_aimer';
+    protected $primaryKey = 'idclient';
     public $timestamps = false;
     
     //IMPORTANT POUR LES INSERTS

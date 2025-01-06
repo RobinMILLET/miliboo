@@ -40,12 +40,11 @@ class CreationCompteController extends Controller
       return response()->json(["ville" => $villes[0]['nomville'] ?? null]);
    }
 
-   public static function extractRequest(Request $request, &$client, &$adr) {
-      if ($request->civilite == "X") $client['civiliteclient'] = null;
-      else $client['civiliteclient'] = $request->civilite;
-      $client['nomclient'] = ucfirst($request->nom);
-      $client['prenomclient'] = ucfirst($request->prenom);
-      
+   public static function toTitle($str) {
+      return ucfirst(strtolower($str));
+   }
+
+   public static function extractAdr(Request $request, &$adr) {
       // Séparation de l'adresse
       if (preg_match('/^(\d+)\s+(.*)$/', $request->adresse, $matches)) {
          $adr['numerorue'] = $matches[1];
@@ -62,7 +61,15 @@ class CreationCompteController extends Controller
          return redirect()->back()->with("error", "cp");
       $ville = strtoupper($request->ville);
       $adr['codeinsee'] = Ville::where("nomville", $ville)->get()->firstOrFail()->codeinsee;
+      return null;
+   }
 
+   public static function extractClient(Request $request, &$client) {
+      if ($request->civilite == "X") $client['civiliteclient'] = null;
+      else $client['civiliteclient'] = $request->civilite;
+      $client['nomclient'] = self::toTitle($request->nom);
+      $client['prenomclient'] = self::toTitle($request->prenom);
+      
       $telportable = preg_replace('/\D/', '', $request->inputtelportable);
       if (strlen($telportable) != 9) return redirect()->back()->with("error", "portable");
       $client['telportableclient'] = $request->telportable . $telportable;
@@ -103,7 +110,7 @@ class CreationCompteController extends Controller
       $pro = array();
 
       $client['emailclient'] = strtolower($request->email);
-      $clientOld = Client::where('emailclient', $client['emailclient'])->first();
+      $clientOld = Client::getByEmail($client['emailclient']);
       if ($clientOld) return redirect()->back()->with('error', "exists");
 
       $client['hashmdp'] = Hash::make($request->password);
@@ -111,7 +118,9 @@ class CreationCompteController extends Controller
       $client['newsletterpartenaires'] = isset($request->ckPartenaires);
       $estPro = (bool)$request->radiochoix ?? false;
       
-      $exit = self::extractRequest($request, $client, $adr);
+      $exit = self::extractClient($request, $client);
+      if ($exit) return $exit;
+      $exit = self::extractAdr($request, $adr);
       if ($exit) return $exit;
 
       if ($estPro) {
@@ -126,6 +135,7 @@ class CreationCompteController extends Controller
       }
 
       $client["datecreationcompte"] = now();
+      $client["derniereutilisation"] = now();
       $client["pointfideliteclient"] = 0;
       DB::beginTransaction();
       try {

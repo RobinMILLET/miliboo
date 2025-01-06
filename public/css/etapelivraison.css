@@ -1,0 +1,229 @@
+#title-panier{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#title-panier h1{
+    font-weight: 500;
+}
+
+
+#progress-panier{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10vw;
+    height: 7vh;
+    
+    --decay: 300px;
+    padding-left: var(--decay);
+    padding-right: var(--decay);
+}
+
+#progress-panier::before {
+    content: '';
+    position: absolute;
+    left: calc(50vw - 23vw / 2);
+    width: 22vw; 
+    height: 2px;
+    background-color: rgba(0, 0, 0, 0.3);
+    transform: translateY(-50%);
+    z-index: 0;
+}
+
+#progress-panier.half-colored::after {
+    content: '';
+    position: absolute;
+    left: calc(50vw - 23vw / 2);
+    width: 11vw;
+    height: 2px;
+    background-color: rgba(0, 0, 0);
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.etape{
+    height: 20%;
+    aspect-ratio: 1;
+    padding: 10px;
+    border-radius: 100px;
+    background-color: black;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+}
+
+.etape:nth-child(3){
+    opacity: 0.7;
+}
+
+#adresse{
+    margin-top: 15vh;
+    margin-left: 1vw;
+    display: flex;
+}
+
+.div-adresse{
+    flex: 1;
+}
+
+#livraison{
+    display: flex;
+    flex-direction: column;
+    gap: 3vh;
+}
+
+#p-name{
+    margin-top: 4vh;
+    margin-bottom: 0;
+    font-weight: bold;
+    font-size: 1.7vh;
+}
+
+#p-tel{
+    position: relative;
+}
+
+.p-info{
+    text-transform: uppercase;
+    font-weight: 200;
+    font-size: 1.7vh;
+    margin: 0;
+}
+
+#select-adresse{
+    width: 50%;
+}
+
+#button-add-adresse{
+    width: 20vw;
+    height: 5vh;
+}
+
+#add-adresse{
+    transform-origin: top;
+    transform: scaleY(0);
+    height: 0px;
+    visibility: collapse;
+    transition: transform 0.5s ease;
+}
+
+#container-adresse{
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+    max-width: 80%;
+
+    border: 1px solid rgb(192, 192, 192);
+    border-radius: 5px;
+    box-sizing: border-box;
+    padding: 5px;
+}
+
+#div-button-ajout{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.8vh;
+
+    margin-top: 3vh;
+    padding-top: 1vh;
+    border-top: 1px solid gray;
+}
+
+.button-ajout-adresse{
+    color: white;
+    box-sizing: border-box;
+    padding: 5px 10px 5px 10px;
+    border: none;
+    outline: none;
+}  
+
+.button-ajout-adresse:hover{
+    filter: invert(100%);
+}
+
+#button-annule{
+    background-color: #6c757d;
+}
+
+#button-valide{
+    background-color: #212529;
+}
+
+textarea {
+    resize: none;
+}
+
+p {
+    margin: 0;
+}
+
+a {
+    font-size: medium;
+    text-decoration: underline;
+}
+
+.inline {
+    display: inline-block;
+    width: fit-content;
+}
+
+.nice {
+    color: darkslategray;
+    margin: 5px;
+    text-decoration: underline;
+}
+
+#div-button{
+    width: 100%;
+    max-width: 100vw;
+    height: 5vh;
+    padding-top: 50px;
+    padding-bottom: 50px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10vh;
+}
+
+#achats{
+    flex: 2.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#button-achats{
+    background: none;
+    border: none;
+}
+
+#p-achats{
+    font-size: 22px;
+}
+
+#commande{
+    flex: 1;
+    height: 100%;
+    max-width: 30vw;
+}
+
+#button-commande{
+    width: 100%;
+    height: 100%;
+
+    background-color: black;
+    color: white;
+}
+
+#p-commande{
+    font-size: 22px;
+    padding: 0;
+    margin: 0;
+}

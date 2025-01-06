@@ -4,22 +4,6 @@
     font-family: sans-serif;
 }
 
-#grid {
-    text-align: left;
-    display: flex;
-    align-content: center;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-#grid>* {
-    text-align: center;
-    margin: 0;
-    display: inline-block;
-    margin: 0.5%;
-    vertical-align: middle;
-}
-
 .produit {
     border: 2px solid lightgray;
     border-radius: 10%;

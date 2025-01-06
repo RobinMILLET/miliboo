@@ -30,6 +30,7 @@
             <h2 class="title-section-panel">Mes informations personnelles</h2>
             <ul class="ul-section-panel">
                 <li class="li-section-panel"><a href="{{ route('modifmdp') }}">Changer mon mot de passe</a></li>
+                <li class="li-section-panel"><a href="{{ route('modifcontact') }}">Changer mes informations de contact</a></li>
                 <li class="li-section-panel"><a href="{{ route('infoperso') }}">Modifier mes informations personnelles</a></li>
             </ul>
         </div>

@@ -117,16 +117,16 @@
                             $qteStock = $colorationChoisie->quantitestock;
                             switch ($qteStock) {
                                 case 0:
-                                    echo "<br><p class=\"infer10stock\">Rupture de stock!</p><br>";
+                                    echo "<p class=\"infer10stock\">Rupture de stock!</p>";
                                     break;
                                 case 1:
-                                    echo "<br><p class=\"infer10stock\">Il ne reste qu'un seul exemplaire !</p><br>";
+                                    echo "<p class=\"infer10stock\">Il ne reste qu'un seul exemplaire !</p>";
                                     break;
                                 case ($qteStock < 10):
-                                    echo "<br><p class=\"infer10stock\">Il ne reste que $colorationChoisie->quantitestock exemplaires !</p><br>";
+                                    echo "<p class=\"infer10stock\">Il ne reste que $colorationChoisie->quantitestock exemplaires !</p>";
                                     break;
                                 default:
-                                    echo "<br><p class=\"super10stock\"><B>Cette article est en stock</B></p><br>";
+                                    echo "<p class=\"super10stock\"><B>Cette article est en stock</B></p>";
                                     break;
                             }
 
@@ -169,7 +169,7 @@
                             echo ",";
                             echo $colorationChoisie->idcouleur;
                             ?>)'>J'achète</button>
-                            <img id="img-like" src="{{ $isLiked ? asset('img/coeur-like.png') : asset('img/coeur.png') }}" data-liked="{{ $isLiked ? 'true' : 'false' }}" data-idproduit="{{ $produit->idproduit }}" alt="">
+                            <img class="show-detail" id="img-like" src="{{ $isLiked ? asset('img/coeur-like.png') : asset('img/coeur.png') }}" data-liked="{{ $isLiked ? 'true' : 'false' }}" data-idproduit="{{ $produit->idproduit }}" alt="">
                         </div>
                     </div>
                 </div>
