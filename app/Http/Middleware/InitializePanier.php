@@ -19,22 +19,22 @@ class InitializePanier
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
-        if (!isset($_SESSION["panier"])) {
+        if (!isset($_SESSION["panier"]) || !$_SESSION["panier"]) {
             $cookie = CookieController::getRequestCookie($request, "cookieConservationPanier");
             if ($connected) {
                 if ($cookie) {
-                    // Fusion paniers
+                    $_SESSION["panier"] = $cookie; // fusion panier avec db ?
                 }
                 else {
-                    $_SESSION["panier"] = null;
+                    $_SESSION["panier"] = array(array(),array()); // récup panier depuis db ?
                 }
             }
             else {
                 if ($cookie) {
-                    $_SESSION["panier"] = json_decode($cookie, true);
+                    $_SESSION["panier"] = $cookie;
                 }
                 else {
-                    $_SESSION["panier"] = array();
+                    $_SESSION["panier"] = array(array(),array());
                 }
             }
         }

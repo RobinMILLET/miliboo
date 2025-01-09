@@ -9,6 +9,6 @@ class ValeurAttribut extends Model
 {
     use HasFactory;
     protected $table = "valeurattribut";
-    protected $primaryKey = null;
+    protected $primaryKey = 'idattribut';
     public $timestamps = false;
 }

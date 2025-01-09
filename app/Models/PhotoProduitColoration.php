@@ -9,7 +9,7 @@ class PhotoProduitColoration extends Model
 {
     use HasFactory;
     protected $table = "photoproduitcoloration";
-    protected $primaryKey = null;
+    protected $primaryKey = 'idphoto';
     public $timestamps = false;
     protected $fillable = [
         'idproduit',

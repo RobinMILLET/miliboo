@@ -37,7 +37,7 @@ button{
     position: relative;
     top: 0;
     left: 0;
-    height: 100%;
+    height: auto;
     width: 100%;
 }
 
@@ -325,14 +325,14 @@ input:checked + .slider:before {
 #but-affiche-cookie{
     position: fixed;
     bottom: 20px;
-    right: 20px;
+    left: 20px;
     background-color: transparent;
     border: none;
     z-index: 10;
 }
 
 #img-cookie{
-    --size: 8vh;
+    --size: 60px;
     height: var(--size);
     width: var(--size);
 }

@@ -48,7 +48,7 @@ public function login(Request $request)
         if (isset($_SESSION['admin'])) {
             $admin = ServiceMiliboo::find($_SESSION['admin']->idservice);
             if ($admin) {
-                $admin->remember_token = null;
+                $admin->remembertoken = null;
                 $admin->save();
             }
         }

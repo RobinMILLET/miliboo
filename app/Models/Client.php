@@ -156,13 +156,14 @@ class Client extends Model
     }
 
     public function anonym() {
+        Log::alert("Lancement anonymisation client N°".$this->idclient);
         DB::beginTransaction();
         try {
             $this->nomclient = "";
             $this->prenomclient = "";
-            $this->civiliteclient = "X";
+            $this->civiliteclient = null;
             $this->emailclient = null;
-            $this->telfixeclient = "00000000000";
+            $this->telfixeclient = null;
             $this->telportableclient = "00000000000";
             foreach($this->hasMany(Adresse::class, "idclient", "idclient")->get() as $adr) {
                 $adr->anonym();

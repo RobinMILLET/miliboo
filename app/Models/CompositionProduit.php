@@ -24,7 +24,25 @@ class CompositionProduit extends Model
         }
     }
 
+    public function stock() {
+        $stocks = $this->getDetailComposition()->map->stock();
+        return $stocks->min();
+    }
+
+    public function delailivraison() {
+        $produits = $this->getDetailComposition()->map->getProduit();
+        $delais = $produits->map->delailivraison;
+        return $delais->max();
+    }
+
     public function getDetailComposition(){
         return $this->hasMany(DetailComposition::class, 'idcomposition', 'idcomposition')->get();
+    }
+
+    public function getReduc() {
+        if (!$this->prixsoldecomposition) return 0;
+        return 100*((float)$this->prixventecomposition
+                - (float)$this->prixsoldecomposition)
+                / (float)$this->prixventecomposition;
     }
 }

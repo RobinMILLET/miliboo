@@ -271,7 +271,7 @@ class Produit extends Model
 
     //TEST AFFICHAGE NOTE DANS LE DETAIL PRODUIT VICTOR // CODE DE ROBIN
     // Fonctionne, peut etre utilise pour refactor le code de recherche car doublon
-    public function affficheNote() {
+    public function afficheNote() {
         $avis = $this->getAvis();
         $nbAvis = $avis->count();
 
@@ -284,7 +284,7 @@ class Produit extends Model
         if ($nbAvis) {
             $avisProduit = "<span>".$stars[(int)$avgNote]."<span class='smalltext'></span></span>";
         }
-        else { $avisProduit = "<span>Aucun avis</span>"; }
+        else {$avisProduit = "<span>Aucun avis</span>";}
 
 
         return [

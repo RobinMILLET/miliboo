@@ -166,13 +166,21 @@ class InfoPersoController extends Controller
         echo json_encode($client->completeArray());
     }
 
-    public static function clientAnonym($confirm) {
-        if ($confirm != "NoReallyDeleteMyAccountNow")
-            return redirect()->route("infoperso");
-        $client = $_SESSION["client"];
-        if (!$client) return redirect()->route("compte");
-        $client->anonym();
-        return redirect()->route("homepage");
+    public static function clientAnonym($any) {
+        if (is_string($any) && ctype_digit($any)) {
+            if($_SESSION['admin']->idservice != 3)
+                return redirect()->route("homepage");
+            $client = Client::find(intval($any));
+            $client->anonym();
+            return redirect()->route("admin.dashboard");
+        }
+        else if ($any == "NoReallyDeleteMyAccountNow") {
+            $client = $_SESSION["client"];
+            if (!$client) return redirect()->route("compte");
+            $client->anonym();
+            return redirect()->route("homepage");
+        }
+        return redirect()->route("infoperso");
     }
 
     public static function delAdr($id) {

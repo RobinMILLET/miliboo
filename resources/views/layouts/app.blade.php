@@ -33,7 +33,7 @@
             </div>
             <ul id="test">
                 <li>
-                    <a class="show-detail" href=""> <p class="p-detail">Aide</p> <img class="imgtest" src="{{ asset('img/question.png') }}" alt="image d'aide"></a>
+                    <a class="show-detail" href="{{ route('aide')}}"> <p class="p-detail">Aide</p> <img class="imgtest" src="{{ asset('img/question.png') }}" alt="image d'aide"></a>
                 </li>
                 <li>
                     <a class="show-detail" href="{{ route('espaceclient')}}"> <p class="p-detail">Compte</p> <img class='imgtest' src='/img/user.png' alt='image compte'></a>
@@ -274,7 +274,17 @@
         </ul>
         </div>
     </div>
-    <footer>
+    
+    <script>
+    var botmanWidget = {
+    aboutText: '',
+    introMessage: "Bienvenue dans notre site web",
+    };
+    </script>
+
+    <script src='https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js'></script>
+
+   <footer>
         <div id="container-footer">
             <div class="lignes">
                 <div id="c1">

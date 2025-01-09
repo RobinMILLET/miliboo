@@ -68,7 +68,6 @@ class ColorationController extends Controller
 
             DB::commit();
 
-
             return response()->json(['success' => true]);
         } catch (\Illuminate\Validation\ValidationException $e) {
 

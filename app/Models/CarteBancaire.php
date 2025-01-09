@@ -10,9 +10,10 @@ class CarteBancaire extends Model
     use HasFactory;
     protected $table = "cartebancaire";
     protected $primaryKey = "idcartebancaire";
+    public $incrementing = true;
     public $timestamps = false;
     protected $fillable = [
-        'nomcartebancaire', 'dateenregistrement', 'numcartebancaire', 'dateexpirationcarte'];
+        'idclient', 'nomcartebancaire', 'dateenregistrement', 'numcartebancaire', 'dateexpirationcarte'];
 
     public function getClient() {
         return $this->belongsTo(Client::class, 'idclient', 'idclient')->get()->firstOrFail();

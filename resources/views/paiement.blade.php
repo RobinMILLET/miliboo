@@ -7,9 +7,6 @@
 @endsection
 
 @section('content')
-<?php
-use \App\Http\Controllers\PanierController;
-?>
 <div id="title-panier">
     <h1>Paiement</h1>
 </div>
@@ -37,19 +34,38 @@ use \App\Http\Controllers\PanierController;
                 <strong>
                     <div class="div-ligne-resume">
                         <p>Total des articles (Prix initial)</p>
-                        <p>{{PanierController::prixPanier(false)}}€</p>
+                        <p>{{ $prix[0] }}€</p>
+                    </div>
+                    <div class="div-ligne-resume">
+                        <p>Facturations supplémentaires</p>
+                        <p>{{ $prix[1] }}€</p>
                     </div>
                     <div class="div-ligne-resume">
                         <p>Frais de livraison</p>
                         <p>Offert</p>
                     </div>
+                    @if ($prix[4] != 0)
+                    <div class="div-ligne-resume">
+                        <p>Prix à débiter</p>
+                        <p>{{ $prix[2] }}€</p>
+                    </div>
+                    <div class="div-ligne-resume">
+                        <p>Réduction fidélité</p>
+                        <p>{{ $prix[3] }}€ ({{ $prix[4] }} points)</p>
+                    </div>
+                    @endif
                     <div class="div-ligne-resume">
                         <p>Total</p>
-                        <p>{{PanierController::prixPanier(false)}}€</p>
+                        <p>{{ $prix[5] }}€</p>
                     </div>
                 </strong>
             </div>
         </div>
+
+        <?php
+        use App\Http\Controllers\PaiementController;
+        PaiementController::echoOptionsCB();
+        ?>
 
         <!-- <p class="p-paiement">Adresse</p>
         <div id="div-container-adresse">
@@ -94,7 +110,7 @@ use \App\Http\Controllers\PanierController;
         </div>
 
         <div class="div-input">
-            <form id="form-carte" method="POST" action="/paieCB">
+            <form id="form-carte" method="POST" action="{{ route('paieNouvCB') }}">
             @csrf
                 <input name="nom" class="input" type="text" placeholder="Nom de la carte bancaire (requis pour sauvegarder)">
                 <input name="num" class="input" type="text" placeholder="0000-0000-0000-0000*" onchange="validate(this, 16, true)" required>

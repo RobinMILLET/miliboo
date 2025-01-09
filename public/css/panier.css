@@ -434,3 +434,8 @@ tbody td {
     content:"\203A";
     font-size: 34px;
 }
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

@@ -30,51 +30,6 @@ function matchColumnHeights() {
     colPresentation.style.height = `${colImagesHeight}px`;
 }
 
-function minusOne() {
-    minusBtn = document.getElementById("minusOne")
-    quant = document.getElementById("quant")
-    plusBtn = document.getElementById("plusOne")
-    plusBtn.disabled = false
-    quantite = parseInt(quant.value)
-    if (quantite <= 2) minusBtn.disabled = true
-    quant.value = quantite-1
-}
-
-function plusOne(max) {
-    minusBtn = document.getElementById("minusOne")
-    quant = document.getElementById("quant")
-    plusBtn = document.getElementById("plusOne")
-    minusBtn.disabled = false
-    quantite = parseInt(quant.value)
-    if (quantite >= max-1) plusBtn.disabled = true
-    quant.value = quantite+1
-}
-
-function verif(max) {
-    minusBtn = document.getElementById("minusOne")
-    quant = document.getElementById("quant")
-    plusBtn = document.getElementById("plusOne")
-    quantite = parseInt(quant.value)
-    if (isNaN(quantite) || quantite < 1) quantite = 1
-    if (quantite > max) quantite = max
-    quant.value = quantite
-    if (quantite <= 2) minusBtn.disabled = true
-    else minusBtn.disabled = false
-    if (quantite >= max-1) plusBtn.disabled = true
-    else plusBtn.disabled = false
-}
-
-function achete(idproduit, idcouleur) {
-    quant = document.getElementById("quant")
-    quantite = parseInt(quant.value)
-    fetch("/addPanier/"+idproduit+"/"+idcouleur+"/"+quantite)
-        .then(response => response.json())
-        .then(data => {
-            window.location.href = "/panier"
-            console.log(data.message)
-        });
-}
-
 function showPreviewImage(img) {
     const modal = document.getElementById('imagePreview');
     const previewImage = document.getElementById('previewImage');

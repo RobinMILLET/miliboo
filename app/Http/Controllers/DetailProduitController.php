@@ -93,7 +93,7 @@ class DetailProduitController extends Controller
      **/
     public static function getNoteProduit($produit)
     {
-        $note = $produit->affficheNote();
+        $note = $produit->afficheNote();
         return $note;
     }
 

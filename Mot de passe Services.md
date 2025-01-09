@@ -14,3 +14,10 @@ Service : DPO
 Login : DPO
 MDP : MdpDPO
 Hash : 1d60dac327ea41c5f9e05c8c37742ce764ae1c2c15f5812aff66e91de3819ece
+
+
+Service : Service Expedition
+Login : ServiceExpedition
+MDP : MdpServiceExpedition
+Hash : d6d059d7340868beb929c0633dc9aaf09019927710178ade21c7f43629b5ee3a
+

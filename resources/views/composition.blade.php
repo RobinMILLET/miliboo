@@ -9,7 +9,7 @@
 
 @section('content')
 
-<h1>Liste des Compositions</h1>
+<h1 id="title-comp">Liste des Compositions</h1>
     <grid class="grid">
     <?php
     use App\Http\Controllers\CompositionController;

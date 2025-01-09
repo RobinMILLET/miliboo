@@ -20,6 +20,7 @@
 <body>
 
     <script src="{{asset('js/detailProduit.js')}}" defer></script>
+    <script src="{{asset('js/panier.js')}}" defer></script>
     <div class="divProduit">
         <div class="columnsProduit">
             <div class="colImagesProduit">
@@ -88,7 +89,7 @@
                         <?php
                         $note = DetailProduitController::getNoteProduit($produit);
                         $noteEtoile = $note['noteEtoiles'];
-                        $nbNote = $note['nbAvis'];
+                        $nbNote = $note['nbAvis'] ? $note['nbAvis'] :"";
                         echo "$noteEtoile $nbNote";
                         ?>
                     </div>
@@ -158,17 +159,22 @@
                         </div>
                         <div id="div-button-panier">
                             <div>
+                                <?php
+                                $stock = $colorationChoisie->quantitestock;
+                                $disablePlus = $stock <= 1 ? " disabled" : "";
+                                $disabled = $stock <= 0 ? " disabled" : "";
+                                $start = $stock >= 1 ? 1 : 0;
+                                ?>
                                 <button id='minusOne' class='button-quantite' disabled onclick="minusOne()">-</button>
-                                <input id='quant' class='input-quantite' type="text" value="1" onchange='verif(<?php echo $colorationChoisie->quantitestock ?>)'></input>
-                                <?php $disable = $colorationChoisie->quantitestock == 1 ? " disabled" : ""; ?>
-                                <button id='plusOne' class='button-quantite' onclick='plusOne(<?php echo $colorationChoisie->quantitestock ?>)'{{$disable}}>+</button>
+                                <input id='quant' class='input-quantite' type="text" value="{{$start}}" onchange='verif(<?php echo $stock ?>)'></input>
+                                <button id='plusOne' class='button-quantite' onclick='plusOne(<?php echo $stock ?>)'{{$disablePlus}}>+</button>
                             </div>
                             <button id="button-achete" onclick='achete(
                             <?php
                             echo $colorationChoisie->idproduit;
                             echo ",";
                             echo $colorationChoisie->idcouleur;
-                            ?>)'>J'achète</button>
+                            ?>)'{{$disabled}}>J'achète</button>
                             <img class="show-detail" id="img-like" src="{{ $isLiked ? asset('img/coeur-like.png') : asset('img/coeur.png') }}" data-liked="{{ $isLiked ? 'true' : 'false' }}" data-idproduit="{{ $produit->idproduit }}" alt="">
                         </div>
                     </div>

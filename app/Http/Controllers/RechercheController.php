@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Produit;
 use App\Models\TypeProduit;
 use App\Models\CategorieProduit;
+use App\Models\Coloration;
 use App\Models\RegroupementProduit;
 use App\Models\ProduitSimilaire;
 
@@ -171,14 +172,24 @@ class RechercheController extends Controller
 
     public function showByRegroupement($idRegroupement)
     {
-        $regroupement = RegroupementProduit::find($idRegroupement);
-        $details = $regroupement->getDetailRegroupement();
-        $produits = collect();
-        foreach ($details as $detail ) {
-            $detailproduits = $detail->getProduit();
-            $produits = $produits->push($detailproduits);
+        if ($idRegroupement == 3) { // madeinfrance
+            $produits = Produit::all()->where("idpays", "=", 1);
         }
-        $produits = $produits->unique('idproduit');
+        else {
+            if ($idRegroupement == 2) { // promotion
+                $details = Coloration::all()->where("estvisible")->whereNotNull("prixsolde");
+            }
+            else {
+                $regroupement = RegroupementProduit::find($idRegroupement);
+                $details = $regroupement->getDetailRegroupement();
+            }
+            $produits = collect();
+            foreach ($details as $detail ) {
+                $produit = $detail->getProduit();
+                $produits = $produits->push($produit);
+            }
+            $produits = $produits->unique('idproduit');
+        }
         
         return view('rechercheProduit', [
             'produits' => self::recherche($produits)

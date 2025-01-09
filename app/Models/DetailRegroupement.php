@@ -9,7 +9,7 @@ class DetailRegroupement extends Model
 {
     use HasFactory;
     protected $table = "detailregroupement";
-    protected $primaryKey = null;
+    protected $primaryKey = 'idregroupement';
     public $timestamps = false;
 
     /**

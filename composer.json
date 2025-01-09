@@ -6,7 +6,10 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "botman/botman": "*",
+        "botman/driver-web": "*",
         "guzzlehttp/guzzle": "^7.2",
+        "laravel/fortify": "^1.25",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8"
@@ -23,7 +26,6 @@
     "autoload": {
         "psr-4": {
             "App\\": "app/",
-            "InitPanier": "app/initPanier.php",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         }

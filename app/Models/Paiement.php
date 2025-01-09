@@ -10,7 +10,10 @@ class Paiement extends Model
     use HasFactory;
     protected $table = 'paiement';
     protected $primaryKey = 'idcommande';
+    public $incrementing = true;
     public $timestamps = false;
+    protected $fillable = ['idcommande', 'idcartebancaire', 'idtypepaiement', 'datepaiement', 'montantpaiement', 'indixepaiement'];
+
 
     public function getTypePaiement() {
         return $this->hasOne(TypePaiement::class, 'idtypepaiement', 'idtypepaiement')->get()->first();

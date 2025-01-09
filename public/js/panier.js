@@ -4,9 +4,8 @@ function m(id) {
     let plus = document.getElementById("p"+id)
     let total = document.getElementById("t"+id)
     plus.disabled = false
-    idproduit = id.split("-")[0]
-    idcouleur = id.split("-")[1]
-    fetch("/addPanier/"+idproduit+"/"+idcouleur+"/-1")
+    id = id.replace("-", "/")
+    fetch("/addPanier/"+id+"/-1")
         .then(response => response.json())
         .then(data => {
             quant.innerHTML = data.quantite
@@ -22,9 +21,8 @@ function p(id) {
     let plus = document.getElementById("p"+id)
     let total = document.getElementById("t"+id)
     minus.disabled = false
-    idproduit = id.split("-")[0]
-    idcouleur = id.split("-")[1]
-    fetch("/addPanier/"+idproduit+"/"+idcouleur+"/1")
+    id = id.replace("-", "/")
+    fetch("/addPanier/"+id+"/1")
         .then(response => response.json())
         .then(data => {
             quant.innerHTML = data.quantite
@@ -35,9 +33,8 @@ function p(id) {
 }
 
 function d(id) {
-    idproduit = id.split("-")[0]
-    idcouleur = id.split("-")[1]
-    fetch("/setPanier/"+idproduit+"/"+idcouleur+"/0")
+    id = id.replace("-", "/")
+    fetch("/setPanier/"+id+"/0")
         .then(response => response.json())
         .then(data => {
             window.location.reload()
@@ -53,4 +50,51 @@ function getPrixPanier(prixpanier) {
 
 function fidelite($prix) {
     return Math.floor($prix/10)*0.5;
+}
+
+
+function minusOne() {
+    minusBtn = document.getElementById("minusOne")
+    quant = document.getElementById("quant")
+    plusBtn = document.getElementById("plusOne")
+    plusBtn.disabled = false
+    quantite = parseInt(quant.value)
+    if (quantite <= 2) minusBtn.disabled = true
+    quant.value = quantite-1
+}
+
+function plusOne(max) {
+    minusBtn = document.getElementById("minusOne")
+    quant = document.getElementById("quant")
+    plusBtn = document.getElementById("plusOne")
+    minusBtn.disabled = false
+    quantite = parseInt(quant.value)
+    if (quantite >= max-1) plusBtn.disabled = true
+    quant.value = quantite+1
+}
+
+function verif(max) {
+    minusBtn = document.getElementById("minusOne")
+    quant = document.getElementById("quant")
+    plusBtn = document.getElementById("plusOne")
+    quantite = parseInt(quant.value)
+    if (isNaN(quantite) || quantite < 1) quantite = 1
+    if (quantite > max) quantite = max
+    quant.value = quantite
+    if (quantite <= 2) minusBtn.disabled = true
+    else minusBtn.disabled = false
+    if (quantite >= max-1) plusBtn.disabled = true
+    else plusBtn.disabled = false
+}
+
+function achete(id, idcouleur = null) {
+    quant = document.getElementById("quant")
+    quantite = parseInt(quant.value)
+    couleur = idcouleur ? "/"+idcouleur : ""
+    fetch("/addPanier/"+id+couleur+"/"+quantite)
+        .then(response => response.json())
+        .then(data => {
+            window.location.href = "/panier"
+            console.log(data.message)
+        });
 }

@@ -17,29 +17,28 @@ class CompositionController extends Controller
 
     public static function show($compositions)
     {  
-        // dd($compositions);
+
         foreach($compositions as $composition){
             $details = $composition->getDetailComposition()->first();
-            // dd($details);
+
             if($details){
 
                 echo "<a href=detailcomposition/$composition->idcomposition>";
                 echo '<div class="produit">';
-                $detailIdProduit = $details->idproduit;
-                
-                $detailidcouleur = $details->idcouleur;
-                // $produit = $details->getColoration();
-                $produit = Coloration::where([
-                        ['idproduit', '=', $detailIdProduit],
-                        ['idcouleur', '=', $detailidcouleur]
-                    ])->first();
-                $photo = $produit->getPhoto()->first();
+                $coloration = $details->getColoration();
+
+                $photo = $coloration->getPhoto()->first();
                 $sourcePhoto = '\\img\\' .$photo->sourcephoto;
-                // dd($sourcePhoto);
+                $prixSolde = $composition->prixsoldecomposition;
                 $prix = $composition->prixventecomposition;
                 echo "<p class='p-titre-comp'>$composition->nomcomposition</p>";
                 echo "<img class='img-comp' src='$sourcePhoto'>";
-                echo "<p class='p-prix-comp'>$prix €</p>";
+                if ($prixSolde) {
+                    echo "<p class='pPrixSoldeProduit'>$prixSolde €</p>";
+                    echo "<p class='pPrixVenteProduit'>$prix €</p>";
+                }
+                else echo "<p>$prix €</p>";
+                
         }
             
         echo '</div>';

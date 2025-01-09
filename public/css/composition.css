@@ -1,3 +1,6 @@
+#title-comp{
+    text-align: center;
+}
 
 .produit {
     border: 2px solid lightgray;
@@ -35,4 +38,10 @@
 .p-prix-comp{
     font-size: 1.5vh;
     font-weight: bold;
+}
+.pPrixSoldeProduit{
+    font-weight: bold;
+}
+.pPrixVenteProduit{
+    text-decoration-line: line-through;
 }

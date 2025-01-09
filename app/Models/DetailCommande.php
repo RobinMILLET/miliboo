@@ -9,15 +9,16 @@ class DetailCommande extends Model
 {
     use HasFactory;
     protected $table = "detailcommande";
-    protected $primaryKey = null;
+    protected $primaryKey = "idcommande";
     public $timestamps = false;
+    protected $fillable = ['idcommande', 'idproduit', 'idcouleur', 'quantitecommande'];
 
     public function getProduit(){
-        return $this->hasMany(Produit::class, 'idproduit', 'idproduit')->get(); //toFix
+        return $this->hasone(Produit::class, 'idproduit', 'idproduit')->get()->first();
     }
 
     public function getColoration(){
-        return $this->belongsTo(Coloration::class, ['idproduit', 'idcouleur'], ['idproduit', 'idcouleur'])->get(); // toFix
+        return $this->belongsTo(Coloration::class, ['idproduit', 'idcouleur'], ['idproduit', 'idcouleur'])->get()->first();
     }
 
     public function completeArray() {

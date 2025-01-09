@@ -24,6 +24,8 @@ use App\Http\Controllers\ColorationController;
 use App\Http\Controllers\DetailCompositionController;
 use App\Http\Controllers\LivraisonController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BotManController;
+use Laravel\Fortify\Fortify;
 
 
 
@@ -74,7 +76,7 @@ Route::post('/sendVerifTel', [ModifContactController::class, 'sendVerifTel']);
 Route::post('/verifTel', [ModifContactController::class, 'verifTel']);
 Route::post('/json', [InfoPersoController::class, 'clientJson'])->name("json");
 Route::get('/json', [InfoPersoController::class, 'clientJson']);
-Route::get('/anonym/{confirm}', [InfoPersoController::class, 'clientAnonym']);
+Route::get('/anonym/{any}', [InfoPersoController::class, 'clientAnonym']);
 Route::get('/delAdr/{id}', [InfoPersoController::class, 'delAdr']);
 Route::post('/addAdr', [InfoPersoController::class, 'addAdr'])->name('addAdr');
 
@@ -96,6 +98,10 @@ Route::get('/creationcompte', function(){
 Route::get('/espaceclient', function(){
     return reqLogin('espaceclient');
 })->name('espaceclient');
+
+Route::get('/aide', function(){
+    return view('aide');
+})->name('aide');
 
 Route::get('/mescommandes', function(){
     return reqLogin('mescommandes');
@@ -131,9 +137,13 @@ Route::get('/panier',[PanierController::class, 'index'])->name('panier');
 Route::get('/prixPanier', [PanierController::class, 'prixPanier']);
 Route::get('/setPanier/{idproduit}/{idcouleur}/{quantite}', [PanierController::class, 'setLignePanier']);
 Route::get('/addPanier/{idproduit}/{idcouleur}/{quantite}', [PanierController::class, 'addToPanier']);
+Route::get('/setPanier/{idcomposition}/{quantite}', [PanierController::class, 'setLignePanierComp']);
+Route::get('/addPanier/{idcomposition}/{quantite}', [PanierController::class, 'addToPanierComp']);
 
 Route::get('/etapelivraison',[LivraisonController::class, 'index'])->name('etapelivraison');
+Route::post('/paiement',[LivraisonController::class, 'redirect']);
 Route::get('/paiement',[PaiementController::class, 'index'])->name('paiement');
+Route::post('/paieNouvCB', [PaiementController::class, 'paieNouvCB'])->name('paieNouvCB');
 Route::post('/paieCB', [PaiementController::class, 'paieCB'])->name('paieCB');
 
 /*
@@ -181,7 +191,7 @@ Route::get('/espaceclient/produitsaimes', [ProduitsAimesController::class, 'show
 Composition
 */
 Route::get('/composition',[CompositionController::class, 'index'])->name("composition");
-Route::get('/detailcomposition/idcomposition{idcomposition}',[DetailCompositionController::class, 'index'])->name("composition.detail");
+Route::get('/detailcomposition/{idcomposition}',[DetailCompositionController::class, 'show'])->name("composition.detail");
 /*
 | Pour la requete like
 */
@@ -210,8 +220,28 @@ Route::post('/repondre-avis', [DetailProduitController::class, 'repondreAvis'])-
 /* Ajout Produit */
 Route::post('/admin/produit/ajouter', [AdminDashboardController::class, 'ajouterProduit'])->name('admin.ajouter.produit');
 
+/* Recupere l'id service */
+Route::get('/getService', [AdminDashboardController::class, 'getService']);
+
 /* Requete donnees coloration */
 Route::get('/coloration-data', [ColorationController::class, 'getColorationData']);
 
 /* Requete directeur vente */
 Route::post('/coloration/{idproduit}/{idcouleur}/update', [ColorationController::class, 'update']);
+
+
+
+//Route BotMan
+Route::match(['get', 'post'], '/botman',
+'App\Http\Controllers\BotManController@handle')->name("botman");
+
+//Page test botman
+Route::get('/welcome', function() {
+    return view('welcome');
+});
+
+
+//Pour MFA
+Fortify::twoFactorChallengeView(function () {
+    return view('auth.two-factor-challenge');
+});

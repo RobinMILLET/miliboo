@@ -10,7 +10,7 @@ class Coloration extends Model
 {
     use HasFactory;
     protected $table = "coloration";
-    protected $primaryKey = ['idproduit', 'idcouleur'];
+    protected $primaryKey = 'idproduit';
     public $incrementing = false;
     public $timestamps = false;
     protected $fillable = [

@@ -42,11 +42,24 @@
             <tbody>
                 <?php
                     use App\Http\Controllers\PanierController;
+                    use App\Models\CompositionProduit;
+
+                    $disabled = " disabled";
+
                     PanierController::fixPanier();
-                    $colorations = $_SESSION["panier"];
+                    $colorations = $_SESSION["panier"][0];
                     if ($colorations and gettype($colorations) == "array") {
+                        $disabled = "";
                         foreach ($colorations as $coloration) {
                             echo PanierController::afficheLigneCookie($coloration);
+                        }
+                    }
+                    $compositions = $_SESSION["panier"][1];
+                    if ($compositions and gettype($compositions) == "array") {
+                        $disabled = "";
+                        foreach ($compositions as $id => $quantite) {
+                            $composition = CompositionProduit::find($id);
+                            echo PanierController::afficheLigneComp($composition, $quantite);
                         }
                     }
                 ?>
@@ -65,7 +78,7 @@
                         </li>
                         <li>
                             <div class="div-ligne-info">
-                                <p class="p-title-info">Remise total</p>
+                                <p class="p-title-info">Remise totale</p>
                                 <p class="p-info moins prix"><strong>0</strong></p>
                             </div>
                         </li>
@@ -87,7 +100,7 @@
         <div class="marge" id="detail">
             <div id="fidelite">
                 <p id="title-fidelite">Points fidélité</p>
-                <p><span id="info-fidelite">19.50€ offert</span> sur votre prochaine commande pour votre achat</p>
+                <p><span id="info-fidelite"></span> sur votre prochaine commande pour votre achat</p>
             </div>
             <!--
             <div id="promo">
@@ -101,7 +114,7 @@
         </div>
         <div class="marge" id="div-button">
             <div id="achats"><form action="{{ route('homepage') }}"><button id="button-achats"><p id="p-achats"><u>Continuer mes achats</u></p></button></form></div>
-            <div id="commande"><a href="{{ route('etapelivraison') }}"><button id="button-commande"><p id="p-commande"> Valider ma commande</p></button></a></div>
+            <div id="commande"><button id="button-commande"{{$disabled}} onclick="window.location.href='/etapelivraison'"><p id="p-commande"> Valider ma commande</p></button></div>
         </div>
     </div>
 </div>

@@ -10,14 +10,22 @@ class DetailComposition extends Model
 {
     use HasFactory;
     protected $table = 'detailcomposition';
-    protected $primaryKey = null;
+    protected $primaryKey = 'idcomposition';
     public $timestamp = false;
 
     public function getColoration(){
-        return $this->belongsToMany(Coloration::class, 'idproduit','idproduit','idcouleur', 'idcouleur')->get();
-        // return Coloration::where([
-        //     ['idproduit', '=', $this->idproduit],
-        //     ['idcouleur', '=', $this->idcouleur]
-        // ])->first();
+        // return $this->belongsToMany(Coloration::class, 'idproduit','idproduit','idcouleur', 'idcouleur')->get();
+        return Coloration::where([
+            ['idproduit', '=', $this->idproduit],
+            ['idcouleur', '=', $this->idcouleur]
+        ])->get()->first();
+    }
+
+    public function getProduit() {
+        return Produit::find($this->idproduit);
+    }
+
+    public function stock() {
+        return intdiv($this->getColoration()->quantitestock,$this->quantitecomposition);
     }
 }

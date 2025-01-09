@@ -7,18 +7,69 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use App\Models\AvisProduit;
+use App\Models\Client;
 use App\Models\Pays;
 use App\Models\Produit;
 use App\Models\Coloration;
+use App\Models\Commande;
 use App\Models\Photo;
 use App\Models\PhotoProduitColoration;
 use App\Models\TypeProduit;
 use App\Models\Couleur;
+use BotMan\BotMan\Commands\Command;
+use DateInterval;
+use DateTime;
+use Illuminate\Support\Carbon;
 
 class AdminDashboardController extends Controller
 {
-    public function show()
+    public function show(Request $request)
     {
+        $filterDate = $request->input('filter_date');
+        $filtreTransporteur = $request->input('filtreTransporteur');
+
+        $clients = Client::query();
+
+        if ($filterDate) {
+            $clients->where('datecreationcompte', '<=', $filterDate);
+        }
+
+        $clients->whereNotNull('nomclient')
+            ->whereNotNull('prenomclient')
+            ->where('nomclient', '!=', '')
+            ->where('prenomclient', '!=', '');
+        $clients = $clients->get();
+
+
+        $commandes = Commande::all();
+        $now = Carbon::now();
+        $demainMidi = Carbon::tomorrow()->setHour(12)->setMinute(0)->setSecond(0);
+        $demainFin = Carbon::tomorrow()->endOfDay();
+        if($filtreTransporteur) {
+            switch ($filtreTransporteur) {
+                case 'domicile':
+                    $commandes = $commandes->where('idtransporteur', '=', 1);
+                    break;
+                case 'autre':
+                    $commandes = $commandes->where('idtransporteur', '>', 1);
+                    break;
+            }
+        }
+
+        $commandes = $commandes->filter(function ($commande) use ($filtreTransporteur, $now, $demainMidi, $demainFin) {
+            $dateLivraison = AdminDashboardController::getDelai($commande);
+            if ($filtreTransporteur === 'domicile') {
+                echo "Date de livraison : " . $dateLivraison->format('Y-m-d H:i:s') . "<br>";
+                echo "Demain midi : " . $demainMidi->format('Y-m-d H:i:s') . "<br>";
+                return $dateLivraison > $now && $dateLivraison < $demainMidi;
+            } elseif ($filtreTransporteur === 'autre') {
+                return $dateLivraison > $now &&  $dateLivraison <= $demainFin;
+            }
+            return true;
+        });
+
+        $commandesStatut = Commande::all()->where("idstatutcommande", "=", 1);
+
         $typesProduit = TypeProduit::all();
         $pays = Pays::all();
         $couleurs = Couleur::all();
@@ -29,6 +80,9 @@ class AdminDashboardController extends Controller
             'pays' => $pays,
             'couleurs' => $couleurs,
             'avisData' => $avisData,
+            'clients' => $clients,
+            'commandes' => $commandes,
+            'commandesStatut' => $commandesStatut,
         ]);
     }
 
@@ -163,5 +217,39 @@ class AdminDashboardController extends Controller
             Log::error('Error adding product: ', ['message' => $e->getMessage()]);
             return response()->json(['error' => 'Internal Server Error'], 500);
         }
+    }
+
+    public static function calculPrixCommande($commande){
+        $prixtotal = 0;
+        $details = $commande->getDetailCommande();
+        foreach($details as $detail){
+            $coloration = Coloration::where([
+                ['idproduit', '=', $detail->idproduit],
+                ['idcouleur', '=', $detail->idcouleur]
+            ])->first();
+            $produit = $coloration->getProduit();
+            $couleur = $coloration->getCouleur();
+            $prix = $coloration->prixvente * $detail->quantitecommande;
+            $prixtotal += $prix;
+        }
+
+        return $prixtotal;
+    }
+
+    public static function getDelai($commande){
+        $details = $commande->getDetailCommande();
+
+        $maxDelai = $details->map->getProduit()->max('delailivraison');
+        list($hours, $minutes, $seconds) = explode(':', $maxDelai);
+        $interval = new DateInterval("PT{$hours}H{$minutes}M{$seconds}S");
+        
+        $date = new DateTime($commande->datecommande);
+        $date->add($interval);
+
+        return $date;
+    }
+
+    public static function getService(){
+        return response()->json(["idService" => $_SESSION['admin']]);
     }
 }

@@ -15,13 +15,14 @@ use Illuminate\Support\Facades\Log;
 
 class AnonymisationClient
 {
+    private static $delaiEnAnnee = 2;
+
     public function handle(Request $request, Closure $next)
     {
         $clients = Client::all()->where("nomclient", "!=", "");
         foreach ($clients as $client) {
-            if ($client->derniereutilisation < date_sub(now(), new DateInterval("P2Y"))) {
+            if ($client->derniereutilisation < date_sub(now(), new DateInterval("P".self::$delaiEnAnnee."Y"))) {
                 $client->anonym();
-                Log::alert("Client anonymisé : " . $client);
             }
         }
         return $next($request);

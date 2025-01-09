@@ -521,10 +521,6 @@ img {
     font-size: 2.2vh;
 }
 
-.super10stock{
-
-
-}
 .infer10stock{
     text-decoration: underline;
 color: red;
@@ -645,4 +641,9 @@ color: red;
 
 .button-reponse-admin:hover {
     background-color: #0056b3;
+}
+
+#button-achete:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }

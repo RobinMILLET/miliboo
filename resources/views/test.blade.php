@@ -6,6 +6,16 @@
     <title>Document</title>
 </head>
 <body>
+<div>
+<script>
+ var botmanWidget = {
+ aboutText: '',
+ introMessage: "Bienvenue dans notre site web"
+ };
+ </script>
+ 
+ <script src='https://cdn.jsdelivr.net/npm/botman-webwidget@0/build/js/widget.js'></script> 
+ </div>
     <?php
 
 use App\Http\Controllers\CookieController;
@@ -67,8 +77,11 @@ use Illuminate\Support\Facades\Hash;
         "adamsGlorieuseEvolution8/",
         "drakeGlorieuseEvolution8/",
         "hillGlorieuseEvolution8/"
+         $hash = hash::make("MdpServiceExpedition");
+    echo("$hash");
     ];
      */
+   
     ?>
 </body>
 </html>

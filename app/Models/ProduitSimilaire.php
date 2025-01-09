@@ -10,7 +10,7 @@ class ProduitSimilaire extends Model
 {
     use HasFactory;
     protected $table = "produitsimilaire";
-    protected $primaryKey = null;
+    protected $primaryKey = 'idproduit';
     public $timestamps = false;
 
     public function getProduit(){

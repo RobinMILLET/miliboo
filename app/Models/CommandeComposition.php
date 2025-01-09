@@ -10,8 +10,9 @@ class CommandeComposition extends Model
 {
     use HasFactory;
     protected $table = "commandecomposition";
-    protected $primaryKey = null;
+    protected $primaryKey = "idcommande";
     public $timestamps = false;
+    protected $fillable = ['idcommande', 'idcomposition', 'quantitecompositioncommande'];
 
     public function completeArray() {
         return [

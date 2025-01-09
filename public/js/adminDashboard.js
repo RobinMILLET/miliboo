@@ -139,8 +139,19 @@ document.querySelectorAll('input[type="file"].photos').forEach((input, index) =>
 });
 
 
+var idService = null;
 document.addEventListener('DOMContentLoaded', function () {
     const tableBody = document.getElementById('directeur-table-body');
+
+    fetch('/getService')
+        .then(response => response.json())
+        .then(data => {
+            idService = data.idService.idservice;
+            console.log(idService)
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
 
     fetch('/coloration-data')
         .then(response => response.json())
@@ -153,13 +164,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 row.setAttribute('data-idcouleur', item.idcouleur);
 
                 row.innerHTML = `
-                    <td><input type="text" value="${item.nomproduit}" disabled></td>
-                    <td><input type="number" value="${item.prix}" disabled></td>
-                    <td><input type="number" value="${item.prixsolde || 'N/A'}" disabled></td>
-                    <td><input type="number" value="${item.nbpaiementmax}" disabled></td>
-                    <td><input type="number" value="${item.coutlivraison}" disabled></td>
+                    <td><input role="directeur" type="text" value="${item.nomproduit}" disabled></td>
+                    <td><input role="directeur" type="number" value="${item.prix}" disabled></td>
+                    <td><input role="service" type="number" value="${item.prixsolde || 'N/A'}" disabled></td>
+                    <td><input role="directeur" type="number" value="${item.nbpaiementmax}" disabled></td>
+                    <td><input role="directeur" type="number" value="${item.coutlivraison}" disabled></td>
                     <td>
-                        <select disabled>
+                        <select role="directeur" disabled>
                             <option value="1" ${item.estvisible ? 'selected' : ''}>Oui</option>
                             <option value="0" ${!item.estvisible ? 'selected' : ''}>Non</option>
                         </select>
@@ -201,7 +212,11 @@ function addEditButtonListeners() {
 
 function enableEditing(row) {
     const inputs = row.querySelectorAll('input, select');
-    inputs.forEach(input => input.disabled = false);
+    inputs.forEach(input => {
+        if (idService == "2" || (idService == "1" && input.getAttribute('role') == 'service')){
+            input.disabled = false
+        }
+    });
 
     const editButton = row.querySelector('.edit-btn');
     const validateButton = row.querySelector('.valider-btn');
@@ -261,4 +276,10 @@ function validateChanges(row) {
             console.error('Error:', error);
             alert('Une erreur s\'est produite lors de la mise à jour.');
         });
+}
+
+const selectTransporteur = document.querySelector("#select-transporteur");
+
+function choixTransporteur(transporteur){
+    console.log(transporteur.options[transporteur.selectedIndex].text)
 }

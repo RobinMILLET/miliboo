@@ -7,7 +7,6 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 
-
 @section('content')
 <body>
     <script src="{{asset('js/adminDashboard.js')}}" defer></script>
@@ -17,12 +16,13 @@
         <div class="tabs">
             @if($_SESSION['admin']->idservice == 3)
                 <button class="tab-button" data-tab="dpo-panel">Anonymisation</button>
+            @elseif($_SESSION['admin']->idservice == 4)
+                <button class="tab-button" data-tab="expedition-panel">Expedition</button>
+                <button class="tab-button" data-tab="livraison-panel">Livraison</button>
             @else
                 <button class="tab-button" data-tab="avis-panel">Avis</button>
                 <button class="tab-button" data-tab="ajouter-produit-panel">Ajouter Produit</button>
-                @if($_SESSION['admin']->idservice == 2)
-                    <button class="tab-button" data-tab="directeur-panel">Directeur des ventes</button>
-                @endif
+                <button class="tab-button" data-tab="directeur-panel">Modification Produit</button>
             @endif
         </div>
 
@@ -167,6 +167,26 @@
                 </form>
             </div>
 
+            <div id="avis-panel" class="tab-pane">
+                <h2>Avis produits</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nom Produit</th>
+                            <th>Client</th>
+                            <th>Note</th>
+                            <th>Titre commentaire</th>
+                            <th>Contenu commentaire</th>
+                            <th>Reponse Miliboo</th>
+                            <th>Date commentaire</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+            </div>
+            
             <div id="directeur-panel" class="tab-pane">
                 <h2>Directeur des ventes</h2>
                 <table id="directeur-table">
@@ -186,27 +206,115 @@
                     </tbody>
                 </table>
             </div>
-
-            <div id="dpo-panel" class="tab-pane">
-                <h2>Directeur des ventes</h2>
+            
+            @if($_SESSION['admin']->idservice == 3)
+                <div id="dpo-panel" class="tab-pane active">
+            @else
+                <div id="dpo-panel" class="tab-pane">
+            @endif
+                <h2>Délégué à la protection des données</h2>
+                <form method="GET" action="{{ route('admin.dashboard') }}">
+                    <label for="filter_date">Afficher les clients avant :</label>
+                    <input type="date" name="filter_date" id="filter_date" value="{{ request('filter_date') }}">
+                    <button type="submit">Filtrer</button>
+                </form>
                 <table id="dpo-table">
                     <thead>
                         <tr>
                             <th>Nom client</th>
                             <th>Prénom client</th>
                             <th>Date de création</th>
-                            <th>Nombre paiement max</th>
-                            <th>Cout livraison</th>
-                            <th>Est visible ?</th>
-                            <th>Actions</th>
+                            <th>Dernière utilisation</th>
+                            <th>Anonymiser</th>
                         </tr>
                     </thead>
-                    <tbody id="directeur-table-body">
-
+                    <tbody id="dpo-table-body">
+                        @foreach ($clients as $client)
+                            <tr>
+                                <td>{{ $client->nomclient }}</td>
+                                <td>{{ $client->prenomclient }}</td>
+                                <td>{{ date('d/m/Y', strtotime($client->derniereutilisation)) }}</td>
+                                <td>{{ date('d/m/Y', strtotime($client->derniereutilisation)) }}</td>
+                                <td><button type="button" id="anonymiser-client" data-client-id="{{ $client->idclient }}"
+                                    onclick="window.location.href='/anonym/{{$client->idclient}}'">Anonymiser</button></td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div> 
 
+            <div id="expedition-panel" class="tab-pane">
+                <h2>Avertir les clients</h2>
+                <table>
+                <thead>
+                    <tr>
+                        <th>Nom client</th>
+                        <th>Prénom client</th>
+                        <th>Numéro de commande</th>
+                        <th>Status de commande</th>
+                        <th>Avertir de l'expedition</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($commandesStatut as $commande)
+                            <tr>
+                                <td>{{ $commande->getClient()->nomclient }}</td>
+                                <td>{{ $commande->getClient()->prenomclient }}</td>
+                                <td>{{ $commande->idcommande }}</td>
+                                <td>{{ $commande->getStatut()->nomstatut }}</td>
+                                <td><button type="button" id="avertir-client" data-client-id="{{ $commande->idcommande }}">Envoyer un sms</button></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            
+            @if (request('filtreTransporteur'))
+                <div id="livraison-panel" class="tab-pane active">
+            @else
+            <div id="livraison-panel" class="tab-pane">
+            @endif
+                <h2>Consulter les commandes à livrer</h2>
+                <form method="GET" action="{{ route('admin.dashboard') }}">
+                    <label for="filtreTransporteur">Filtrer par :</label>
+                    <select name="filtreTransporteur" id="filtreTransporteur">
+                        <option value="">-- Choisir une option --</option>
+                        <option value="tout" {{ request('filtreTransporteur') == 'tout' ? 'selected' : '' }}>Tout les transporteur</option>
+                        <option value="domicile" {{ request('filtreTransporteur') == 'domicile' ? 'selected' : '' }}>Transport à domicile</option>
+                        <option value="autre" {{ request('filtreTransporteur') == 'autre' ? 'selected' : '' }}>Autre transporteur</option>
+                    </select>
+                    <button type="submit">Filtrer</button>
+                </form>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nom client</th>
+                            <th>Prénom client</th>
+                            <th>Numéro de commande</th>
+                            <th>Transporteur</th>
+                            <th>Coût</th>
+                            <th>Date de la commande</th>
+                            <th>Livraison estimé</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        use App\Http\Controllers\AdminDashboardController;
+                        ?>
+                        @foreach ($commandes as $commande)
+                            <tr>
+                                <td>{{ $commande->getClient()->nomclient }}</td>
+                                <td>{{ $commande->getClient()->prenomclient }}</td>
+                                <td>{{ $commande->idcommande }}</td>
+                                <td>{{ $commande->getTransporteur()->nomtransporteur }}</td>
+                                <td>{{ number_format(AdminDashboardController::calculPrixCommande($commande), 2, ',', ' ') }}€</td>
+                                <td>{{ date('d/m/y', strtotime($commande->datecommande)) }}</td>
+                                <td>{{ date('d/m/y H:i', strtotime(htmlspecialchars(AdminDashboardController::getDelai($commande)->format('Y-m-d H:i:s')))) }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <div id="colorations-data" data-couleurs='@json($couleurs)'></div>

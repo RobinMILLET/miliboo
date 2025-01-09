@@ -12,6 +12,11 @@ class Commande extends Model
     protected $table = "commande";
     protected $primaryKey = "idcommande";
     public $timestamps = false;
+    public $incrementing = true;
+    protected $fillable = [
+        'idclient', 'idadresse', 'idadressefact', 'idstatutcommande', 'idtransporteur', 'idcodepromo',
+        'datecommande', 'avecassurance', 'aveclivraisonexpress', 'instructionlivraison'
+    ];
 
 
     public function getPaiement(){
@@ -48,6 +53,15 @@ class Commande extends Model
 
     public function getCodePromo() {
         return $this->belongsTo(CodePromo::class, 'idcodepromo', 'idcodepromo')->get()->first();
+    }
+
+    public function getPrixTot() {
+        $prixTot = 0;
+        $colorations = $this->getDetailCommande()->map->getColoration();
+        foreach ($colorations as $coloration) {
+            $prixTot += $coloration->prixsolde ?? $coloration->prixvente;
+        }
+        return round($prixTot, 2);
     }
 
     public function completeArray() {
