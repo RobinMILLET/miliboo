@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\Http\Controllers\InfoPersoController;
+use App\Http\Controllers\LivraisonController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Commande extends Model
 {
@@ -57,10 +59,16 @@ class Commande extends Model
 
     public function getPrixTot() {
         $prixTot = 0;
-        $colorations = $this->getDetailCommande()->map->getColoration();
-        foreach ($colorations as $coloration) {
-            $prixTot += $coloration->prixsolde ?? $coloration->prixvente;
+        $details = $this->getDetailCommande();
+        foreach ($details as $detail) {
+            $prixTot += $detail->quantitecommande * $detail->getColoration()->prix();
         }
+        $detailscompositions = $this->getCommandeComposition();
+        foreach ($detailscompositions as $detailcomposition) {
+            $prixTot += $detailcomposition->quantitecompositioncommande * $detailcomposition->getCompositionProduit()->prix();
+        }
+        if ($this->avecassurance) $prixTot += LivraisonController::$PRIXASSURANCE;
+        if ($this->aveclivraisonexpress) $prixTot += LivraisonController::$PRIXEXPRESS;
         return round($prixTot, 2);
     }
 

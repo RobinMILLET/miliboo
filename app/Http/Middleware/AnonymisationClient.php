@@ -12,6 +12,7 @@ use App\Models\Client;
 use DateInterval;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Log;
+use App\Models\CarteBancaire;
 
 class AnonymisationClient
 {
@@ -19,12 +20,16 @@ class AnonymisationClient
 
     public function handle(Request $request, Closure $next)
     {
-        $clients = Client::all()->where("nomclient", "!=", "");
+        $clients = Client::where("nomclient", "!=", "");
         foreach ($clients as $client) {
             if ($client->derniereutilisation < date_sub(now(), new DateInterval("P".self::$delaiEnAnnee."Y"))) {
                 $client->anonym();
             }
         }
+        $cb = CarteBancaire::where("dateexpirationcarte", "<", now())->get();
+        Log::alert("Anonymisation de ".$cb->count()." cartes bancaires expirées.");
+        Log::alert("!!! anonymisation CB automatique désactive (Middleware/AnonymisationClient/31) !!!.");
+        //$cb->map->anonym();
         return $next($request);
     }
 }

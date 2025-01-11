@@ -54,9 +54,12 @@ class AvisProduit extends Model
 
     public function anonym() {
         $photos = $this->hasMany(PhotoAvis::class, "idavis", "idavis")->get();
+        SignalementAvis::where('idavis',$this->idavis)
+            ->delete();
         foreach ($photos as $photo) {
             //$photo->getPhoto()->delete();
         }
         $photos->map->delete();
+        $this->delete();
     }
 }

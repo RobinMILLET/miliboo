@@ -7,6 +7,14 @@
 @endsection
 
 @section('content')
+
+<?php
+    use App\Http\Controllers\PaiementController;
+    if (session('error')) {
+        PaiementController::error(session('error'));
+    }
+?>
+
 <div id="title-panier">
     <h1>Paiement</h1>
 </div>
@@ -63,7 +71,6 @@
         </div>
 
         <?php
-        use App\Http\Controllers\PaiementController;
         PaiementController::echoOptionsCB();
         ?>
 
@@ -116,8 +123,23 @@
                 <input name="num" class="input" type="text" placeholder="0000-0000-0000-0000*" onchange="validate(this, 16, true)" required>
                 <p id="p-title-expiration">Expiration</p>
                 <div id="div-expiration">
-                    <input name="mois" class="input" type="text" placeholder="Mois d'expiration (deux chiffres)*" maxlength="2" onchange="validate(this, 2)" required>
-                    <input name="an" class="input" type="text" placeholder="Année d'expiration (deux chiffres)*" maxlength="2" onchange="validate(this, 2)" required>
+                    <?php
+                    echo '<select name="mois" id="select-cb" class="input">';
+                    $calendrier = [
+                        '01' => 'Janvier','02' => 'Février','03' => 'Mars',
+                        '04' => 'Avril','05' => 'Mai','06' => 'Juin',
+                        '07' => 'Juillet','08' => 'Août','09' => 'Septembre',
+                        '10' => 'Octobre','11' => 'Novembre','12' => 'Décembre'
+                    ];
+                    foreach ($calendrier as $num => $nom) {
+                        echo "<option value='$num'>$nom ($num)</option>";
+                    }
+                    echo '</select><select name="an" id="select-cb" class="input">';
+                    for ($annee = date('Y'); $annee <= date('Y') + 5; $annee++) {
+                        echo "<option value='$annee'>$annee</option>";
+                    }
+                    echo '</select>';
+                    ?>
                 </div>
                 <input name="crypt" class="input" type="text" placeholder="Cryptogramme visuel (3 chiffres)* (non conservé)" maxlength="3" onchange="validate(this, 3)" required>
                 <p class="p-obligatoire">* obligatoire</p>

@@ -10,7 +10,10 @@
 
 <?php
     use App\Http\Controllers\DetailCommandeController;
+    use App\Http\Controllers\LivraisonController;
     use App\Models\Commande;
+    $prixassurance = LivraisonController::$PRIXASSURANCE;
+    $prixexpress = LivraisonController::$PRIXEXPRESS;
     $idcommande = (int)$_GET['id'];
     $commande = Commande::find($idcommande);
     DetailCommandeController::getSuivi($commande);
@@ -60,16 +63,26 @@
             
                 <?php
                     $prixTotal = DetailCommandeController::getDetailCommande($commande);
+                    $prixTotal = DetailCommandeController::getCommandeComposition($commande);
                 ?>
         </tbody>
         <tfoot>
             <tr class="tr-foot">
-                <td id="td-total">Total :</td>
+                <td id="td-total">Total :
+                    @if ($commande->avecassurance)
+                    &nbsp; &nbsp; &nbsp;
+                    Assurance Livraison ( + {{ $prixassurance }}€ )
+                    @endif
+                    @if ($commande->aveclivraisonexpress)
+                    &nbsp; &nbsp; &nbsp;
+                    Livraison Express ( + {{ $prixexpress }}€ )
+                    @endif
+                </td>
                 <td></td>
                 <td></td>
                 <td></td>
                 <?php
-                    echo "<td id='td-total-prix'>$prixTotal</td>";
+                    echo "<td id='td-total-prix'> ".$commande->getPrixTot()." €</td>";
                 ?>
             </tr>
         </tfoot>

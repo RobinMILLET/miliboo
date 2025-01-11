@@ -165,15 +165,10 @@ class Client extends Model
             $this->emailclient = null;
             $this->telfixeclient = null;
             $this->telportableclient = "00000000000";
-            foreach($this->hasMany(Adresse::class, "idclient", "idclient")->get() as $adr) {
-                $adr->anonym();
-            }
-            $this->getCarteBancaire()->map->delete();
+            $this->hasMany(Adresse::class, "idclient", "idclient")->get()->map->anonym();
+            $this->getCarteBancaire()->map->anonym();
             if ($this->getProfessionel()) $this->getProfessionel()->anonym();
-            foreach ($this->getAvisProduit() as $avis) {
-                $avis->anonym();
-            }
-            $this->getAvisProduit()->map->delete();
+            $this->getAvisProduit()->map->anonym();
             $this->getMessageChatBot()->map->delete();
             $this->getHisoriqueConsultation()->map->delete();
             if ($this->getPanier()) {

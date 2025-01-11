@@ -45,4 +45,8 @@ class CompositionProduit extends Model
                 - (float)$this->prixsoldecomposition)
                 / (float)$this->prixventecomposition;
     }
+
+    public function prix() {
+        return $this->prixsoldecomposition ? $this->prixsoldecomposition : $this->prixventecomposition;
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Http\Controllers\Composition;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Coloration extends Model
 {
@@ -75,6 +76,10 @@ class Coloration extends Model
     public function produit()
     {
         return $this->belongsTo(Produit::class, 'idproduit', 'idproduit');
+    }
+
+    public function prix() {
+        return $this->prixsolde ? $this->prixsolde : $this->prixvente;
     }
 
 }

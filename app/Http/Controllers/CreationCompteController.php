@@ -7,6 +7,7 @@ use App\Models\Adresse;
 use App\Models\Pays;
 use App\Models\Client;
 use App\Models\ActivitePro;
+use App\Models\Departement;
 use App\Models\Professionel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -59,12 +60,13 @@ class CreationCompteController extends Controller
       $adr['codepostaladresse'] = $request->cp;
       if (strlen($adr['codepostaladresse']) != 5 || !ctype_digit($adr['codepostaladresse']))
          return redirect()->back()->with("error", "cp");
-      $ville = strtoupper($request->ville);
-      $adr['codeinsee'] = Ville::where("nomville", $ville)->get()->firstOrFail()->codeinsee;
+      $ville = Ville::where("nomville", $request->ville)->get()->first();
+      if (!$ville) return redirect()->back()->with("error", "ville");
+      $adr['codeinsee'] = $ville->codeinsee;
       return null;
    }
 
-   public static function extractClient(Request $request, &$client) {
+   public static function extractClient(Request $request, &$client, $mod = false) {
       if ($request->civilite == "X") $client['civiliteclient'] = null;
       else $client['civiliteclient'] = $request->civilite;
       $client['nomclient'] = self::toTitle($request->nom);
@@ -79,6 +81,10 @@ class CreationCompteController extends Controller
          if (strlen($telfixe) != 9) return redirect()->back()->with("error", "fixe");
          $client['telfixeclient'] = $request->telfixe . $telfixe;
       }
+      if (!$mod && Client::all()->where('nomclient', '=', $client["nomclient"])
+         ->where('prenomclient', '=', $client["prenomclient"])
+         ->where('telportableclient', '=', $client["telportableclient"])
+         ->count() != 0) return redirect()->back()->with("error", "person");
       else $client['telfixeclient'] = null;
       return null;
    }
@@ -161,6 +167,8 @@ class CreationCompteController extends Controller
       echo '<script>alert("';
       switch ($error) {
          case "exists": echo "Cet email est déjà utilisé."; break;
+         case "person": echo "Vous avez déjà un compte."; break;
+         case "ville": echo "La ville n'est pas reconnue."; break;
          case "cp": echo "Le code postal n'est pas valide. (5 chiffres)"; break;
          case "portable": echo "Le numéro de portable n'est pas valide. (9 chiffres)"; break;
          case "fixe": echo "Le numéro de fixe n'est pas valide. (9 chiffres)"; break;

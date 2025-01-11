@@ -12,7 +12,7 @@ class Paiement extends Model
     protected $primaryKey = 'idcommande';
     public $incrementing = true;
     public $timestamps = false;
-    protected $fillable = ['idcommande', 'idcartebancaire', 'idtypepaiement', 'datepaiement', 'montantpaiement', 'indixepaiement'];
+    protected $fillable = ['idcommande', 'idcartebancaire', 'idtypepaiement', 'datepaiement', 'montantpaiement', 'indicepaiement'];
 
 
     public function getTypePaiement() {

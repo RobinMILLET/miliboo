@@ -131,7 +131,7 @@ img compte,
     margin-bottom: 25px;
 }
 
-a{
+a:not(.no){
     text-decoration: none;
     color: black;
     font-size: x-large;

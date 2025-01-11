@@ -20,4 +20,8 @@ class CommandeComposition extends Model
             "quantiteComposition" => $this->quantitecompositioncommande,
         ];
     }
+
+    public function getCompositionProduit() {
+        return CompositionProduit::find($this->idcomposition);
+    }
 }

@@ -12,6 +12,12 @@
 @include('partials.modifinfoperso')
 @include('partials.modifadresse')
 <?php
+
+use App\Http\Controllers\CreationCompteController;
+
+if (session('error')) {
+    CreationCompteController::error(session('error'));
+}
 use App\Http\Controllers\InfoPersoController;
 InfoPersoController::getInfoPerso();
 ?>

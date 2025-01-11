@@ -18,10 +18,9 @@
     </ul>
 
     <div>
-    <div id="compte" class="div-aide">
+        <div id="compte" class="div-aide">
             <h2>Comment se connecter à son compte</h2>
             <p>Vous pouvez accéder à votre compte en cliquant <a href="{{ route('espaceclient')}}"> <p>Ici</p></a>.</p>
-            <img src="{{asset('img/aide/compte.png')}}" alt="">
         </div>
         <div id="cookie" class="div-aide">
             <h2>Comment accéder au cookie</h2>
@@ -30,7 +29,7 @@
         </div>
         <div id="like" class="div-aide">
             <h2>Comment ajouter un produit à sa liste de favoris</h2>
-            <p>1. Se connecter à son compte <a href="{{ route('espaceclient')}}"> <p>Ici</p></a></p>
+            <p>1.Se connecter à son compte</p>
             <p>2.Choisir un produit</p>
             <p>Commencer par aller dans une catégorie</p>
             <img src="{{asset('img/aide/accesProduit.png')}}" alt="">
@@ -39,6 +38,20 @@
             <p>Ajouter votre produit en cliquant sur le bouton like</p>
             <img src="{{asset('img/aide/like.png')}}" alt=""> 
 
+        </div>
+        <div id="panier" class="div-aide">
+            <h2>Comment consulter son panier</h2>
+            <p>1.Choisir un produit</p>
+            <p>Commencer par aller dans une catégorie</p>
+            <img src="{{asset('img/aide/accesProduit.png')}}" alt="">
+            <p>Choisir un produit</p>      
+            <img src="{{asset('img/aide/choixProduit.png')}}" alt="" style="width: 900px;">
+            <p>2.L'ajouter à son panier</p>
+            <p>Appuyer sur le bouton "J'achète"</p>
+            <img src="{{asset('img/aide/achete.png')}}" alt="">
+            <p>3.Aller dans son panier</p>
+            <p>Cliquer sur l'icone du panier en haut à droite</p>
+            <img src="{{asset('img/aide/panier.png')}}" alt="">
         </div>
     </div>
 </div>

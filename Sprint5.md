@@ -1,6 +1,6 @@
 | NumUS  | Histoire                                                                                                 | Statut (%) | Bug  |
 |-----|----------------------------------------------------------------------------------------------------------|------------|------|
-| 20  | En tant que Visiteur et après avoir trouvé un produit je souhaite voir les composants de ce produit, afin d'avoir une description complète | 95%        | AffichageCommande  |
+| 20  | En tant que Visiteur et après avoir trouvé un produit je souhaite voir les composants de ce produit, afin d'avoir une description complète | 100%        | non  |
 | 21  | En tant que visiteur, je souhaite pouvoir créer un compte client particulier afin de pouvoir acheter un produit | 90%       | Testing+SMS  |
 | 22  | En tant que visiteur, je souhaite pouvoir créer un compte client professionnel afin de pouvoir vendre des produits | 90%        | Testing+SMS  |
 | 24  | En tant que Client je veux pouvoir basculer mon panier en commande afin de recevoir mes articles chez moi. | 100%        | Non  |

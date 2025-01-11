@@ -16,9 +16,9 @@
             <thead>
                 <?php
                 $client = $_SESSION["client"];
-
+                use App\Http\Controllers\CommandeController;
                 use App\Http\Controllers\EspaceClientController;
-                EspaceClientController::getCommandeEnCours($client);
+                CommandeController::getCommande($client, [1,2,3]);
                 ?>
         </table>
     </div>

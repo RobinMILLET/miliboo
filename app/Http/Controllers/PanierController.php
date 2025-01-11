@@ -141,14 +141,12 @@ class PanierController extends Controller
             $coloration = Coloration::where('idproduit', '=', $ligne[0])
                 ->where('idcouleur', '=', $ligne[1])->first();
             if (!$coloration) continue;
-            $prixcoloration = $coloration->prixsolde ?? $coloration->prixvente;
-            $prix += $prixcoloration * $ligne[2];
+            $prix += $coloration->prix() * $ligne[2];
         }
         foreach ($panier[1] as $key => $value) {
             $composition = CompositionProduit::find($key);
             if (!$composition) continue;
-            $prixcomposition = $composition->prixsoldecomposition ?? $composition->prixventecomposition;
-            $prix += $prixcomposition * $value;
+            $prix += $composition->prix() * $value;
         }
         if ($route) return response()->json([
             "prixpanier" => round($prix, 2)]);

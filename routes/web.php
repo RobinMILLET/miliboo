@@ -245,3 +245,7 @@ Route::get('/welcome', function() {
 Fortify::twoFactorChallengeView(function () {
     return view('auth.two-factor-challenge');
 });
+
+Route::get('/paiementTest', function(){
+    return view('paiementTest');
+})->name('paiementTest');

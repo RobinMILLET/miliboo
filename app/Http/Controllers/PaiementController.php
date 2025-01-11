@@ -78,7 +78,7 @@ class PaiementController extends Controller
         $mois = $request->mois;
         if (!self::onlyNum($mois, 2)) return redirect()->back()->with("error", "mois");
         $an = $request->an;
-        if (!self::onlyNum($an, 2)) return redirect()->back()->with("error", "an");
+        if (!self::onlyNum($an, 4)) return redirect()->back()->with("error", "an");
         $date = new \DateTime();
         $date->setDate(intval($an), intval($mois), 1);
         $card["dateexpirationcarte"] = $date;
@@ -155,7 +155,7 @@ class PaiementController extends Controller
         $paiement = self::savePaiement($commande, $prix[5], $idcb, $numcb);
         $nb = self::saveDetailCommande($commande, $panier);
         $client->pointfideliteclient -= $prix[4];
-        $client->pointfideliteclient += floor((max(0,$prix[0]-$prix[3]))/10)*0.5;
+        $client->pointfideliteclient += floor((max(0,$prix[0]-$prix[3]))/20);
         $client->save();
         Log::alert("Commande CB créée avec succès: ($nb articles)", [$client, $commande, $paiement]);
         DB::commit();
@@ -177,11 +177,9 @@ class PaiementController extends Controller
             ]);
             $coloration = Coloration::all()->where("idproduit", "=", $detailcommande[0])
                 ->where("idcouleur", "=", $detailcommande[1])->first();
-            Log::alert($coloration);
             $coloration->quantitestock -= $detailcommande[2];
             if ($coloration->quantitestock < 0) $coloration->quantitestock = 0; //
             $coloration->save();
-
         }
         foreach ($panier[1] as $idcomposition => $quantite) {
             CommandeComposition::create([
@@ -203,7 +201,7 @@ class PaiementController extends Controller
     }
 
     public static function savePaiement($commande, $prix, $idcb, $numcb) {
-        if ($prix >= 0) return null;
+        if ($prix <= 0) return null;
         $paiement = Paiement::create([
             "idcommande" => $commande->idcommande,
             "idcartebancaire" => $idcb,
@@ -214,4 +212,18 @@ class PaiementController extends Controller
         ]);
         return $paiement;
     }
+
+    public static function error($error) {
+        echo '<script>alert("';
+        switch ($error) {
+           case "num": echo "Numéro de crate invalide (16 chiffres)"; break;
+           case "mois": echo "Mois d'expiration invalide"; break;
+           case "an": echo "Année d'expiration invalide"; break;
+           case "crypt": echo "Cyptogramme invalide (3 chiffres)"; break;
+           case "nom": echo "Nom de crate bancaire requis pour sauvegarder"; break;
+           case "notfound": echo "Carte bancaire inconnue"; break;
+           case "sql": echo "Erreur lors du processus d'enregistrement"; break;
+        }
+        echo '")</script>';
+     }
 }

@@ -18,7 +18,7 @@ class DetailCommande extends Model
     }
 
     public function getColoration(){
-        return $this->belongsTo(Coloration::class, ['idproduit', 'idcouleur'], ['idproduit', 'idcouleur'])->get()->first();
+        return $this->hasone(Coloration::class, "idproduit", "idproduit")->where("idcouleur", "=", $this->idcouleur)->get()->first();
     }
 
     public function completeArray() {

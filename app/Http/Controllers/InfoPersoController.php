@@ -98,7 +98,7 @@ class InfoPersoController extends Controller
         $client  = array();
         $adr = array();
 
-        $exit = CreationCompteController::extractClient($request, $client);
+        $exit = CreationCompteController::extractClient($request, $client, true);
         if ($_SESSION["client"]["telportableclient"] != $client['telportableclient']) {
             $client["telveriftoken"] = null;
             $client["telverifdate"] = null;
@@ -177,10 +177,10 @@ class InfoPersoController extends Controller
         else if ($any == "NoReallyDeleteMyAccountNow") {
             $client = $_SESSION["client"];
             if (!$client) return redirect()->route("compte");
-            $client->anonym();
-            return redirect()->route("homepage");
+            $exit = $client->anonym();
+            if ($exit) return $exit;
         }
-        return redirect()->route("infoperso");
+        return redirect()->route("homepage");
     }
 
     public static function delAdr($id) {

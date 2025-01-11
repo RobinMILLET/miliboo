@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\MailController;
 use App\Models\Client;
 use DateInterval;
 use Illuminate\Http\Request;

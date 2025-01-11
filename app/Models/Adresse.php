@@ -52,6 +52,9 @@ class Adresse extends Model
     }
 
     public function anonym() {
+        if (!Commande::where('idadresse',$this->idadresse)
+            ->orWhere('idadressefact',$this->idadresse)->count())
+            { $this->delete(); return; }
         $this->nomadresse = "";
         $this->numerorue = "";
         $this->nomrue = "";

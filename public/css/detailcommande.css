@@ -122,7 +122,7 @@ th{
 }
 
 #div-etape::before {
-    --w: 38.4vw;
+    --w: 58.4vw;
     content: '';
     position: absolute;
     left: calc(50% - calc(var(--w) / 2));
@@ -133,12 +133,24 @@ th{
     z-index: 0;
 }
 
-#div-etape.half-colored::after {
-    --w: 38.4vw;
+#div-etape.first-colored::after {
+    --w: 58.4vw;
     content: '';
     position: absolute;
     left: calc(50% - calc(var(--w) / 2));
-    width: calc(var(--w) / 2); 
+    width: calc(var(--w) / 3); 
+    height: 2px;
+    background-color: green;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+#div-etape.second-colored::after {
+    --w: 58.4vw;
+    content: '';
+    position: absolute;
+    left: calc(50% - calc(var(--w) / 2));
+    width: calc(var(--w) / 1.5); 
     height: 2px;
     background-color: green;
     transform: translateY(-50%);
@@ -146,7 +158,7 @@ th{
 }
 
 #div-etape.all-colored::after {
-    --w: 38.4vw;
+    --w: 58.4vw;
     content: '';
     position: absolute;
     left: calc(50% - calc(var(--w) / 2));
@@ -158,7 +170,7 @@ th{
 }
 
 #div-etape.all-colored-fail::after {
-    --w: 38.4vw;
+    --w: 58.4vw;
     content: '';
     position: absolute;
     left: calc(50% - calc(var(--w) / 2));
@@ -197,4 +209,9 @@ th{
 
 .etape-contentieux{
     background-color: red;
+}
+
+a {
+    margin-left: 5px;
+    color: black;
 }

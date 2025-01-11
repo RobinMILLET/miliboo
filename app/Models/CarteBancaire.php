@@ -25,6 +25,12 @@ class CarteBancaire extends Model
         - 5) . substr($num, -4);
     }
 
+    public function anonym() {
+        Paiement::where('idcartebancaire',$this->idcartebancaire)
+            ->update(['idcartebancaire'=>null]);
+        $this->delete();
+    }
+
     public function completeArray() {
         return [
             "nomCarteBancaire" => $this->nomcartebancaire,
