@@ -118,35 +118,13 @@
                         <option value="X">Front-end</option>
                         <option value="X">PHP ascendant Laravel</option>
                         <option value="X">Elephant PostGres SQL</option>
-                        <option value="X">Helicoptère de combat v8 biturbo 5 cylindres atmosphérique en ligne 5.2L</option>
-                        <option value="X">Lave vaisselle</option>
-                        <option value="X">Paillasson</option>
-                        <option value="X">Renard ascendant lave linge</option>
                         <option value="X">La glorieuse évolution</option>
-                        <option value="X">Voiture électrique à recharge solaire 10kW</option>
-                        <option value="X">Fusée Mars 2040 propulsée par des moteurs ioniques</option>
                         <option value="X">Tapis de bain à ultrason</option>
-                        <option value="X">Machine à café expresso à broyeur intégré</option>
                         <option value="X">Chat autonome générateur d'énergie éolienne</option>
-                        <option value="X">Cafetière qui fait aussi la sieste</option>
-                        <option value="X">Chaussettes chauffantes pour pieds frigorifiés</option>
                         <option value="X">Grille-pain qui parle (enfin, presque)</option>
-                        <option value="X">Canapé avec fonction "ne me dérange pas"</option>
-                        <option value="X">Parapluie qui refuse de se retourner</option>
-                        <option value="X">Pots de fleurs qui se plaignent de l’arrosage</option>
-                        <option value="X">Tasse qui dit "coucou" à chaque gorgée</option>
-                        <option value="X">Lampe qui s'endort avant vous</option>
-                        <option value="X">Manteau qui vous suit à l'ombre</option>
                         <option value="X">Coussin qui vous juge pendant la sieste</option>
                         <option value="X">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</option>
                         <option value="X">Jeff Bezos</option>
-                        <option value="X">Grille-pain à réaction thermique</option>
-                        <option value="X">Balai magique à autonomie infinie</option>
-                        <option value="X">Lave-linge avec fonction "trouver les chaussettes disparues"</option>
-                        <option value="X">Brosse à dents avec option "concert privé" sous la douche</option>
-                        <option value="X">Frigo qui vous juge en ouvrant la porte</option>
-                        <option value="X">Ours qui a peur quand on fait ROAAAAAAR</option>
-                        <option value="X">Polygone entre 64 et 8,7 cotés</option>
                         -->
                     </select>
                     <p></p>                
