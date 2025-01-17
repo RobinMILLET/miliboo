@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use DateInterval;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ModifContactController extends Controller
 {
@@ -12,15 +13,21 @@ class ModifContactController extends Controller
         $request->validate([
             'email' => 'required|string',
             'ckNewsletter' => 'nullable|string',
-            'ckPartenaires' => 'nullable|string']);
-        $_SESSION["client"]['newslettermiliboo'] = isset($request->ckNewsletter);
-        $_SESSION["client"]['newsletterpartenaires'] = isset($request->ckPartenaires);
-        if ($_SESSION["client"]['emailclient'] != strtolower($request->email)) {
-            $_SESSION["client"]['emailveriftoken'] = null;
-            $_SESSION["client"]['emailverifdate'] = null;
-            $_SESSION["client"]['emailclient'] = strtolower($request->email);
+            'ckPartenaires' => 'nullable|string',
+            'ckA2f' => 'nullable|string'
+        ]);
+        $client = $_SESSION["client"];
+        if (!$client) return redirect()->back();
+        $client->newslettermiliboo = isset($request->ckNewsletter);
+        $client->newsletterpartenaires = isset($request->ckPartenaires);
+        if ($client->checkTelVerif())
+            $client->a2f = isset($request->ckA2f);
+        if ($client->emailclient != strtolower($request->email)) {
+            $client->emailveriftoken = null;
+            $client->emailverifdate = null;
+            $client->emailclient = strtolower($request->email);
         }
-        $_SESSION["client"]->save();
+        $client->save();
         return redirect()->back();
     }
 
@@ -30,7 +37,7 @@ class ModifContactController extends Controller
 
         $token = bin2hex(random_bytes(32));
         $client['emailveriftoken'] = $token;
-        $client['emailverifdate'] = date_add(now(), new DateInterval("PT5M"));
+        $client['emailverifdate'] = now()->addMinutes(5);
         $client->save();
 
         $data = [
@@ -61,6 +68,16 @@ class ModifContactController extends Controller
         return redirect()->route('modifcontact');
     }
 
+    public static function getBladeA2f() {
+        $client = $_SESSION["client"];
+        $client->checkTokens();
+        $checked = $client->a2f ? ' checked' : '';
+        $disabled = $client->checkTelVerif() ? "" : " disabled";
+        echo '<input name="ckA2f" class="input-newsletters" id="checkbox-a2f" type="checkbox"'.$disabled.$checked.'>  ';
+        echo '<label class="label-newsletters" for="checkbox-a2f">Activer l\'authentification à deux facteurs (par téléphone).</label>';
+        if ($disabled) echo "<p class='red'>Vous devez vérifier votre numéro de téléphone pour activer cette option.</p>";
+    }
+
     public static function getBladeVerifMail() {
         $client = $_SESSION["client"];
         $client->checkTokens();
@@ -87,10 +104,15 @@ class ModifContactController extends Controller
         $client = $_SESSION["client"];
         if (!$client) return redirect()->route('compte');
         $token = str_pad(strval(random_int(0, 999999)), 6, "0", STR_PAD_LEFT);
-        $client->telverifdate = date_add(now(), new DateInterval("PT5M"));
+        $client->telverifdate = now()->addMinutes(5);
         $client->telveriftoken = $token;
         $client->save();
-        return redirect()->route('modifcontact')->with("token", $token);
+        //return redirect()->route('modifcontact')->with("token", $token);
+        $sms = new SmsController(
+            "Votre code de vérification miliboo est ".$token,
+            "+".$client->telportableclient
+        );
+        return redirect()->route('modifcontact');
     }
 
     public static function verifTel(Request $request) {
@@ -116,7 +138,7 @@ class ModifContactController extends Controller
         $client->checkTokens();
         $disabledSend = "";
         if (!$client->checkTelVerif()) {
-            echo "<p>Vous n'avez pas encore vérifié votre numéro '".$client->telportableclient."'.</p>";
+            echo "<p>Vous n'avez pas encore vérifié votre numéro '+".$client->telportableclient."'.</p>";
             if ($client->telverifdate && $client->telverifdate > now()) {
                 echo "<p>Vous devez attendre au moins 5 minutes avant de pouvoir renvoyer un message.</p>";
                 $disabledSend = " disabled";
@@ -133,7 +155,7 @@ class ModifContactController extends Controller
         $client->checkTokens();$disabledValid = "";
         if ($client->checkTelVerif()) {
             $disabledValid = " disabled";
-            echo "<p>Votre numéro de téléphone '".$client->telportableclient."' est déjà vérifié.</p>";
+            echo "<p>Votre numéro de téléphone '+".$client->telportableclient."' est déjà vérifié.</p>";
         }
         if (!$disabledValid) {
             echo "&nbsp; <input type='text' maxlength='6' required placeholder='000000' name='token'> &nbsp;";

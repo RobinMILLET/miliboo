@@ -28,8 +28,13 @@ class InitializeClient
         else if ($_SESSION["client"]) {
             // Update client if it changed
             $_SESSION["client"] = Client::find($_SESSION["client"]->idclient);
-            $_SESSION["client"]->derniereutilisation = now();
-            $_SESSION["client"]->save();
+            if ($_SESSION["client"]->nomclient == "") {
+                LoginController::logOut();
+            }
+            else {
+                $_SESSION["client"]->derniereutilisation = now();
+                $_SESSION["client"]->save();
+            }
         }
         return $next($request);
     }

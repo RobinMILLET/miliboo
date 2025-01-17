@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('css')
+<link rel="stylesheet" href="{{ asset('css/adminlogin.css') }}">
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -12,21 +16,21 @@
                         {{ session('error') }}
                     </div>
                     @endif
-                    <form method="POST" action="{{ route('admin.login.submit') }}">
+                    <form id="form-admin" method="POST" action="{{ route('admin.login.submit') }}">
                         @csrf
                         <div class="form-group">
-                            <label for="loginservice">Login Service</label>
-                            <input type="text" class="form-control" id="loginservice" name="loginservice" required>
+                            <label class="lab-admin" for="loginservice">Login Service</label>
+                            <input type="text" class="form-control input" id="loginservice" name="loginservice" required>
                         </div>
                         <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
+                            <label class="lab-admin" for="password">Password</label>
+                            <input type="password" class="form-control input" id="password" name="password" required>
                         </div>
-                        <div class="form-group form-check">
+                        <div class="form-group form-check" style="display: block;">
                             <input type="checkbox" class="form-check-input" id="remember" name="remember">
                             <label class="form-check-label" for="remember">Remember Me</label>
                         </div>
-                        <button type="submit" class="btn btn-primary">Login</button>
+                        <button type="submit" class="btn btn-primary button">Login</button>
                     </form>
                 </div>
             </div>

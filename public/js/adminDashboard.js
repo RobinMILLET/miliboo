@@ -226,6 +226,19 @@ function enableEditing(row) {
 }
 
 function validateChanges(row) {
+    const prix = parseFloat(row.querySelector('td:nth-child(2) input').value);
+    const prixsolderaw = row.querySelector('td:nth-child(3) input').value
+    const prixsolde = parseFloat(prixsolderaw) || null;
+
+    if (prix <= 0) {
+        alert('Le prix doit être supérieur à 0');
+        return; 
+    }
+
+    if (prixsolderaw != "" && prixsolde <= 0) {
+        alert('Le prix soldé doit être supérieur à 0');
+        return;
+    }
     const inputs = row.querySelectorAll('input, select');
     inputs.forEach(input => input.disabled = true);
 

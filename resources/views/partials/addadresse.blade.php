@@ -1,7 +1,7 @@
 <body>
     <form id="container-partials-adresse" method="POST" action="{{ route('addAdr') }}">
     @csrf
-    <input name="nomadr" id="nomadr" type="text" class="input" placeholder="Nom de l'adresse*">
+    <input name="nomadr" id="nomadr" type="text" class="input" placeholder="Nom de l'adresse *">
         <div class="div-input">
             <input name="adresse" type="text" placeholder="Adresse *" class="input" id="input-adresse" required>
             <p class="p-obligatoire">* obligatoire</p>                

@@ -68,7 +68,10 @@
             }
             ?>
         <section id="mid">
-            <p class="left"><b id="count">{{ count($produits) }}</b> produit(s)</p>
+            <div class='show-detail'>
+            <p class="left"><b id="count">{{ count($produits) }}</b> produit(s)<img class="imgAide" src="{{ asset('img/question.png') }}"></p>
+            <p class='p-detail right' style="top:0;transform:translateX(50px)">Nombre de produits renvoyés par la recherche et les filtres</p>
+            </div>
             <select onchange="setGet('tri',this.value,true)" class="right">
                 <option value="">Trier par:</option>
                 <option value="nom">Alphabétique</option>

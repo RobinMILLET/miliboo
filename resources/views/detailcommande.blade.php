@@ -17,6 +17,9 @@
     $idcommande = (int)$_GET['id'];
     $commande = Commande::find($idcommande);
     DetailCommandeController::getSuivi($commande);
+    if ($commande->idclient != $_SESSION["client"]->idclient) {
+        echo "<script>window.location.href='mescommandes'</script>";
+    }
 ?>
 
 <div id="container-detail-commande">
@@ -52,7 +55,7 @@
     <table id="table-commande">
         <thead>
             <tr class='tr'>
-                <th>Articles</th>
+                <th class="show-detail"><p class="p-detail">Oui</p>Articles</th>
                 <th>Référence</th>
                 <th>Prix</th>
                 <th>Quantité</th>

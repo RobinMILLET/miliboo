@@ -65,7 +65,7 @@
             <p id="p-souvenir">Se souvenir de moi</p>
         </div>
 
-        <p id="p-oublie"><a href="" id="a-oublie">Mot de passe oublié ?</a></p>
+        <p id="p-oublie"><a href="{{route('reset')}}" id="a-oublie">Mot de passe oublié ?</a></p>
 
         <div class="div-button">
             <button class="button-compte" type="submit">Valider</button>

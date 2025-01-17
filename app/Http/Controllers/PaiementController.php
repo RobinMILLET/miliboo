@@ -13,9 +13,16 @@ use App\Models\Paiement;
 use App\Models\Produit;
 use App\Models\Transporteur;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Stripe\PaymentMethod;
+use Stripe\PaymentIntent;
+use Stripe\Exception\ApiErrorException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Stripe\Stripe;
+use Stripe\Charge;
+use Stripe\Card;
+use Stripe\Error;
 
 class PaiementController extends Controller
 {
@@ -23,14 +30,15 @@ class PaiementController extends Controller
         $cbs = CarteBancaire::all()->where("idclient", "=", $_SESSION["client"]->idclient);
         if (count($cbs) == 0) return;
         echo '<form id="form-cbsaved" method="POST" action="/paieCB">'.csrf_field();
-        echo '<h2 class="title-section">Choisir une carte bancaire :</h2>';
-        echo '<select name="idcb" id="select-cb" class="input"  style="width:256px;">';
+        echo '<h2 class="title-section" style="margin-bottom:0">Choisir une carte bancaire :</h2>';
+        echo "<p style='margin-top:0'>Sélectionnez une carte bancaire enregistrée sur votre compte</p>";
+        echo '<select name="idcb" id="select-cb" class="input">';
         foreach ($cbs as $cb) {
             echo "<option value='$cb->idcartebancaire'>$cb->nomcartebancaire</option>";
         }
         echo '</select>';
         echo '<input name="crypt" class="input" type="text" placeholder="Cryptogramme visuel" maxlength="3" onchange="validate(this, 3)" required>';
-        echo '<button type="submit" class="btn btn-primary">Valider</button></form>';
+        echo '<button type="submit" class="btn btn-primary button">Valider</button></form>';
         
     }
 
@@ -49,8 +57,13 @@ class PaiementController extends Controller
 
     public function index() {
         if (!$_SESSION["client"]) return redirect('/compte');
+        if (!$_SESSION["client"]->checkMailVerif() ||
+            !$_SESSION["client"]->checkTelVerif())
+                return redirect()->route('modifcontact')->with('error', 'verif');
         if (!isset($_SESSION["adresseFact"], $_SESSION["adresseLivr"], $_SESSION["transporteur"]))
             return redirect()->route('etapelivraison');
+        if (PanierController::prixPanier(false, $_SESSION["panier"]) == 0)
+            return redirect()->route('panier');
         return view('paiement', ['prix' => self::getTotalPrix($_SESSION["panier"])]);
     }
 
@@ -70,6 +83,7 @@ class PaiementController extends Controller
             'crypt' => 'required|string',
             'save' => 'nullable|string',
         ]);
+
         $card = array();
         $card["nomcartebancaire"] = $request->nom ?? $client->nomclient . " ". $client->prenomclient;
         $card["numcartebancaire"] = preg_replace('/[\s-]/', '', $request->num);
@@ -114,7 +128,50 @@ class PaiementController extends Controller
             return redirect()->back()->with("error", "crypt");
         $numcb = substr($array["numcartebancaire"], 12, 4);
 
+
+
+
+
         // test et paiement CB
+
+         $VALIDCARDS = [
+             "4242424242424242",
+             "4000056655665556",
+             "5555555555554444",
+             "2223003122003222",
+             "5200828282828210",
+             "5105105105105100",
+             "6011111111111117",
+             "6011981111111113",
+             "3056930009020004",
+             "6555900000604105",
+             "3566002020360505",
+             "6200000000000005",
+             "6200000000000047"
+         ];
+
+         if (!in_array($array["numcartebancaire"], $VALIDCARDS) || 
+             $array["dateexpirationcarte"] < now()) {
+                 return redirect()->back()->with("error", "pay");
+         }
+
+        // redirect error 'pay' pour annuler car mauvaise carte
+
+        // $paymentIntent = \Stripe\PaymentIntent::create([
+        //     'amount' => $prix, // Montant en centimes 
+        //     'currency' => 'eur',
+        //     // 'payment_method' => $id, // Le ID de la méthode de paiement (token)
+        //     'confirmation_method' => 'manual',
+        //     'confirm' => true,
+        // ]);
+        
+        // // Vérifier si la carte est valide
+        // if ($paymentIntent->status == 'succeeded') {
+        //     error_log("Carte valide et autorisée!");
+        // } else {
+        //     error_log("La carte n'est pas valide.");
+        // }
+        
         // <[ ]>
         
         DB::beginTransaction();
@@ -136,6 +193,9 @@ class PaiementController extends Controller
             return redirect()->back()->with("error", "sql");
         }
     }
+
+
+
 
     public static function saveCommande($panier, $idcb, $numcb) {
         $client = $_SESSION["client"];
@@ -162,9 +222,23 @@ class PaiementController extends Controller
         $_SESSION["adresseFact"] = null; $_SESSION["adresseLivr"] = null; $_SESSION["transporteur"] = null;
         $_SESSION["assurance"] = null; $_SESSION["express"] = null; $_SESSION["instruct"] = null; $_SESSION["usefidel"] = null;
         $_SESSION["panier"] = array(array(), array());
+        try {
+            $data = [
+                'prenomclient' => $client->prenomclient,
+                'nomclient' => $client->nomclient,
+                'emailclient' => $client->emailclient,
+                'id' => $commande->idcommande,
+            ];
+    
+            $mail = new MailController("Confirmation de commande Miliboo", "mail.cmdmail", $data);
+            $mail->sendTo($client->emailclient);
+        }
+        catch (\Exception $e) {
+            Log::alert("Erreur sur envoi mail pour commande : ", [$e]);
+        }
         return redirect()->route("detailcommande", ['id'=>$commande->idcommande]);
     }
-
+   
     public static function saveDetailCommande($commande, $panier) {
         // $panier[0] = [[idproduit, idcouleur, quantite], ...]
         // $panier[1] = [idcomposition => quantite, ...]
@@ -223,7 +297,10 @@ class PaiementController extends Controller
            case "nom": echo "Nom de crate bancaire requis pour sauvegarder"; break;
            case "notfound": echo "Carte bancaire inconnue"; break;
            case "sql": echo "Erreur lors du processus d'enregistrement"; break;
+           case "pay": echo "Erreur lors du processus de paiement"; break;
         }
         echo '")</script>';
      }
+    
+    
 }

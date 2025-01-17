@@ -9,6 +9,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class MailController extends Mailable
@@ -51,14 +52,15 @@ class MailController extends Mailable
     public function sendTo($target = "s234miliboo@gmail.com") {
         if (!$this->built) $this->build();
         
+        Log::alert("Envoi d'un mail à ".$target, [$this]);
         /* ----------------------------- |
         |  [PROTECTION] --> DÉSACTIVÉ ?  |
         | ----------------------------- */
-        //return;
+        //Log::alert("Envoi de mail désactivé (MailController)"); return;
         
-        // Tant que notre DNS perso est pas setup
-        // On ne peut envoyer des mail qu'à notre adresse
+        // Replacement de l'adresse destinataire par la nôtre
         $target = "s234miliboo@gmail.com";
+
         Mail::to($target)->send($this);
     }
 }

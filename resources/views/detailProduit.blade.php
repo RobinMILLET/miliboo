@@ -12,11 +12,6 @@
 
 @include('partials.deposeavis')
 
-<div class="product-detail">
-    <h1>{{ $produit->nomproduit }}</h1>
-</div>
-
-
 <body>
 
     <script src="{{asset('js/detailProduit.js')}}" defer></script>
@@ -27,7 +22,6 @@
                 <?php
 
                 use App\Http\Controllers\DetailProduitController;
-                use App\Models\Produit;
 
                 $colorDispos = $colorationsDispos;
                 $colorationProduit = $colorationChoisie;
@@ -81,20 +75,26 @@
             <div class="colPresentationProduit">
                 <div class="cardProduit">
                     <h1 class="titreProduit"> {{ $produit->nomproduit }}</h1>
-                    <a class="aDescDetail" href="#descProduit">
-                        Description détaillée
+                    <a class="aDescDetail show-detail" href="#descProduit">
+                        Description détaillée<img class="imgAide" src="{{ asset('img/question.png') }}">
+                        <p class="p-detail right">Cliquez pour obtenir une descripton détaillée du produit</p>
                     </a>
+
 
                     <div class="divNoteProduit">
                         <?php
                         $note = DetailProduitController::getNoteProduit($produit);
                         $noteEtoile = $note['noteEtoiles'];
-                        $nbNote = $note['nbAvis'] ? $note['nbAvis'] :"";
-                        echo "$noteEtoile $nbNote";
+                        $nbNote = $note['nbAvis'] ? $note['nbAvis'] : "";
+                        echo "<a class='aNoteUser show-detail' href='#divAvis'> $noteEtoile $nbNote";
+                        echo "<img class='imgAide' src='" .asset('img/question.png') . "'>";
+                        echo "<p class='p-detail right'>Cliquez pour accéder aux avis du produit</p></a>";
                         ?>
                     </div>
                     <div class="divColoris">
-                        <p class="pColoris"> Colori(s) disponible(s)</p>
+                        <div class="show-detail" style="width:fit-content">
+                        <p class="pColoris"> Colori(s) disponible(s)<img class="imgAide" src="{{ asset('img/question.png') }}"></p>
+                        <p class="p-detail right" style='left:100%'>Sélectionnez le coloris souhaité</p></div>
                         <div class="divListColoris">
 
                             <?php
@@ -140,7 +140,7 @@
                             //   |_|  \__,_|\__,_|\__| | .__/ \__,_|___/ |_| \__,_|_|_|  \___|  \___\__,_|
                             //                         | |                                                
                             //                         |_|                                                
-                            
+
                             // if ($colorationChoisie->quantitestock == 1) {
                             //     echo "<br><p class=\"infer10stock\">Il ne reste qu'un seul exemplaire !</p><br>";
                             // } else {
@@ -167,22 +167,26 @@
                                 ?>
                                 <button id='minusOne' class='button-quantite' disabled onclick="minusOne()">-</button>
                                 <input id='quant' class='input-quantite' type="text" value="{{$start}}" onchange='verif(<?php echo $stock ?>)'></input>
-                                <button id='plusOne' class='button-quantite' onclick='plusOne(<?php echo $stock ?>)'{{$disablePlus}}>+</button>
+                                <button id='plusOne' class='button-quantite' onclick='plusOne(<?php echo $stock ?>)' {{$disablePlus}}>+</button>
                             </div>
                             <button id="button-achete" onclick='achete(
                             <?php
                             echo $colorationChoisie->idproduit;
                             echo ",";
                             echo $colorationChoisie->idcouleur;
-                            ?>)'{{$disabled}}>J'achète</button>
-                            <img class="show-detail" id="img-like" src="{{ $isLiked ? asset('img/coeur-like.png') : asset('img/coeur.png') }}" data-liked="{{ $isLiked ? 'true' : 'false' }}" data-idproduit="{{ $produit->idproduit }}" alt="">
+                            ?>)' {{$disabled}}>J'achète</button>
+                            
+                            <div class="show-detail">
+                                <img id="img-like" src="{{ $isLiked ? asset('img/coeur-like.png') : asset('img/coeur.png') }}" data-liked="{{ $isLiked ? 'true' : 'false' }}" data-idproduit="{{ $produit->idproduit }}" alt="">
+                                <p class="p-detail bottom">Cliquez pour ajouter à vos favoris</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="divAvis">
+        <div class="divAvis" id="divAvis">
             <h2 class="titreAvis">
                 Avis clients
             </h2>
@@ -231,8 +235,11 @@
         </div>
 
         <div class="divListeProduits marge">
+
             <div class="divProduitsSimilaire">
-                <?php
+            
+            <?php
+
 
                 $lesProduitsSimilaire = DetailProduitController::getProduitsSimilaire($produit);
                 DetailProduitController::affichageProduitsSimilaire($lesProduitsSimilaire);

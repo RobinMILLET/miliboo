@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Compte')
+@section('title', 'Composition')
 
 @section('css')
 <link rel="stylesheet" type="text/css" href="{{asset('css/composition.css')}}" />

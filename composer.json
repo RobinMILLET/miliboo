@@ -11,8 +11,14 @@
         "guzzlehttp/guzzle": "^7.2",
         "laravel/fortify": "^1.25",
         "laravel/framework": "^10.10",
+        "laravel/pulse": "^1.3",
         "laravel/sanctum": "^3.3",
-        "laravel/tinker": "^2.8"
+        "laravel/telescope": "^5.3",
+        "laravel/tinker": "^2.8",
+        "mohsenabrishami/stethoscope": "^2.7",
+        "srmklive/paypal": "^3.0",
+        "stripe/stripe-php": "^16.4",
+        "twilio/sdk": "^8.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

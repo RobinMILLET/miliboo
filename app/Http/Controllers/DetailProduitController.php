@@ -235,7 +235,10 @@ class DetailProduitController extends Controller
             echo "Il n'y a pas de produits Similaire";
             return;
         }
-        echo "<h2 class='titreProduitCarroussel'>Vous aimerez aussi</h2>";
+        echo "<h2 class='titreProduitCarroussel show-detail'>Vous aimerez aussi";
+        echo "<p class='p-detail bottom'>Découvrez des produits similaires qui pourraient compléter votre commande</p></a>";
+        echo "<img class='imgAide' src='" .asset('img/question.png') . "'>";
+        echo "</h2>";
         echo "<div class='carroussel'>";
         echo "<button class='button-scroll' id='button-scroll-left'><</button>";
         echo "<div class='topProduitsCarroussel'>";
@@ -304,7 +307,10 @@ class DetailProduitController extends Controller
             return;
         }
 
-        echo "<h2 class='titreProduitCarroussel'>Nos clients ont également aimé ces produits</h2>";
+        echo "<h2 class='titreProduitCarroussel show-detail'>Nos clients ont également aimé ces produits";
+        echo "<p class='p-detail bottom'>Découvrez des produits aimés par nos clients qui pourraient compléter votre commande</p></a>";
+        echo "<img class='imgAide' src='" .asset('img/question.png') . "'>";
+        echo "</h2>";
         echo "<div class='carroussel'>";
         echo "<button class='button-scroll' id='button-scroll-left'><</button>";
         echo "<div class='topProduitsCarroussel'>";
@@ -361,10 +367,14 @@ class DetailProduitController extends Controller
             return;
         }
 
-        echo "<h2 class='titreProduitCarroussel'>Vous avez consulté récemment les produits suivant</h2>";
+        echo "<h2 class='titreProduitCarroussel show-detail'>Vous avez récemment consulté les produits suivants";
+        echo "<p class='p-detail bottom'>Voir les derniers produits consultés</p></a>";
+        echo "<img class='imgAide' src='" .asset('img/question.png') . "'>";
+        echo "</h2>";
         echo "<div class='carroussel'>";
         echo "<button class='button-scroll' id='button-scroll-left'><</button>";
         echo "<div class='topProduitsCarroussel'>";
+
         foreach ($produitsConsultes as $elementConsulte) {
             $produit = $elementConsulte['produit'];
             $sourcePhoto = $elementConsulte['sourcePhoto'];

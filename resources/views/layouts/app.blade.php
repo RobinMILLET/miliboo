@@ -33,17 +33,22 @@
             </div>
             <ul id="test">
                 <li>
-                    <a class="show-detail" href="{{ route('aide')}}"> <p class="p-detail">Aide</p> <img class="imgtest" src="{{ asset('img/question.png') }}" alt="image d'aide"></a>
+                    <a class="a-quick-bar show-detail" href="{{ route('aide')}}"> <p class="p-detail bottom">Aide</p> <img class="imgtest" src="{{ asset('img/question.png') }}" alt="image d'aide"></a>
                 </li>
                 <li>
-                    <a class="show-detail" href="{{ route('espaceclient')}}"> <p class="p-detail">Compte</p> <img class='imgtest' src='/img/user.png' alt='image compte'></a>
+                    <a class="a-quick-bar show-detail" href="{{ route('espaceclient')}}"> <p class="p-detail bottom">Compte</p> <img class='imgtest' src='/img/user.png' alt='image compte'></a>
                 </li>
+                @if(isset($_SESSION['client']->idclient) && $_SESSION['client']->idclient !== null)
+                    <li>
+                        <a class="a-quick-bar show-detail" href="{{ route('compte.aimes')}}"> <p class="p-detail bottom">Favoris</p> <img class='imgtest' src='/img/coeur.png' alt='image favoris'></a>
+                    </li>
+                    @endif
                 <li>
-                    <a class="show-detail" href="{{ route('panier') }}"> <p class="p-detail">Panier</p> <img class="imgtest" src="{{ asset('img/basket.png') }}" alt="image panier"></a>
+                    <a class="a-quick-bar show-detail" href="{{ route('panier') }}"> <p class="p-detail bottom">Panier</p> <img class="imgtest" src="{{ asset('img/basket.png') }}" alt="image panier"></a>
                 </li>
                 @if(isset($_SESSION['admin']) && $_SESSION['admin'] !== null)
                     <li>
-                        <a class="show-detail" href="{{ route('admin.dashboard') }}"> <p class="p-detail">Admin</p> <img class="imgtest" src="{{ asset('img/admin.png') }}" alt="image admin"></a>
+                        <a class="a-quick-bar show-detail" href="{{ route('admin.dashboard') }}"><img class="imgtest" src="{{ asset('img/admin.png') }}" alt="image admin"></a>
                     </li>
                 @endif
             </ul>
@@ -56,9 +61,9 @@
             <a href="{{ route('produits.parRegroupement', 3)}}" class="navigation-regroupement">Made in FRANCE</a>
             <a href="{{ route('composition') }}" class="navigation-regroupement">Composition</a>
         </div>
-        <div>
+       <!-- <div>
             <a href="" class="navigation-pro">Espace Pro</a>
-        </div>
+        </div>-->
     </div>
     <div id="div-cat">
         <nav class="marge" id="navcategorie">
@@ -278,7 +283,7 @@
     <script>
     var botmanWidget = {
     aboutText: '',
-    introMessage: "Bienvenue dans notre site web",
+    introMessage: "Bienvenue dans notre site web <br>Voici quelques sujets sur lesquels je peux vous aider : <br>- Problèmes de chargement de page <br>- Navigation sur le site <br>- Délais de livraison <br>- Suivi de commande <br>- Retour de produit <br>- Assemblage de meubles <br>- Promotions en cours <br>- Produits que vous aimez <br>- Modes de paiement <br>- Traitement des données personnelles"
     };
     </script>
 
@@ -308,8 +313,8 @@
                 <div id="c2">
                     <h3 class="title-footer">Aide & Contact</h3>
                     <ul class="ul-footer">
-                        <!-- <li><a href="">Besoin d'aide</a></li>
-                        <li><a href="">Espace presse</a></li>
+                        <li><a href="{{ route('aide') }}">Besoin d'aide</a></li>
+                        <!-- <li><a href="">Espace presse</a></li>
                         <li><a href="">Avis Clients</a></li>
                         <li><a href="">Plan du site</a></li>
                         <li><a href="">Promotions meubles</a></li>

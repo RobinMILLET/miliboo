@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\A2fController;
 use App\Http\Controllers\CookieController;
 use App\Http\Controllers\InfoPersoController;
 use App\Http\Controllers\DetailProduitController;
@@ -26,8 +27,8 @@ use App\Http\Controllers\LivraisonController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BotManController;
 use Laravel\Fortify\Fortify;
-
-
+use App\Http\Controllers\PayPalController;
+use App\Models\Paiement;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,6 +63,7 @@ Route::get('/erreur', function(){
 
 Route::get('/compte',[LoginController::class, 'index'])->name('compte');
 Route::get('/login', [LoginController::class, 'tryLogin']);
+Route::get('/login/{idclient}/{mdpresetoken}', [LoginController::class, 'loginByReset']);
 Route::post('/login', [LoginController::class, 'tryLogin']);
 Route::post('/modMdp', [InfoPersoController::class, 'tryChangeMdp']);
 Route::post('/modMail', [ModifContactController::class, 'changeMail']);
@@ -79,6 +81,11 @@ Route::get('/json', [InfoPersoController::class, 'clientJson']);
 Route::get('/anonym/{any}', [InfoPersoController::class, 'clientAnonym']);
 Route::get('/delAdr/{id}', [InfoPersoController::class, 'delAdr']);
 Route::post('/addAdr', [InfoPersoController::class, 'addAdr'])->name('addAdr');
+Route::post('/resetMdp', [LoginController::class, 'resetPassword'])->name('resetMdp');
+Route::get('/a2f', [A2fController::class, 'index'])->name("a2f");
+Route::post('/a2fSend', [A2fController::class, 'a2fSend'])->name('a2fSend');
+Route::post('/a2fLogin', [A2fController::class, 'a2fLogin'])->name('a2fLogin');
+Route::get('/expedie/{idcmd}', [AdminDashboardController::class, 'expedie'])->name("expedie");
 
 
 function reqLogin($route) {
@@ -127,24 +134,45 @@ Route::get('/modifcontact', function(){
     return reqLogin('modifcontact');
 })->name('modifcontact');
 
+Route::get('/reset', function(){
+    return view('resetmdp');
+})->name('reset');
+
 /*
 | Produits
 */
-Route::get('/produit/idproduit{id}/coloration{idcoloration}', [DetailProduitController::class, 'show']) ->name('produit.show');
+Route::middleware(['web'])->group(function(){
+    Route::get('/produit/idproduit{id}/coloration{idcoloration}', [DetailProduitController::class, 'show']) ->name('produit.show');
 
-Route::get('/panier',[PanierController::class, 'index'])->name('panier');
+    Route::get('/panier',[PanierController::class, 'index'])->name('panier');
+    
+    Route::get('/prixPanier', [PanierController::class, 'prixPanier']);
+    Route::get('/setPanier/{idproduit}/{idcouleur}/{quantite}', [PanierController::class, 'setLignePanier']);
+    Route::get('/addPanier/{idproduit}/{idcouleur}/{quantite}', [PanierController::class, 'addToPanier']);
+    Route::get('/setPanier/{idcomposition}/{quantite}', [PanierController::class, 'setLignePanierComp']);
+    Route::get('/addPanier/{idcomposition}/{quantite}', [PanierController::class, 'addToPanierComp']);
+    
+    Route::get('/etapelivraison',[LivraisonController::class, 'index'])->name('etapelivraison');
+    Route::post('/paiement',[LivraisonController::class, 'redirect']);
+    Route::get('/paiement',[PaiementController::class, 'index'])->name('paiement');
+    Route::post('/paieNouvCB', [PaiementController::class, 'paieNouvCB'])->name('paieNouvCB');
+    Route::post('/paieCB', [PaiementController::class, 'paieCB'])->name('paieCB');
+});
+// Route::get('/produit/idproduit{id}/coloration{idcoloration}', [DetailProduitController::class, 'show']) ->name('produit.show');
 
-Route::get('/prixPanier', [PanierController::class, 'prixPanier']);
-Route::get('/setPanier/{idproduit}/{idcouleur}/{quantite}', [PanierController::class, 'setLignePanier']);
-Route::get('/addPanier/{idproduit}/{idcouleur}/{quantite}', [PanierController::class, 'addToPanier']);
-Route::get('/setPanier/{idcomposition}/{quantite}', [PanierController::class, 'setLignePanierComp']);
-Route::get('/addPanier/{idcomposition}/{quantite}', [PanierController::class, 'addToPanierComp']);
+// Route::get('/panier',[PanierController::class, 'index'])->name('panier');
 
-Route::get('/etapelivraison',[LivraisonController::class, 'index'])->name('etapelivraison');
-Route::post('/paiement',[LivraisonController::class, 'redirect']);
-Route::get('/paiement',[PaiementController::class, 'index'])->name('paiement');
-Route::post('/paieNouvCB', [PaiementController::class, 'paieNouvCB'])->name('paieNouvCB');
-Route::post('/paieCB', [PaiementController::class, 'paieCB'])->name('paieCB');
+// Route::get('/prixPanier', [PanierController::class, 'prixPanier']);
+// Route::get('/setPanier/{idproduit}/{idcouleur}/{quantite}', [PanierController::class, 'setLignePanier']);
+// Route::get('/addPanier/{idproduit}/{idcouleur}/{quantite}', [PanierController::class, 'addToPanier']);
+// Route::get('/setPanier/{idcomposition}/{quantite}', [PanierController::class, 'setLignePanierComp']);
+// Route::get('/addPanier/{idcomposition}/{quantite}', [PanierController::class, 'addToPanierComp']);
+
+// Route::get('/etapelivraison',[LivraisonController::class, 'index'])->name('etapelivraison');
+// Route::post('/paiement',[LivraisonController::class, 'redirect']);
+// Route::get('/paiement',[PaiementController::class, 'index'])->name('paiement');
+// Route::post('/paieNouvCB', [PaiementController::class, 'paieNouvCB'])->name('paieNouvCB');
+// Route::post('/paieCB', [PaiementController::class, 'paieCB'])->name('paieCB');
 
 /*
 | Recherche
@@ -214,6 +242,9 @@ Route::prefix('admin')->group(function () {
     Route::get('/logout', [LoginServicesController::class, 'logout'])->name('admin.logout');
 });
 
+/* Envoie sms pour livraison */
+Route::get('/expedie/{cle}')->name('expedie');
+
 /* Reponse service vente */
 Route::post('/repondre-avis', [DetailProduitController::class, 'repondreAvis'])->name('repondre.avis');
 
@@ -241,11 +272,40 @@ Route::get('/welcome', function() {
 });
 
 
-//Pour MFA
-Fortify::twoFactorChallengeView(function () {
-    return view('auth.two-factor-challenge');
+/* Logout Admin */
+Route::get('/logoutAdmin', function () {
+    $_SESSION['admin'] = null;
+    return redirect()->route('admin.login');
+})->name('logoutAdmin');
+
+/* Pulse Test */
+Route::get('/test-pulse', function () {
+    \Log::info('Test route accessed');
+    sleep(1);
+    return 'Test complete';
 });
 
-Route::get('/paiementTest', function(){
-    return view('paiementTest');
-})->name('paiementTest');
+Route::get('/debug-pulse-queries', function () {
+    DB::select("SELECT *, pg_sleep(0.5) FROM coloration");
+    
+    DB::select("
+        SELECT *
+        FROM coloration
+        WHERE idproduit IN (
+            SELECT idproduit 
+            FROM coloration 
+            WHERE pg_sleep(0.3) IS NOT NULL
+        )
+    ");
+        
+    return "Slow queries executed";
+});
+
+Route::get('/debug-pulse-cache', function () {
+    Cache::put('test-key-1', 'value1', 60);
+    Cache::get('test-key-1');
+    Cache::put('test-key-2', 'value2', 60);
+    Cache::forget('test-key-1');
+    
+    return "Cache operations executed";
+});

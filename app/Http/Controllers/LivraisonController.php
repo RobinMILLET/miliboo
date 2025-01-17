@@ -15,6 +15,11 @@ class LivraisonController extends Controller
     public function index()
     {
         if (!$_SESSION["client"]) return redirect('/compte');
+        if (!$_SESSION["client"]->checkMailVerif() ||
+            !$_SESSION["client"]->checkTelVerif())
+                return redirect()->route('modifcontact')->with('error', 'verif');
+        if (PanierController::prixPanier(false, $_SESSION["panier"]) == 0)
+            return redirect()->route('panier');
         return view("etapelivraison", ['prixassurance' => self::$PRIXASSURANCE, 'prixexpress' => self::$PRIXEXPRESS]);
     }
 

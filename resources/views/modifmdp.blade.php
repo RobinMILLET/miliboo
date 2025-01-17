@@ -13,8 +13,11 @@
     <form method="POST" action="/modMdp" id="form">
     @csrf
         <div id="div-input">
-            <?php $mdpError = session()->get('error')=="mdp" ? " error" : ""; ?>
-            <input id="ancienmdp" name="ancienmdp" class="input{{$mdpError}}" type="password" placeholder="Ancien mot de passe" required>
+            <?php
+                use App\Http\Controllers\InfoPersoController;
+                $mdpError = session()->get('error')=="mdp" ? " error" : "";
+                InfoPersoController::ancienMdp($mdpError);
+            ?>
             <input id="password" name="password" class="input" type="password" placeholder="Nouveau mot de passe" required onkeyup="validatePassword()">
             <input id="passwordConfirm" name="passwordConfirm" class="input" type="password" placeholder="Confirmer mot de passe" required onkeyup="validatePassword()">
         </div>

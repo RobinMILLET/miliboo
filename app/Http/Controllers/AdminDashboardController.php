@@ -20,61 +20,173 @@ use BotMan\BotMan\Commands\Command;
 use DateInterval;
 use DateTime;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Benchmark;
 
 class AdminDashboardController extends Controller
 {
+    // public function show(Request $request)
+    // {
+    //     $filterDate = $request->input('filter_date');
+    //     $filtreTransporteur = $request->input('filtreTransporteur');
+
+    //     $clients = Client::query();
+
+    //     if ($filterDate) {
+    //         $clients->where('derniereutilisation', '<=', $filterDate);
+    //     }
+
+    //     $clients->whereNotNull('nomclient')
+    //         ->whereNotNull('prenomclient')
+    //         ->where('nomclient', '!=', '')
+    //         ->where('prenomclient', '!=', '');
+    //     $clients = $clients->get();
+
+
+    //     $commandes = Commande::all();
+    //     $now = Carbon::now();
+    //     $demainMidi = Carbon::tomorrow()->setHour(12)->setMinute(0)->setSecond(0);
+    //     $demainFin = Carbon::tomorrow()->endOfDay();
+    //     if($filtreTransporteur) {
+    //         switch ($filtreTransporteur) {
+    //             case 'domicile':
+    //                 $commandes = $commandes->where('idtransporteur', '=', 1);
+    //                 break;
+    //             case 'autre':
+    //                 $commandes = $commandes->where('idtransporteur', '>', 1);
+    //                 break;
+    //         }
+    //     }
+
+    //     $commandes = $commandes->filter(function ($commande) use ($filtreTransporteur, $now, $demainMidi, $demainFin) {
+    //         $dateLivraison = AdminDashboardController::getDelai($commande);
+    //         if ($filtreTransporteur === 'domicile') {
+    //             //echo "Date de livraison : " . $dateLivraison->format('Y-m-d H:i:s') . "<br>";
+    //             //echo "Demain midi : " . $demainMidi->format('Y-m-d H:i:s') . "<br>";
+    //             return $dateLivraison > $now && $dateLivraison < $demainMidi;
+    //         } elseif ($filtreTransporteur === 'autre') {
+    //             return $dateLivraison > $now &&  $dateLivraison <= $demainFin;
+    //         }
+    //         return true;
+    //     });
+
+    //     $commandes = $commandes->filter(function ($commande) {
+    //         $client = $commande->getClient();
+        
+    //         return $client && !is_null($client->nomclient) && !is_null($client->prenomclient) && $client->nomclient !== '' && $client->prenomclient !== '';
+    //     });
+
+    //     $commandesStatut = Commande::all()->where("idstatutcommande", "=", 2);
+
+    //     $commandesStatut = $commandesStatut->filter(function ($commande) {
+    //         $client = $commande->getClient();
+        
+    //         return $client && !is_null($client->nomclient) && !is_null($client->prenomclient) && $client->nomclient !== '' && $client->prenomclient !== '';
+    //     });
+
+    //     $typesProduit = TypeProduit::all();
+    //     $pays = Pays::all();
+    //     $couleurs = Couleur::all();
+    //     $avisData = self::affichageAvis();
+
+    //     return view('admin.dashboard', [
+            // 'typesProduit' => $typesProduit,
+            // 'pays' => $pays,
+            // 'couleurs' => $couleurs,
+            // 'avisData' => $avisData,
+            // 'clients' => $clients,
+            // 'commandes' => $commandes,
+            // 'commandesStatut' => $commandesStatut,
+    //     ]);
+    // }
+
     public function show(Request $request)
     {
-        $filterDate = $request->input('filter_date');
+        $benchmarks = [];
+    
         $filtreTransporteur = $request->input('filtreTransporteur');
-
-        $clients = Client::query();
-
-        if ($filterDate) {
-            $clients->where('datecreationcompte', '<=', $filterDate);
-        }
-
-        $clients->whereNotNull('nomclient')
-            ->whereNotNull('prenomclient')
-            ->where('nomclient', '!=', '')
-            ->where('prenomclient', '!=', '');
-        $clients = $clients->get();
-
-
-        $commandes = Commande::all();
-        $now = Carbon::now();
-        $demainMidi = Carbon::tomorrow()->setHour(12)->setMinute(0)->setSecond(0);
-        $demainFin = Carbon::tomorrow()->endOfDay();
-        if($filtreTransporteur) {
-            switch ($filtreTransporteur) {
-                case 'domicile':
-                    $commandes = $commandes->where('idtransporteur', '=', 1);
-                    break;
-                case 'autre':
-                    $commandes = $commandes->where('idtransporteur', '>', 1);
-                    break;
+        
+        $benchmarks['Clients Query'] = Benchmark::measure(function () use ($request, &$clients) {
+            $filterDate = $request->input('filter_date');
+            $clients = Client::query();
+            if ($filterDate) {
+                $clients->where('datecreationcompte', '<=', $filterDate);
             }
-        }
-
-        $commandes = $commandes->filter(function ($commande) use ($filtreTransporteur, $now, $demainMidi, $demainFin) {
-            $dateLivraison = AdminDashboardController::getDelai($commande);
-            if ($filtreTransporteur === 'domicile') {
-                echo "Date de livraison : " . $dateLivraison->format('Y-m-d H:i:s') . "<br>";
-                echo "Demain midi : " . $demainMidi->format('Y-m-d H:i:s') . "<br>";
-                return $dateLivraison > $now && $dateLivraison < $demainMidi;
-            } elseif ($filtreTransporteur === 'autre') {
-                return $dateLivraison > $now &&  $dateLivraison <= $demainFin;
-            }
-            return true;
+            $clients->whereNotNull('nomclient')
+                ->whereNotNull('prenomclient')
+                ->where('nomclient', '!=', '')
+                ->where('prenomclient', '!=', '');
+            $clients = $clients->get();
         });
-
-        $commandesStatut = Commande::all()->where("idstatutcommande", "=", 1);
-
-        $typesProduit = TypeProduit::all();
-        $pays = Pays::all();
-        $couleurs = Couleur::all();
-        $avisData = self::affichageAvis();
-
+    
+        $commandesMetrics = [];
+    
+        $commandesMetrics['Initial Query'] = Benchmark::measure(function () use (&$commandes) {
+            $commandes = Commande::all();
+        });
+    
+        $commandesMetrics['Calcul dates'] = Benchmark::measure(function () use (&$now, &$demainMidi, &$demainFin) {
+            $now = Carbon::now();
+            $demainMidi = Carbon::tomorrow()->setHour(12)->setMinute(0)->setSecond(0);
+            $demainFin = Carbon::tomorrow()->endOfDay();
+        });
+    
+        $commandesMetrics['Transporteur Filtre'] = Benchmark::measure(function () use ($filtreTransporteur, &$commandes) {
+            if($filtreTransporteur) {
+                switch ($filtreTransporteur) {
+                    case 'domicile':
+                        $commandes = $commandes->where('idtransporteur', '=', 1);
+                        break;
+                    case 'autre':
+                        $commandes = $commandes->where('idtransporteur', '>', 1);
+                        break;
+                }
+            }
+        });
+    
+        $commandesMetrics['Date livraison Processing'] = Benchmark::measure(function () use (&$commandes, $filtreTransporteur, $now, $demainMidi, $demainFin, &$commandesMetrics) {
+            $totalCommandes = count($commandes);
+            $processedCommandes = 0;
+            $delayCalculations = [];
+            
+            $commandes = $commandes->filter(function ($commande) use ($filtreTransporteur, $now, $demainMidi, $demainFin, &$processedCommandes, &$delayCalculations) {
+                $processedCommandes++;
+                
+                $delayStart = microtime(true);
+                $dateLivraison = AdminDashboardController::getDelai($commande);
+                $delayEnd = microtime(true);
+                $delayCalculations[] = ($delayEnd - $delayStart) * 1000;
+                
+                if ($filtreTransporteur === 'domicile') {
+                    return $dateLivraison > $now && $dateLivraison < $demainMidi;
+                } elseif ($filtreTransporteur === 'autre') {
+                    return $dateLivraison > $now && $dateLivraison <= $demainFin;
+                }
+                return true;
+            });
+            
+            $commandesMetrics['Calcul délais'] = [
+                'total' => $totalCommandes,
+                'processed' => $processedCommandes,
+                'avg_delay_calc' => number_format(array_sum($delayCalculations) / count($delayCalculations), 2),
+                'min_delay_calc' => number_format(min($delayCalculations), 2),
+                'max_delay_calc' => number_format(max($delayCalculations), 2)
+            ];
+        });
+                
+        $benchmarks['Commandes Statut'] = Benchmark::measure(function () use (&$commandesStatut) {
+            $commandesStatut = Commande::all()->where("idstatutcommande", "=", 1);
+        });
+    
+        $benchmarks['Loading typesProduit, pays et couleurs'] = Benchmark::measure(function () use (&$typesProduit, &$pays, &$couleurs) {
+            $typesProduit = TypeProduit::all();
+            $pays = Pays::all();
+            $couleurs = Couleur::all();
+        });
+    
+        $benchmarks['Avis Processing'] = Benchmark::measure(function () use (&$avisData) {
+            $avisData = self::affichageAvis();
+        });
+    
         return view('admin.dashboard', [
             'typesProduit' => $typesProduit,
             'pays' => $pays,
@@ -83,6 +195,8 @@ class AdminDashboardController extends Controller
             'clients' => $clients,
             'commandes' => $commandes,
             'commandesStatut' => $commandesStatut,
+            'benchmarks' => $benchmarks,
+            'commandesMetrics' => $commandesMetrics,
         ]);
     }
 
@@ -238,8 +352,15 @@ class AdminDashboardController extends Controller
 
     public static function getDelai($commande){
         $details = $commande->getDetailCommande();
-
         $maxDelai = $details->map->getProduit()->max('delailivraison');
+
+        $cmdComp= $commande->getCommandeComposition();
+        $detailComp = $cmdComp->map->getCompositionProduit()->map->getDetailComposition();
+        foreach ($detailComp as $detail) {
+            $maxDelaiComp = $detail->map->getProduit()->max('delailivraison');
+            if ($maxDelaiComp > $maxDelai)
+                $maxDelai = $maxDelaiComp;
+        }
         list($hours, $minutes, $seconds) = explode(':', $maxDelai);
         $interval = new DateInterval("PT{$hours}H{$minutes}M{$seconds}S");
         
@@ -251,5 +372,19 @@ class AdminDashboardController extends Controller
 
     public static function getService(){
         return response()->json(["idService" => $_SESSION['admin']]);
+    }
+
+    public static function expedie($idcmd) {
+        if ($_SESSION['admin']->idservice != 4) 
+            return redirect()->route('admin.login');
+        $cmd = Commande::find($idcmd);
+        if (!$cmd) return redirect()->back();
+        $cmd->idstatutcommande = 3;
+        $sms = new SmsController(
+            "Votre commande Miliboo N°".$cmd->idcommande." à été expédiée.",
+            "+".$cmd->getClient()->telportableclient
+        );
+        $cmd->save();
+        return redirect()->route('admin.dashboard');
     }
 }

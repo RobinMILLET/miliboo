@@ -21,12 +21,14 @@ class Client extends Model
     public $timestamps = false;
     public $incrementing = true;
     protected $keyType = 'int';
-    protected $hidden = ['hashmdp', 'rememberme'];
+    protected $hidden = ['hashmdp', 'rememberme', 'a2ftoken',
+        'emailveriftoken', 'telveriftoken', 'restmdptoken'];
     protected $fillable = [
         'nomclient', 'prenomclient', 'civiliteclient',
         'emailclient', 'telfixeclient', 'telportableclient',
         'datecreationcompte', 'hashmdp', 'pointfideliteclient',
-        'newslettermiliboo', 'newsletterpartenaires', 'derniereutilisation'];
+        'newslettermiliboo', 'newsletterpartenaires', 'derniereutilisation',
+    ];
 
     public function getProduitsAimes() {
         return $this->belongsToMany(Produit::class, 'a_aimer', 'idclient', 'idproduit');
@@ -99,6 +101,16 @@ class Client extends Model
             $this->telverifdate = null;
             $this->save();
         }
+        if ($this->resetmdpexpir && $this->resetmdpexpir < now()) {
+            $this->resetmdptoken = null;
+            $this->resetmdpexpir = null;
+            $this->save();
+        }
+        if ($this->a2fexpir && $this->a2fexpir < now()) {
+            $this->a2ftoken = null;
+            $this->a2fexpir = null;
+            $this->save();
+        }
     }
 
     public static function auth($login, $password) {
@@ -130,9 +142,10 @@ class Client extends Model
             "pointFideliteClient" => $this->pointfideliteclient,
             "newsLetterMiliboo" => $this->newslettermiliboo,
             "newsLetterPartenaires" => $this->newsletterpartenaires,
-            "emailVerifDate" => $this->emailverifdate,
-            "telVerifDate" => $this->telverifdate,
+            "emailVerifDate" => $this->emailveriftoken ? null : $this->emailverifdate,
+            "telVerifDate" => $this->telveriftoken ? null : $this->telverifdate,
             "derniereUtilisation" => $this->derniereutilisation,
+            "authDeuxFacteurs" => $this->a2f,
             "Adresse" => InfoPersoController::collectionCompleteArray(
                 $this->hasMany(Adresse::class, "idclient", "idclient")->get()),
             "CarteBancaire" => InfoPersoController::collectionCompleteArray(
@@ -180,6 +193,10 @@ class Client extends Model
             $this->remembertoken = null;
             $this->emailveriftoken = null;
             $this->telveriftoken = null;
+            $this->resetmdptoken = null;
+            $this->resetmdpexpir = null;
+            $this->a2ftoken = null;
+            $this->a2fexpir = null;
             $this->save();
             DB::commit();
             LoginController::logOut();

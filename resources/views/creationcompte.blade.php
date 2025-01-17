@@ -101,7 +101,7 @@
                     <div class="div-input">
                         <div id="div-tva">
                             <label for="tva" class="label">FR</label>
-                            <input name="tva" type="text" placeholder="Numéro de TVA intracommunautaire" class="input" id="input-tva">
+                            <input name="tva" type="text" placeholder="Numéro de TVA intracommunautaire (11 chiffres)" class="input" id="input-tva">
                         </div>
                         <p class="p-obligatoire">* obligatoire</p>
                     </div>

@@ -24,6 +24,9 @@
                 <button class="tab-button" data-tab="ajouter-produit-panel">Ajouter Produit</button>
                 <button class="tab-button" data-tab="directeur-panel">Modification Produit</button>
             @endif
+            <button class="tab-button" data-tab="metrics-panel">Métriques</button>
+            <a href="/pulse" class="tab-button pulse" target="_blank">Pulse Dashboard</a>
+            <a href="/logoutAdmin" class="logout-btn">Se déconnecter</a>
         </div>
 
         <div class="tab-content">
@@ -262,7 +265,7 @@
                                 <td>{{ $commande->getClient()->prenomclient }}</td>
                                 <td>{{ $commande->idcommande }}</td>
                                 <td>{{ $commande->getStatut()->nomstatut }}</td>
-                                <td><button type="button" id="avertir-client" data-client-id="{{ $commande->idcommande }}">Envoyer un sms</button></td>
+                                <td><a href="{{ route('expedie', $commande->idcommande)}}"><button type="button" id="avertir-client" data-client-id="{{ $commande->idcommande }}">Expédier</button></a></td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -294,7 +297,7 @@
                             <th>Transporteur</th>
                             <th>Coût</th>
                             <th>Date de la commande</th>
-                            <th>Livraison estimé</th>
+                            <th>Livraison estimée</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -315,8 +318,77 @@
                     </tbody>
                 </table>
             </div>
+
+            <div id="metrics-panel" class="tab-pane">
+            <h2>Métriques de Performance</h2>
+            
+            @if(isset($benchmarks))
+            <div class="card">
+                <div class="card-header">
+                    <h3>Performances Générales</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Opération</th>
+                                <th>Temps (ms)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($benchmarks as $operation => $time)
+                            <tr>
+                                <td>{{ $operation }}</td>
+                                <td>{{ number_format($time, 2) }} ms</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            @endif
+
+            @if(isset($commandesMetrics))
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3>Analyse Détaillée des Commandes</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Opération</th>
+                                <th>Détails</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($commandesMetrics as $operation => $metric)
+                                <tr>
+                                    <td>{{ $operation }}</td>
+                                    <td>
+                                        @if(is_array($metric))
+                                            <ul class="list-unstyled">
+                                                <li>Nombre total de commandes: {{ $metric['total'] }}</li>
+                                                <li>Commandes traitées: {{ $metric['processed'] }}</li>
+                                                <li>Temps de calcul moyen: {{ $metric['avg_delay_calc'] }} ms</li>
+                                                <li>Temps de calcul minimum: {{ $metric['min_delay_calc'] }} ms</li>
+                                                <li>Temps de calcul maximum: {{ $metric['max_delay_calc'] }} ms</li>
+                                            </ul>
+                                        @else
+                                            {{ number_format($metric, 2) }} ms
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            @endif
+        </div>
         </div>
     </div>
+
     <div id="colorations-data" data-couleurs='@json($couleurs)'></div>
     <script>
         console.log('CSRF Token:', '{{ csrf_token() }}');

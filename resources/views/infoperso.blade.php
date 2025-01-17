@@ -22,12 +22,14 @@ use App\Http\Controllers\InfoPersoController;
 InfoPersoController::getInfoPerso();
 ?>
 <br>
-<button class='button' onclick="window.location.href='/json'">
+<button class='button show-detail' onclick="window.location.href='/json'">
     Récupérer mes informations personnelles
+    <p class='p-detail right' style="transform:translateX(50px);top:-50%">En format JSON</p>
 </button>
 <br><br><br>
-<button class='button' style="color:red" onclick="anonym()">
+<button class='button show-detail' style="color:red" onclick="anonym()">
     Supprimer mon compte
+    <p class='p-detail right' style="transform:translateX(40px);top:-50%">De manière définitive et irréversible</p>
 </button>
 <!-- <div id="div-info-perso">
     <h3 id="title-info-perso">Mes informations personnelles</h3>

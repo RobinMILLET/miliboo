@@ -1,0 +1,25 @@
+.card-header{
+    text-align: center;
+    font-size: xx-large;
+    font-weight: bold;
+}
+
+#form-admin{
+    padding-top: 5vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.form-group{
+    display: flex;
+    flex-direction: column;
+
+    width: 33%;
+}
+
+.lab-admin{
+    text-align: center;
+}

@@ -52,7 +52,7 @@ class PanierController extends Controller
                     "<button id='p$id' class='button-quantite' onclick=\"p('$id')\" $disablehigh>+</button>" .
                     "</div></td>";
 
-        $suppr = "<td class='td-supprimer'><button id='d$id' class='but-supprimer' onclick=\"d('$id')\"><img src='/img/supprimer.png' alt=''></button></td>";
+        $suppr = "<td class='td-supprimer'><button id='d$id' class='but-supprimer show-detail' onclick=\"d('$id')\"><p class='p-detail bottom'>Retirer de mon panier</p><img src='/img/supprimer.png' alt=''></button></td>";
         $total = "<td class='td-total'><p id='t$id' class='p-total prix'>".round($trueprice*$quantite, 2)."</p></td>";
         return "<tr class='tr-body'>$img$description$quantites$suppr$total</tr>";
     }

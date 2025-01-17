@@ -115,6 +115,7 @@ Compte, aide, panier
 #test{
     align-items: center;
     display: flex;
+    gap: 20px;
 }
 /*
 img compte, 
@@ -122,7 +123,6 @@ img compte,
 
 .imgtest{
     height: 50px;
-    margin-left: 20px;
 }
     
 #navigation{
@@ -132,7 +132,7 @@ img compte,
 }
 
 a:not(.no){
-    text-decoration: none;
+    /* text-decoration: none; */
     color: black;
     font-size: x-large;
     position: relative;
@@ -407,29 +407,50 @@ a:not(.no){
 
 .p-detail{
     position: absolute;
+    visibility: hidden;
     opacity: 0;
     width: auto;
-    min-width: 100%;
+    white-space: nowrap;
     text-align: center;
-    top: 70%;
-    left: 50%;
-    transform: translateX(-35%);
 
-    font-size: 2vh;
+    font-size: 1.5vh;
     box-sizing: border-box;
-    padding: 5px;
+    padding: 10px;
     background-color: black;
     color: white;
 
     border-radius: 5px;
 
-    transition: all 0.1s ease;
+    transition: transform 0.5s ease, opacity 0.5s ease;
 }
 
-.p-detail::after {
+.top{
+    bottom: 95%;
+}
+
+.top::after{
     content: "";
     position: absolute;
-    top: -10px;
+    top: 110%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-top: 10px solid black;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    width: 0;
+    height: 0;
+}
+
+.bottom{
+    top: 130%;
+    left: 50%;
+    transform: translate(-50%, -60%);
+}
+
+.bottom::after {
+    content: "";
+    position: absolute;
+    top: -9px;
     left: 50%;
     transform: translateX(-50%);
     border-left: 10px solid transparent;
@@ -437,7 +458,62 @@ a:not(.no){
     border-bottom: 10px solid black;
 }
 
-.show-detail:hover > .p-detail{
+.right{
+    left: 90%;
+    top: -70%;
+}
+
+.right::after{
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -10px;
+    transform: translateY(-50%);
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid black;
+}
+
+.left{
+    right: 130%;
+}
+
+.left::after{
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -10px;
+    transform: translateY(-50%);
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid black;
+}
+
+.show-detail{
+    position: relative;
+}
+
+.show-detail:hover .p-detail.top{
+    transform: translateY(10%);
+    visibility: visible;
+    opacity: 1;
+}
+
+.show-detail:hover .p-detail.bottom{
+    transform: translate(-50%, -40%);
+    visibility: visible;
+    opacity: 1;
+}
+
+.show-detail:hover .p-detail.right{
+    transform: translateX(10%);
+    visibility: visible;
+    opacity: 1;
+}
+
+.show-detail:hover .p-detail.left{
+    transform: translateX(10%);
+    visibility: visible;
     opacity: 1;
 }
 
@@ -533,4 +609,16 @@ a:not(.no){
 
 #input-ville{
     flex: 2.5;
+}
+
+.imgAide {
+    width: 20px;
+    margin-left: 10px;
+    height: auto;
+}
+
+.a-quick-bar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

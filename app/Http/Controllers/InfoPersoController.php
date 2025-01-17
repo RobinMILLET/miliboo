@@ -68,16 +68,34 @@ class InfoPersoController extends Controller
             echo "</div>";
         }
     }
+
+    public static function ancienMdp($mdpError) {
+        $client = $_SESSION["client"];
+        if (!$client->resetmdptoken && $client->resetmdpexpir &&
+            now() < $client->resetmdpexpir) return;
+        echo '<input id="ancienmdp" name="ancienmdp" class="input'.$mdpError.'" type="password" placeholder="Ancien mot de passe" required>';
+    }
     
     public static function tryChangeMdp(Request $request) {
-        $request->validate([
+        $client = $_SESSION["client"];
+        if (!$client) return redirect()->route('compte');
+        $client->checkTokens();
+        if (!$client->resetmdptoken && $client->resetmdpexpir &&
+        now() < $client->resetmdpexpir) {
+                $request->validate([
+                    'password' => 'required|string']);
+        }
+        else {
+            $request->validate([
             'ancienmdp' => 'required|string',
             'password' => 'required|string']);
-        if (!$_SESSION["client"]->checkPassword($request->ancienmdp)) {
-            return redirect()->back()->with('error', "mdp");
+            if (!$client->checkPassword($request->ancienmdp))
+                return redirect()->back()->with('error', "mdp");
         }
-        $_SESSION["client"]->hashmdp = Hash::make($request->password);
-        $_SESSION["client"]->save();
+        $client->hashmdp = Hash::make($request->password);
+        $client->resetmdptoken = null;
+        $client->resetmdpexpir = null;
+        $client->save();
         return redirect()->route("espaceclient");
     }
 
@@ -104,6 +122,9 @@ class InfoPersoController extends Controller
             $client["telverifdate"] = null;
             $_SESSION["client"]->telveriftoken = null;
             $_SESSION["client"]->telverifdate = null;
+            $_SESSION["client"]->a2f = false;
+            $_SESSION["client"]->a2ftoken = null;
+            $_SESSION["client"]->a2fexpir = null;
         }
         if ($exit) return $exit;
         $exit = CreationCompteController::extractAdr($request, $adr);
@@ -162,8 +183,12 @@ class InfoPersoController extends Controller
     public static function clientJson(Request $request) {
         $client = $_SESSION["client"];
         if (!$client) return redirect()->route("compte");
+        echo "<h2>Mes données personnelles au format JSON</h2>";
+        echo "<p>Pour les statistiques ou l'exportation</p>";
         echo "<button onclick='window.location.href=\"/infoperso\"'>Retour</button><br>";
+        echo "<br><textarea style='width:100%;height:75%'>";
         echo json_encode($client->completeArray());
+        echo "</textarea>";
     }
 
     public static function clientAnonym($any) {

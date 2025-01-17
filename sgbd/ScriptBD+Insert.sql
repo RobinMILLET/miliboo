@@ -3508,3 +3508,9 @@ FROM generate_series(1, 10);   -- Crée 10 lignes
 --ALTER TABLE miliboo.client ADD derniereutilisation TIMESTAMP; 
 --update client set derniereutilisation = datecreationcompte
 --ALTER TABLE miliboo.client ALTER COLUMN derniereutilisation SET NOT NULL;
+
+--ALTER TABLE miliboo.client ADD resetmdptoken char (64); 
+--ALTER TABLE miliboo.client ADD resetmdpexpir TIMESTAMP NULL; 
+--ALTER TABLE miliboo.client ADD a2f BOOLEAN NOT NULL DEFAULT FALSE;
+--ALTER TABLE miliboo.client ADD a2ftoken char (6) NULL; 
+--ALTER TABLE miliboo.client ADD a2fexpir TIMESTAMP NULL;

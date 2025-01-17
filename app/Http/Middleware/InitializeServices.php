@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Cookie;
 use App\Http\Controllers\LoginServicesController;
 use App\Models\Client;
+use App\Models\ServiceMiliboo;
 use Illuminate\Auth\Events\Login;
 
 class InitializeServices

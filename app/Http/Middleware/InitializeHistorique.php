@@ -18,14 +18,15 @@ class InitializeHistorique
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
-        if (!isset($_SESSION["historiqueConsultation"])) {
+        if (!isset($_SESSION["historiqueConsultation"]) ||
+                $_SESSION["historiqueConsultation"] == null) {
             $cookie = $request->cookie("cookieDernieresConsultations");
             if ($connected) {
                 if ($cookie) {
-                    // 
+                    $_SESSION["historiqueConsultation"] = json_decode($cookie, true);
                 }
                 else {
-                    $_SESSION["historiqueConsultation"] = null;
+                    $_SESSION["historiqueConsultation"] = array();
                 }
             }
             else {

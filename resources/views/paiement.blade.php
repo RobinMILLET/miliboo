@@ -20,9 +20,9 @@
 </div>
 
 <div id="progress-panier" class="marge half-colored">
-    <div class="etape"><p>1</p></div>
-    <div class="etape"><p>2</p></div>
-    <div class="etape"><p>3</p></div>
+    <div class="etape show-detail"><p class="p-detail bottom">Étape 1: Panier</p><p>1</p></div>
+    <div class="etape show-detail"><p class="p-detail bottom">Étape 2: Livraison</p><p>2</p></div>
+    <div class="etape show-detail"><p class="p-detail bottom">Étape 3: Paiement</p><p>3</p></div>
 </div>
 
 <div id="div-paiement" class="marge">
@@ -45,7 +45,10 @@
                         <p>{{ $prix[0] }}€</p>
                     </div>
                     <div class="div-ligne-resume">
-                        <p>Facturations supplémentaires</p>
+                        <div class='show-detail' style='display:inline-block'>
+                        <p>Facturations supplémentaires<img class="imgAide" src="{{ asset('img/question.png') }}"></p>
+                        <p class='p-detail right' style='top:0;'>Assurance et Livraison Express</p>
+                        </div>
                         <p>{{ $prix[1] }}€</p>
                     </div>
                     <div class="div-ligne-resume">
@@ -107,11 +110,11 @@
                 <label for="radio-carte">Carte de crédit</label>
             </div>
             <div>
-                <input class="input-radio" name="modepaiement" type="radio" id="radio-virement" disabled>
+                <input style='cursor: not-allowed ;' class="input-radio" name="modepaiement" type="radio" id="radio-virement" disabled>
                 <label for="radio-virement">Virement Bancaire</label>
             </div>
             <div>
-                <input class="input-radio" name="modepaiement" type="radio" id="radio-paypal" disabled>
+                <input style='cursor: not-allowed ;' class="input-radio" name="modepaiement" type="radio" id="radio-paypal" disabled>
                 <label for="radio-paypal">Paypal</label>
             </div>
         </div>
@@ -121,6 +124,7 @@
             @csrf
                 <input name="nom" class="input" type="text" placeholder="Nom de la carte bancaire (requis pour sauvegarder)">
                 <input name="num" class="input" type="text" placeholder="0000-0000-0000-0000*" onchange="validate(this, 16, true)" required>
+                
                 <p id="p-title-expiration">Expiration</p>
                 <div id="div-expiration">
                     <?php
@@ -134,7 +138,7 @@
                     foreach ($calendrier as $num => $nom) {
                         echo "<option value='$num'>$nom ($num)</option>";
                     }
-                    echo '</select><select name="an" id="select-cb" class="input">';
+                    echo '</select>&nbsp;<select name="an" id="select-cb" class="input">';
                     for ($annee = date('Y'); $annee <= date('Y') + 5; $annee++) {
                         echo "<option value='$annee'>$annee</option>";
                     }
@@ -145,8 +149,12 @@
                 <p class="p-obligatoire">* obligatoire</p>
 
                 <div id="div-sace-info">
-                    <input name="save" type="checkbox" class="input-check" id="checkbox-save" name="checkbox-save">
-                    <label for="checkbox-save">Sauvegarder les coordonnées bancaire</label>
+                    <div class="show-detail" style="width:fit-content">
+                        <p class='p-detail right'>Facilitez les prochains achats en enregistrant cette carte</p>
+                        <input name="save" type="checkbox" class="input-check" id="checkbox-save" name="checkbox-save">
+                        <label for="checkbox-save">Sauvegarder les coordonnées bancaire</label>
+                        <img class="imgAide" src="{{ asset('img/question.png') }}">
+                    </div>
                 </div>
 
                 <button id="submit" type="submit" class="button">Valider</button>
@@ -154,6 +162,7 @@
         </div>
     </div>
 </div>
+<!-- <script src="https://js.stripe.com/v3/"></script> -->
 <script src="{{ asset('js/paiement.js') }}"></script>
 
 @endsection

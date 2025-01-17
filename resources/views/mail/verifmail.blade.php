@@ -64,6 +64,8 @@
         <p>Si vous ne parvenez pas à cliquer sur le bouton ci-dessus, copiez et collez ce lien dans votre navigateur :</p>
         <p><a href="{{ url('verif/' . $id . '/' . $token) }}">{{ url('verif/' . $id . '/' . $token) }}</a></p>
 
+        <p>Ce lien deviendra inactif sous peu; ne tardez pas !</p>
+
         <p>Adresse email utilisée : {{ $emailclient }}</p>
 
         <p>Merci et à bientôt,</p>

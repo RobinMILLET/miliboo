@@ -317,3 +317,64 @@ button:hover {
         font-size: 12px;
     }
 }
+
+.logout-btn {
+    background-color: #dc3545;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: larger !important;
+    transition: background-color 0.2s;
+}
+
+.logout-btn:hover {
+    background-color: #c82333;
+    text-decoration: none;
+    color: white;
+}
+
+.pulse {
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+}
+
+.pulse:hover {
+    background-color: #45a049;
+}
+
+#metrics-panel .card {
+    margin: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#metrics-panel .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+#metrics-panel .table th,
+#metrics-panel .table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+#metrics-panel .table th {
+    background-color: #f5f5f5;
+}
+
+#metrics-panel .list-unstyled {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#metrics-panel .list-unstyled li {
+    margin-bottom: 5px;
+}

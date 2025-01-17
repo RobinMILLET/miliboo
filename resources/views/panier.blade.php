@@ -16,9 +16,9 @@
     </div>
 
     <div id="progress-panier" class="marge">
-        <div class="etape"><p>1</p></div>
-        <div class="etape"><p>2</p></div>
-        <div class="etape"><p>3</p></div>
+        <div class="etape show-detail"><p class="p-detail bottom">Étape 1: Panier</p><p>1</p></div>
+        <div class="etape show-detail"><p class="p-detail bottom">Étape 2: Livraison</p><p>2</p></div>
+        <div class="etape show-detail"><p class="p-detail bottom">Étape 3: Paiement</p><p>3</p></div>
     </div>
 
     <div id="content-panier">
@@ -98,7 +98,7 @@
                 </div>
         </div>
         <div class="marge" id="detail">
-            <div id="fidelite">
+            <div id="fidelite" style="margin-top:-250px">
                 <p id="title-fidelite">Points fidélité</p>
                 <p><span id="info-fidelite"></span> sur votre prochaine commande pour votre achat</p>
             </div>
@@ -112,7 +112,7 @@
             </div>
                 -->
         </div>
-        <div class="marge" id="div-button">
+        <div class="marge" id="div-button" style="margin-top:-100px">
             <div id="achats"><form action="{{ route('homepage') }}"><button id="button-achats"><p id="p-achats"><u>Continuer mes achats</u></p></button></form></div>
             <div id="commande"><button id="button-commande"{{$disabled}} onclick="window.location.href='/etapelivraison'"><p id="p-commande"> Valider ma commande</p></button></div>
         </div>
